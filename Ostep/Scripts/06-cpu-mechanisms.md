@@ -34,7 +34,7 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 ## Script
 
 ### B01 — Just run it  `cold open` (~0:45)
-**Student** (curious): What is the simplest way to run a program? Load it, jump to `main()`, and get out of the way?
+**Student** (curious): Last time I asked how the OS ever gets control back once my program is on the CPU. So let's start simple. What's the simplest way to run a program? Load it, jump to `main()`, and get out of the way?
 
 **Professor** (explaining): That's called direct execution, and it has one huge advantage. It's *fast*. No middleman. The program runs natively on the hardware.
 
@@ -61,7 +61,7 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 *Visual idea:* Crux card in the Virtualization accent. Two arrows, "performance" and "control", pull a process in opposite directions; they merge into the term "limited direct execution" (term highlight).
 
 ### B03 — The naive protocol  `build-up` (~1:00)
-**Narrator (V.O.):** Here's direct execution as a protocol. The OS creates a process entry, allocates memory, loads the program, sets up the stack, clears the registers, and *calls* `main()`. The program runs, and *returns*. The OS frees the memory and removes the entry.
+**Narrator (V.O.):** Here's direct execution as a protocol. The OS creates a process entry, allocates memory, loads the program (that's the work behind `exec()` from last time), sets up the stack, clears the registers, and *calls* `main()`. The program runs, and *returns*. The OS frees the memory and removes the entry.
 
 **Student** (curious): That's just calling a function.
 
@@ -238,6 +238,7 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 
 ## Callbacks & setups
 - Callbacks to earlier episodes:
+  - 05's teaser question, "how does the OS ever get control back?" (B01), and the glass-wall image (the OS watching from behind glass). `exec()` as the loading step (B03).
   - The dashed **User/Kernel boundary** and **Privilege gauge** from 01–03 (B04, B05, B07): finally put to work.
   - "Trap and return-from-trap" terms from 01–03 (B05).
   - The **save slot** / register context and the "video-game save" line from 04 (B10).
@@ -256,4 +257,4 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 - **Student's "inspect every instruction" objection (B04):** this is my addition, not the book's, to motivate hardware modes. Keep?
 - **Analogies:** I reused *save slot* (04) and the book's *baby-proofing*. No new analogy for the trap table beyond the "sticky note with an address" visual. Fine?
 - **"Fake return-from-trap" (B07):** the book doesn't use the word "fake", but the first return-from-trap does start a process that never trapped. I flag it as a simplification in the narration. OK?
-- **Order of 05:** since episode 05 (fork/exec/wait) comes first, B03 assumes the viewer knows processes are created by the OS. Should B03 mention `fork()` and `exec()` by name?
+- **Order of 05:** resolved by the consistency pass. B01 now picks up 05's teaser question, and B03 names `exec()`.

@@ -146,7 +146,7 @@
 | 11 | "Return-from-trap pops them off again." | The packet pops out of the tray back into A. |
 | 12 | "When I write `open()` in C, it looks like an ordinary function call." | Student (curious). A `Code` snippet `fd = open("notes.txt", …);` slides in at the left of A. |
 | 13 | "It is. A call into the C library, which puts the arguments in agreed places, executes the trap, and unpacks the result." | Professor (happy). The snippet is wrapped by a thin box labeled "C library" with three tiny chips inside (args → regs, syscall number, trap!). The trap arrow fires from the box. |
-| 14 | "Somebody wrote that assembly for you." | A small tag "hand-coded assembly" on the box; a tiny hand-wave from Professor (blink). Hold 0.8 s. |
+| 14 | "Somebody wrote that assembly for you." | A small tag "hand-coded assembly" on the box; a tiny hand-wave and a `blink()` from the Professor. Hold 0.8 s. |
 
 **Characters:** Student (confused → curious), Professor (happy).
 **Ends with:** LDE world: chip at the user seat, A running, `k-stack(A)` empty, the handler box, the Disk, gauge USER, "system call", "trap" and "return-from-trap" in the term strip history.

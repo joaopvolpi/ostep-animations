@@ -22,7 +22,7 @@
 | Thing | Look | Notes |
 |---|---|---|
 | Process **A** | `Process(label="A", color=PROCESS_COLORS[0])` (coral) | Same as 04. Plays the long job in the gum gag. |
-| Process **B** | `PROCESS_COLORS[1]` (mint) | The short job. |
+| Process **B** | `PROCESS_COLORS[1]` (mint) | The short job, and the gamer in S08 (same as episode 08). |
 | Process **C** | `PROCESS_COLORS[2]` (gold) | Third process in MLFQ and Queue callbacks. |
 | Process **D** | `PROCESS_COLORS[3]` (sky) | Only the "gullible neighbor" in S08. |
 | CPU home | `CPU_COLOR` chip at **(0, 0.8)** in callback scenes (scale 0.8) | A running process stands on top of it, as in 04. |
@@ -128,7 +128,7 @@ idle hatched). Mini timelines here follow it exactly.
 ### S06 — MLFQ and the scheduler wars   (beats: B04, second part) · ~0:25
 **Purpose:** MLFQ as "SJF + RR in one", then the CFS/BFS/O(1) controversy as a squabble.
 **Starts with:** S05 end state.
-**Layout:** center-left (−1.8, 0.6): a mini **MLFQ stack**, three stacked queue rows (Q2 top, Q0 bottom), 4 wide. Center-right (3.2, 0.6): three name tags in a loose triangle.
+**Layout:** center-left (−1.8, 0.6): a mini **MLFQ stack** (episode 08's `MLFQLadder`, 3 levels, scaled), three stacked queue rows (Q2 top, Q0 bottom), 4 wide. Center-right (3.2, 0.6): three name tags in a loose triangle.
 
 | # | Narration | On screen / animation |
 |---|---|---|
@@ -171,8 +171,8 @@ idle hatched). Mini timelines here follow it exactly.
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | "Anything else that caught your fancy?" | The seesaw scene fades out; the MLFQ stack returns at the left. Professor → neutral, looks at Student. |
-| 2 | "Gaming the scheduler!" | Student → excited. The MLFQ rows glow. Process D (sky, "gullible neighbor") sits in the lower row; Process C (gold, "the gamer") sits at the top row with sunglasses (small `Line`s over the face). |
-| 3 | "I might try it next time I run a job on Amazon's EC2." | A cloud-ish rounded rectangle + `server_rack` slides in at top-right with the label "EC2". C's glasses glint. |
+| 2 | "Gaming the scheduler!" | Student → excited. The MLFQ rows glow. Process D (sky, "gullible neighbor") sits in the lower row; Process B (mint, "the gamer", the same gamer as episode 08) sits at the top row with 08's sunglasses glyph. |
+| 3 | "I might try it next time I run a job on Amazon's EC2." | A cloud-ish rounded rectangle + `server_rack` slides in at top-right with the label "EC2". B's glasses glint. |
 | 4 | "Steal some cycles from some unsuspecting, and more importantly OS-ignorant, customer." | C does the MLFQ trick: each time its slice ends, a tiny disk blip (the `Disk.spin()` mini icon) fires, and C stays on the top row, climbing back up (`hop_to`). A tiny coin / cycle token slides from D's row to C. D's row gets a small tear. D → blocked look. |
 | 5 | "I might have created a monster." | Professor → surprised. A grey stitched Process (zombie expression, bolts on the neck as two small rectangles) walks in from the right edge (`FadeIn` + shift). |
 | 6 | "Professor Frankenstein is not what I'd like to be called." | The monster raises its arms; a small "Prof. Frankenstein" name tag drops above the Professor; Professor → worried. |

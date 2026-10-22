@@ -224,13 +224,13 @@ Last time we learned two good ideas for scheduling, and learned that each one ne
 ### B18 — Teaser  `teaser` (~0:25)
 **Student** (curious): MLFQ is clever. But it has so many knobs, and the rules keep patching each other. Isn't there a simpler way to share the CPU fairly?
 
-**Professor** (happy): There is. Forget turnaround and response for a moment. What if we just promised each job a *share* of the CPU, and picked the next one by drawing a ticket from a hat?
+**Professor** (happy): There is. Forget turnaround and response for a moment. What if we just promised each job a *share* of the CPU, and picked the next one by drawing a ticket from a raffle drum?
 
 **Student** (surprised): The scheduler gambles?
 
 **Professor** (proud): Next time.
 
-*Visual idea:* A hat or jar fills with colored tickets (A coral ×3, B mint ×1, C gold ×1); one ticket is pulled; cut to black with "Next: 09 · Lottery Scheduling".
+*Visual idea:* 09's raffle drum fills with colored tickets (A coral ×3, B mint ×1, the 75/25 split episode 09 opens with); one ticket is pulled; cut to black with "Next: 09 · Lottery Scheduling".
 
 ## Cut / deferred material
 - **Homework (mlfq.py simulation):** cut from the video. It could become an on-screen "try it yourself" link at the end.

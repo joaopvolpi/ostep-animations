@@ -35,7 +35,9 @@ is the spec, the script is the narration, and the bible is the style law.
 2. `ostep_lib/README.md`, plus the source of anything you'll use (`ostep_lib/style.py`,
    `ostep_lib/characters/*`, `ostep_lib/props/*` if it exists). Use the real API; don't guess.
 3. `Ostep/Scenes/<NN-slug>.md`: the whole file, especially "Visual overview" (persistent
-   assignments), the selected scenes, and "New assets needed".
+   assignments), the selected scenes, and "New assets needed". Also check any
+   `Ostep/Scenes/_shared-assets-*.md` covering this episode: it gives the **canonical name and spec**
+   for assets several episodes share. Build those under that name, once.
 4. `Ostep/Scripts/<NN-slug>.md`: the narration for the beats the selected scenes cover.
 5. Existing code in `Ostep/Manim/<NN-slug>/`, if any. Extend it; never silently overwrite a
    scene file that already exists. Ask first, unless the user asked to redo it.
