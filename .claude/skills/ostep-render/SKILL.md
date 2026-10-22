@@ -1,6 +1,6 @@
 ---
 name: ostep-render
-description: Implement an OSTEP episode's scene breakdown (Ostep/Scenes/*.md) as ManimCE code using ostep_lib, render it, visually verify the frames, and assemble the episode video with subtitles from the script's narration. Use when the user asks to code, animate, implement, render or build the video for a chapter or for specific scenes, e.g. "render episode 04", "/ostep-render 04 S05-S07", "/ostep-render 04 --final".
+description: Implement an OSTEP episode's scene breakdown (Ostep/Scenes/*.md) as ManimCE code using ostep_lib, render it with tools/render.py into Ostep/Renders, and assemble the episode video with burned-in single-line captions (default on, --no-captions to disable) from the script's narration. Use when the user asks to code, animate, implement, render or build the video for a chapter or for specific scenes, e.g. "render episode 04", "/ostep-render 04 S05-S07", "/ostep-render 04 --final".
 ---
 
 # OSTEP scenes → Manim code → rendered video
@@ -15,6 +15,20 @@ is the spec, the script is the narration, and the bible is the style law.
 - Optional scene selection: `S05`, `S05-S07`, `S03,S09`. The default is all scenes.
 - Optional `--final`: high-quality render (`-qh`, 1080p60) plus episode assembly. The default is a
   draft (`-ql`, 480p15) of the selected scenes only, with no assembly.
+- Optional `--no-captions`: render without the caption band. **Captions are on by default.**
+
+## Captions (default: on)
+- Captions are the script's narration, burned into the video by `tools/render.py`. It scales the
+  animation to 90%, keeps it at the top of the frame, and adds a caption band below it, so the
+  output stays 16:9.
+- Rules: **one line at most** (long narration is split and timed proportionally), the **series font**
+  (CMU Serif, `TEXT` color on `BG`), and **never overlapping the animation** (they live only in the
+  band).
+- The band is outside the animation's frame, so scene layouts need no changes and no frame checks
+  for it. Just keep everything inside the normal safe area as usual.
+- The caption text comes from `NarratedScene.say(...)` subcaptions. So every spoken line must go
+  through `say`, using the script's exact words, or it won't be captioned.
+- `--no-captions` gives the clean video (full-size animation, no band).
 
 ## Read first
 1. `Ostep/README.md`: palette, layout, props, motion rules.
@@ -37,10 +51,15 @@ Ostep/Manim/<NN-slug>/
   common.py             # episode constants: process colors/labels, home positions, shared builders
   s01_<slug>.py         # one file per scene: class S01<CamelTitle>(NarratedScene)
   s02_<slug>.py
-Ostep/Renders/<NN-slug>/
-  <NN-slug>.mp4         # assembled episode (--final only)
-  <NN-slug>.srt         # subtitles from the narration
+Ostep/Renders/<NN-slug>/<quality>/      # written by tools/render.py, e.g. 480p15 or 1080p60
+  scenes/<stem>.mp4 + .srt  # clean scene video + its subcaptions
+  captioned/<stem>.mp4      # scene with the caption band (captions on)
+  <NN-slug>.mp4             # assembled episode (captioned unless --no-captions)
+  <NN-slug>.srt             # single-line captions for the whole episode
 ```
+**Every rendered video goes to `Ostep/Renders/`** through `tools/render.py`. Manim's working
+caches go to `.cache/media/` (gitignored). Don't leave videos in the scratchpad or in `media/`
+folders.
 Each scene file starts by putting the project root on `sys.path`
 (`Path(__file__).resolve().parents[3]`), then `from ostep_lib import *` and `from common import *`
 (add the scene's own folder to the path too). Always render from the project root.
@@ -57,7 +76,7 @@ For every item in "New assets needed" that the selected scenes use and that does
   props table (`Ostep/README.md` §6).
 - Episode-only pieces (a one-off icon) go in that episode's `common.py` instead.
 
-### `ostep_lib/narration.py` (create once if missing)
+### `ostep_lib/narration.py` (exists; extend it, don't replace it)
 A `NarratedScene(Scene)` base that applies the style and paces animations to the narration:
 - `self.say(text, *animations, min_time=None)`: attaches `text` as a subcaption
   (`self.add_subcaption(text, duration=d)`), where `d = max(words / 2.5, min_time or 0)`
@@ -88,8 +107,10 @@ complete.
 
 ## Step 3: render and verify (token-frugal)
 Images are expensive, so frame inspection is the exception, not the rule.
-1. Draft render every scene: `python -m manim -ql Ostep/Manim/<NN-slug>/sXX_<slug>.py SXX<Title>`.
-   It must run without errors. **Don't Read frames by default.**
+1. Draft render with the tool: `python tools/render.py <NN> --scenes SXX` (or a range). This
+   renders at 480p15, writes to `Ostep/Renders/<NN-slug>/480p15/`, and captions by default. Add
+   `--no-captions` while iterating, if you only need the clean video. Every scene must run without
+   errors. **Don't Read frames by default.**
 2. **Catch layout problems in code.** Use `next_to`/`arrange` with buffers. Assert, or print, that
    key mobjects stay inside the safe area (x ∈ [−6.6, 6.6], y ∈ [−3.6, 3.6]). Check bounding boxes
    for overlaps between the main elements.
@@ -101,16 +122,15 @@ Images are expensive, so frame inspection is the exception, not the rule.
 5. Check the duration against the scene's estimate (±30%). A big mismatch usually means
    narration text is missing, or the pauses are wrong.
 
-## Step 4: assemble (`--final` only)
-1. Render every scene with `-qh`.
-2. Concatenate in scene order with ffmpeg's concat demuxer into `Ostep/Renders/<NN-slug>/<NN-slug>.mp4`
-   (re-encode, `-c:v libx264 -pix_fmt yuv420p`, if the inputs' parameters differ).
-3. Merge the per-scene `.srt` files into `<NN-slug>.srt`, offsetting each by the cumulative
-   durations (read them with `ffprobe`).
-4. Extract ~4 frames spread over the episode and Read them as a final sanity check.
+## Step 4: assemble
+- Draft episode: `python tools/render.py <NN>` renders all scenes and assembles
+  `Ostep/Renders/<NN-slug>/480p15/<NN-slug>.mp4` + `.srt`.
+- `--final`: `python tools/render.py <NN> -q h`, which gives 1080p60 in `.../1080p60/`.
+- Add `--no-captions` for a clean version. Use `--no-render` to re-caption or re-assemble existing
+  renders without re-rendering.
+- For `--final`, extract ~4 frames spread over the episode and Read them as a final sanity check.
 
-Clean up stray `media/` folders and `__pycache__` outside `Ostep/Renders/` when done. Use
-`--media_dir` pointing into the scratchpad for drafts, so the project stays clean.
+Clean up stray `media/` folders and `__pycache__` when done.
 
 ## Report
 - The files created or changed (code, props, docs).
