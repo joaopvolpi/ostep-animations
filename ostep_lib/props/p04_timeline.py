@@ -29,13 +29,16 @@ from __future__ import annotations
 import numpy as np
 from manim import (
     Animation, AnimationGroup, Create, FadeIn, FadeOut, GrowFromEdge, Line, Rectangle,
-    Text, Transform, VGroup, ORIGIN, LEFT, RIGHT, UP, DOWN, smooth, linear,
+    Text, Transform, VGroup, ORIGIN, LEFT, RIGHT, UP, DOWN, PI, smooth, linear,
+    Triangle, DashedLine, Arrow,
 )
 
-from ..style import TEXT, DIM, CPU_COLOR, PROCESS_COLORS, BG
+from ..style import TEXT, DIM, CPU_COLOR, DISK_COLOR, KERNEL_COLOR, PROCESS_COLORS, BG
 from .p04_icons import hatch_rect, mini_clock, IDLE_GREY
 
 STATES = ("running", "ready", "blocked", "idle", "busy")
+ROW_KINDS = ("process", "cpu", "disk", "os")
+_KIND_COLOR = {"cpu": CPU_COLOR, "disk": DISK_COLOR, "os": KERNEL_COLOR}
 
 
 def _P(x, y=0.0):
@@ -58,16 +61,39 @@ class Timeline(VGroup):
     cpu_row : add a "CPU" utilization row under the process rows.
     label_font, tick_font : font sizes.
     grid : draw the faint track and separators.
+
+    Extensions (episode 07; all optional, defaults keep the old behavior)
+    ---------------------------------------------------------------------
+    row_kinds : list (one per row) of ``"process"`` (default), ``"cpu"``, ``"disk"``,
+        ``"os"``.  Non-process rows default to CPU_COLOR / DISK_COLOR / KERNEL_COLOR (when
+        ``colors`` is not given); cells of such rows take the color of the job that ran
+        (``fill(row, tick, "running", color=job_color)``).
+    label_mode : ``"cell"`` (default, 1..N centered under the cells) or ``"boundary"``
+        (0, step, 2*step... at the cell boundaries, like a time axis).
+    unit_per_tick : value of one tick in boundary mode (e.g. 10 for 10 s per cell).
+    label_every : label every n-th boundary (boundary mode).
+    Fractional ticks: ``fill_span(row, b0, b1, state, color)`` fills the span between two
+    boundaries (floats allowed, e.g. 1 ms slivers).  ``move_block`` transforms a block to
+    another cell.  Markers: ``arrival_marker``, ``completion_marker``, ``bracket``.
     """
 
     def __init__(self, rows, ticks=8, colors=None, x_range=(-5.0, 5.0), top=-2.2,
                  row_height=0.45, row_step=None, tick_labels=True, tick_label_y=None,
                  unit=None, cpu_row=False, cpu_label="CPU", label_font=24, tick_font=20,
-                 grid=True, **kwargs):
+                 grid=True, row_kinds=None, label_mode="cell", unit_per_tick=1, label_every=1,
+                 **kwargs):
         super().__init__(**kwargs)
         self.rows = list(rows)
         self.n_ticks = ticks
         self.colors = list(colors) if colors else [PROCESS_COLORS[i % 6] for i in range(len(rows))]
+        self.row_kinds = list(row_kinds) if row_kinds else ["process"] * len(self.rows)
+        if colors is None:
+            for i, k in enumerate(self.row_kinds):
+                if k in _KIND_COLOR:
+                    self.colors[i] = _KIND_COLOR[k]
+        self.label_mode = label_mode
+        self.unit_per_tick = unit_per_tick
+        self.label_every = max(1, int(label_every))
         self.x0, self.x1 = map(float, x_range)
         self.top_y = float(top)
         self.row_h = float(row_height)
@@ -146,6 +172,21 @@ class Timeline(VGroup):
         if not self.show_ticks:
             return g
         y = self.tick_label_y if self.tick_label_y is not None else self.bottom_y() - 0.25
+        if self.label_mode == "boundary":
+            w = self.tick_width(ticks)
+            last = self.x0
+            for k in range(0, ticks + 1, self.label_every):
+                v = k * self.unit_per_tick
+                txt = str(int(v)) if float(v).is_integer() else f"{v:g}"
+                t = Text(txt, font_size=self.tick_font, color=DIM)
+                t.move_to(_P(self.x0 + k * w, y))
+                g.add(t)
+                last = t.get_right()[0]
+            if self.unit:
+                u = Text(self.unit, font_size=self.tick_font, color=DIM)
+                u.move_to(_P(last + 0.1, y), aligned_edge=LEFT)
+                g.add(u)
+            return g
         for k in range(1, ticks + 1):
             t = Text(str(k), font_size=self.tick_font, color=DIM)
             t.move_to(_P(self.cell_center(0, k, ticks)[0], y))
@@ -186,6 +227,7 @@ class Timeline(VGroup):
             raise ValueError(f"unknown state {state!r}; use one of {STATES}")
         b.move_to(c)
         b.state = state
+        b.span = span
         return b
 
     def fill(self, row, tick, state, color=None, run_time=0.35, span=1):
@@ -317,6 +359,101 @@ class Timeline(VGroup):
             g.add(t)
         return g
 
+    # ----------------------------------------------- episode 07 extensions
+    def row_top(self, row):
+        """y of the top edge of a row."""
+        return self.row_y(row) + self.row_h / 2
+
+    def fill_span(self, row, b0, b1, state="running", color=None, run_time=0.35):
+        """Animation growing a block that covers the span between boundaries ``b0`` and
+        ``b1`` (floats allowed).  Stored at ``block_at[(row, b0 + 1)]``."""
+        return self.fill(row, b0 + 1, state, color, run_time=run_time, span=b1 - b0)
+
+    def set_span(self, row, b0, b1, state="running", color=None):
+        """Instantly place a block covering boundaries ``b0``..``b1``. Returns it."""
+        i = self.row_index(row)
+        b = self.make_block(i, b0 + 1, state, color, span=b1 - b0)
+        old = self.block_at.get((i, b0 + 1))
+        if old is not None:
+            self.blocks.remove(old)
+        self.blocks.add(b)
+        self.block_at[(i, b0 + 1)] = b
+        return b
+
+    def move_block(self, row, t_from, t_to, state=None, color=None, span=None, run_time=0.8):
+        """Animation: the block at (row, t_from) transforms into one at (row, t_to)
+        (optionally another state / color / span).  The block is re-indexed."""
+        i = self.row_index(row)
+        b = self.block_at.pop((i, t_from))
+        if color is None:
+            color = b[0].get_stroke_color() if b.state == "ready" else b[0].get_fill_color()
+        tgt = self.make_block(i, t_to, state or b.state, color, span=getattr(b, "span", 1) if span is None else span)
+        self.block_at[(i, t_to)] = b
+        b.state = tgt.state
+        b.span = tgt.span
+        return Transform(b, tgt, run_time=run_time)
+
+    def arrival_marker(self, row, boundary, label=None, color=TEXT, font_size=18, length=0.24,
+                       dx=0.0, label_side=RIGHT):
+        """Down arrow just above a row at ``boundary`` (tip on the row's top edge), with an
+        optional label. Parts: ``arrow``, ``label``. Not added."""
+        x = self.tick_x(boundary) + dx
+        top = self.row_top(row)
+        ar = Arrow(_P(x, top + length + 0.02), _P(x, top + 0.02), buff=0, stroke_width=3.5,
+                   tip_length=0.12, max_tip_length_to_length_ratio=0.6, color=color)
+        g = VGroup(ar)
+        g.arrow = ar
+        g.label = VGroup()
+        if label is not None:
+            t = Text(str(label), font_size=font_size, color=color)
+            t.next_to(ar, label_side, buff=0.06)
+            g.label = t
+            g.add(t)
+        return g
+
+    def completion_marker(self, row, boundary, label=None, color=None, font_size=20, size=0.16):
+        """Down-pointing triangle just under the grid at ``boundary`` plus the number
+        (default: the boundary value) in the job's color. Parts: ``tri``, ``label``. Not added."""
+        if color is None:
+            color = self.colors[self.row_index(row)] if row is not None else TEXT
+        x = self.tick_x(boundary)
+        tri = Triangle().rotate(PI).scale_to_fit_width(size).set_fill(color, 1).set_stroke(TEXT, 1)
+        tri.move_to(_P(x, self.bottom_y() - 0.06 - size * 0.4))
+        if label is None:
+            v = boundary * self.unit_per_tick
+            label = str(int(v)) if float(v).is_integer() else f"{v:g}"
+        t = Text(str(label), font_size=font_size, color=color, weight="BOLD")
+        t.next_to(tri, DOWN, buff=0.04)
+        g = VGroup(tri, t)
+        g.tri, g.label = tri, t
+        return g
+
+    def bracket(self, row, t0, t1, label=None, style="solid", color=None, font_size=18,
+                gap=0.1, cap=0.07):
+        """Horizontal bracket above a row from boundary ``t0`` to ``t1`` (solid TEXT by
+        default; ``style="dashed"`` uses the INTRO color: the response bracket).  The label
+        sits at the right end.  Parts: ``line``, ``caps``, ``label``. Not added."""
+        from ..style import INTRO
+        if color is None:
+            color = INTRO if style == "dashed" else TEXT
+        y = self.row_top(row) + gap
+        xa, xb = self.tick_x(t0), self.tick_x(t1)
+        if xb - xa > 0.25 and style == "dashed":
+            line = DashedLine(_P(xa, y), _P(xb, y), dash_length=0.08)
+        else:
+            line = Line(_P(xa, y), _P(max(xb, xa + 1e-3), y))
+        line.set_stroke(color, 2.5)
+        caps = VGroup(Line(_P(xa, y - cap), _P(xa, y + cap)), Line(_P(xb, y - cap), _P(xb, y + cap)))
+        caps.set_stroke(color, 2.5)
+        g = VGroup(line, caps)
+        g.line, g.caps, g.label = line, caps, VGroup()
+        if label is not None:
+            t = Text(str(label), font_size=font_size, color=color, weight="BOLD")
+            t.move_to(_P(xb + 0.08, y + 0.03), aligned_edge=LEFT)
+            g.label = t
+            g.add(t)
+        return g
+
     def ghost_blocks(self, spec, opacity=0.45):
         """Translucent blocks (not added, not tracked) for a what-if overlay.
         ``spec`` is a list of (row, tick, state)."""
@@ -329,5 +466,6 @@ class Timeline(VGroup):
 
 
 TIMELINE_STATES = STATES
+TIMELINE_ROW_KINDS = ROW_KINDS
 
-__all__ = ["Timeline", "TIMELINE_STATES"]
+__all__ = ["Timeline", "TIMELINE_STATES", "TIMELINE_ROW_KINDS"]

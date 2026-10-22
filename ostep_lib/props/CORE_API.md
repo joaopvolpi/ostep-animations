@@ -86,8 +86,9 @@ They are added as they get built. Check the module docstrings.
 - v1.1 (non-breaking fixes):
   - `Memory` cells now use an opaque fill that looks the same (`mix(color, BG, 1 - cell_fill_opacity)`,
     opacity 1), so lines drawn behind a column are hidden. `clear_cell` restores that fill.
-  - `CruxCard.strip()/dock()`: the header/subtitle placeholders are invisible dots at the strip center, so no
-    stray dot is left at ORIGIN after docking.
+  - `CruxCard.dock()` (rewritten after episodes 04–07 still saw a stray dot with subtitles): the frame and
+    question morph into the strip; the header and subtitle fade out and are removed from the card when the
+    animation ends. The ghost-dot workaround (`strip()` + `ReplacementTransform`) is no longer needed.
   - `Disk`: the decorative side band was removed (`disk.band` still exists but isn't drawn).
 - `NarratedScene`: with env var `OSTEP_CHECK=1`, every `play` prints `[bounds]` warnings for visible mobjects
   that cross the frame edge (debug aid, off by default).

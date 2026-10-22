@@ -143,6 +143,10 @@ as described. When a new recurring prop is invented, add it here.
 | **PCB card** | Small card with a process-color header and fields (pid, state, …); a stack of them = the process list. | The OS's bookkeeping. |
 | **Mechanism / policy icons** | Gears (and a robotic arm) = mechanism, *how*. A spotlight picking a process = policy, *which*. | Every time these two words come up. |
 | **Save slot** | A floppy-like icon. | The register context: what's saved to pause and resume a process. |
+| **OS token** | A small red "OS" badge (`KernelToken`) that rides on the CPU chip when the kernel is running. | Who is on the CPU: the OS or a process (traps, timer interrupts, context switches). |
+| **Alarm clock** | `AlarmClock` that rings. | The timer interrupt, wherever it appears. |
+| **Padlock** | `Padlock`: red when closed, green when open. | Assumptions, protection, locks: one padlock design for the series. |
+| **Metric readout** | `MetricReadout`: the average formula written term by term, with the final value boxed green or red. | Every scheduling metric (turnaround, response). |
 
 **Timeline state encoding (series standard):** running = solid process color; ready = process-color
 outline (fill 0.15); blocked = `DIM` at 0.35 with a clock; idle CPU = dark grey hatched;

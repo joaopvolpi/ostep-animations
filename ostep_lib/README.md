@@ -76,6 +76,35 @@ and `ostep_lib/props/p04_preview.py` with `P04PropSheet` / `P04IconSheet` (04).
 - `Bus(y, x_range, taps)`: `add_tap`, `path(a, b)` for `MoveAlongPath`.
 - Icons (`p04_icons`): browser/music/chat/gamepad/envelope icons, sheet_music, `RoboticArm`, `SpeedGauge`, `Notepad`, save_slot, `MenuCard`, cursor, puff, info_tag, progress_ring, keyboard, plug, whistle, exit_tag, mini_clock, hatch_rect, check/cross marks, `ep_tag("→ Ep. 06")`.
 
+**Process API props (`p05_*.py`)** (preview: `p05_preview.py` → `P05PropSheet`)
+- `clone_process(proc, to=None, color=None, label=None, …)` returns `(clone, anim)`; add the clone to the scene before playing.
+- `ProcessWorld(color, pid, pcb_pid, label)`: creature + memory column + registers + PCB + fd plugs. `place`, `assemble`, `clone_to`, `clone_stages`, `set_pid`, `pc_marker`, `code_point`, `collapse`, `set_program`.
+- `CodeWalker(src, font_size, caption)` / `make_code`: Code with several colored highlight bars (lines numbered from 1). `add_bar`, `move_bar`, `indicate`, `circumscribe`, `line_point`, `line_mob`, `write_in`. Bars aren't children; use `.everything()` to move or fade them together.
+- `FdTable` (`cut`, `scan_free`, `plug_into`, `slot_point`), `ShellLoop(cx)` (`light`, `draw_arrow`, `highlight_gap`, `workshop`, …), `KernelPipe` (`send(text)`, `left_end`, `right_end`), `MenuCardRows` (`row_y`, `highlight_row`, `chip_for`, `bracket`).
+- Icons: `bolt_glyph`, `Keycap` (`.press()`), `handler_box`, `shield_arc`, `crown_tag`, `glass_pane`, `wrench_glyph`, `program_chip`, `mem_icon_small`, `zombie_mini`, `stop_sign_tag`.
+
+**Limited-direct-execution props (`p06_*.py`)** (preview: `p06_preview.py` → `P06PropSheet`)
+- `KernelToken(label="OS")`: the red OS badge riding the CPU. `place(cpu)`, `hop_onto(cpu)`, `dim_to(o)`, `wake()`, `reach(point)`, `retract()`.
+- `cpu_ride(chip, target, boundary, gauge, riders, run_time)`: the chip slides across the user/kernel line, the line flashes, and the gauge flips at the midpoint.
+- `RegPacket(color, labels, cell, n)` (`fly_to`, `fly_into`), `PacketFly(mob, end, arc, end_scale, fade)`, `ShiftBy(mob, delta)` (relative shift, safe inside `Succession`).
+- `KernelStack(label, color, width, height, slots)`: `push`, `pop`, `slot_point`, `glow`, `plain`, `dim_down`.
+- `TrapTable(rows, …)`: `add_row`, `highlight_row`, `unhighlight`, `lock`, `row`.
+- `ProtocolChart(columns, col_x, colors, …)` (Figures 6.1/6.2-style listings): `draw`, `write_row`, `section`, `link`, `sweep`, `clear_rows`; older rows dim and the chart scrolls.
+- `AlarmClock(radius, boxed, label)` (`ring`, `spin`, `start`, `stop`), `ShieldGate(height)` (`open`, `close`).
+- Icons: `cabinet_lock`, `socket_cover`, `fence_glyph`, `magnifier_icon`, `door_in_line`, `booth_gate`, `bench_ring`.
+
+**Scheduling props (`p07_*.py`)** (preview: `p07_preview.py` → `P07PropSheet`)
+- `Padlock` (`open`, `close`, `wobble`, `shake`, `pulse`; red when closed, green when open) and `PadlockStrip(n, size, at, opened)` (`open(i)`, `close(i)`). This is the series' padlock; prefer it over `ov_icons.padlock`.
+- `MetricReadout(terms, denom, value, center, font_size)`: writes `\frac{a+b+c}{n}=v` piece by piece. `reveal_term`, `reveal_numerator`, `reveal_value`, `frame_value(good)`, `strike(old)`, `count_value`, `show_all`, `fade_out`. `ro.shown` holds what's revealed.
+- `CrystalBall` (`glow_up`, `glow_down`, `crack`), `Cart(boxes)`, `Checkout` (`blink`), `milk_carton`, `checkbook_icon`.
+- **`Timeline` extensions** (additive): kwargs `row_kinds` (process/cpu/disk/os), `label_mode="boundary"`, `unit_per_tick`, `label_every`; methods `row_top`, `fill_span` / `set_span` (fractional ticks), `move_block`, `arrival_marker`, `completion_marker`, `bracket(style="solid"|"dashed")`.
+
+**Gotchas**
+- Don't define a method named `dim` on a `VGroup` subclass; it shadows Manim's `Mobject.dim`.
+- `FadeOut` of a block inside a `Timeline` doesn't detach it; call `Timeline.purge()` after clearing.
+- `PrivilegeGauge` can't be scaled after creation (`set_level` rebuilds from unscaled geometry). Build it at its final size.
+- To build an instant "starts with" state from an animation: `anim.begin(); anim.finish()`.
+
 Known quirk: a character's `.width` / `.height` are unreliable (empty submobjects count in
 Manim's bounding box). Use `get_left()` / `get_right()` / `get_top()` / `get_bottom()`.
 

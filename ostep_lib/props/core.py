@@ -478,8 +478,21 @@ class CruxCard(VGroup):
         return VGroup(fr, ghost(), q, ghost())
 
     def dock(self, point=(0, 3.2, 0), font_size=24, run_time=1.0):
-        target = self.strip(point, font_size)
-        return Transform(self, target, run_time=run_time)
+        """Frame and question morph into the strip; header and subtitle fade out and are
+        dropped from the card afterwards (no leftover ghost points)."""
+        fr, _, q, _ = self.strip(point, font_size)
+        card = self
+        fades = [FadeOut(m) for m in (self.header, self.subtitle) if len(m.get_family()) > 1 or m.has_points()]
+
+        class _Dock(AnimationGroup):
+            def clean_up_from_scene(self, scene):
+                super().clean_up_from_scene(scene)
+                for m in (card.header, card.subtitle):
+                    card.remove(m)
+                    scene.remove(m)
+                card.header, card.subtitle = VGroup(), VGroup()
+
+        return _Dock(Transform(self.frame, fr), Transform(self.question, q), *fades, run_time=run_time)
 
 
 class TipCard(VGroup):
