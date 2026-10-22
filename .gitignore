@@ -1,0 +1,19 @@
+# Rendered videos and Manim caches
+*.mp4
+*.mov
+*.webm
+*.gif
+media/
+.cache/
+Ostep/Renders/
+
+# The book itself (free online, copyrighted): re-download with
+#   python tools/download_ostep.py Ostep/Chapters
+Ostep/Chapters/*.pdf
+
+# Python
+__pycache__/
+*.pyc
+
+# Local Claude Code settings
+.claude/settings.local.json

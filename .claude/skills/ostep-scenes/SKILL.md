@@ -1,0 +1,86 @@
+---
+name: ostep-scenes
+description: Turn an OSTEP episode script (Ostep/Scripts/*.md) into a detailed scene breakdown that specifies exactly what is on screen, how it animates and how visuals sync with narration, ready to be implemented in ManimCE. Use when the user asks to define/plan/break down the scenes, storyboard, or visuals for a chapter's script, e.g. "make the scenes for chapter 4" or "/ostep-scenes 04-cpu-intro".
+---
+
+# OSTEP script → scene breakdown
+
+You turn an episode script into a **storyboard in words**. It has to be precise enough that someone
+(or a later coding step) can implement every scene in ManimCE with `ostep_lib` without
+inventing anything. Every concept is **explained visually**: the picture should teach even with
+the sound off, and the narration should feel like it's describing what the viewer is watching.
+
+## Inputs
+
+- The argument identifies the episode (number, slug, or script path). Resolve it in
+  `Ostep/Scripts/`. If no script exists, stop and suggest running `ostep-script` first.
+- Read **all** of these first:
+  1. `Ostep/README.md`, the series bible: palette, layout, characters, recurring props. Follow it
+     strictly. Reuse props before inventing new ones.
+  2. `ostep_lib/README.md`: available characters, expressions and API. Only use expressions
+     that exist. If a needed prop or expression doesn't exist yet, specify it in
+     "New assets needed" rather than silently assuming it.
+  3. The script, fully.
+  4. The chapter PDF when you need details: exact figures, code listings, numbers. The book's
+     figures are often the best starting point for a diagram; note which figure you adapt.
+  5. The previous episode's scene file, if any, for visual continuity.
+
+## Process
+
+1. **Map beats to scenes.** A scene is one continuous visual setup, the unit that becomes one
+   Manim `Scene` class or a section of one. Usually 1 beat → 1–3 scenes. Every beat must be covered.
+2. **Design the visual explanation first, then the choreography.** For each concept ask: what
+   picture makes this obvious? Prefer *showing the mechanism move*: processes walking onto the
+   CPU, a trap crossing the user/kernel line, addresses being translated as arrows. Avoid
+   *labels describing it*. Use transformations to show that one representation becomes
+   another. Keep consistent spatial meaning: the same thing stays in the same place and color.
+3. **Choreograph against narration.** Split the narration into chunks and attach each animation
+   to the exact words it lands on. Leave pauses after reveals.
+4. **Track screen state.** Every scene starts from the previous scene's "state at end". Nothing
+   appears or disappears without an animation. Watch clutter: at most ~3 focal elements at once.
+5. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
+   bible, characters only in corners/edges and only reacting to beats, no text walls
+   (≤ ~25 words on screen), every term's first appearance uses the Term highlight.
+
+## Output
+
+Write `Ostep/Scenes/<NN-slug>.md` (same name as the script). If it exists, ask before
+overwriting. Structure:
+
+```markdown
+# <NN> — <Chapter title> · Scene breakdown
+> Script: Ostep/Scripts/<NN-slug>.md · Scenes: <count> · Est. duration: <mm:ss>
+
+## Visual overview
+- Core visual metaphor(s) of the episode and how they evolve.
+- Props used (from the bible) and the persistent color/label assignment (e.g. Process A = PROCESS_COLORS[0]).
+
+## Scenes
+
+### S01 — <title>   (beats: B01) · ~0:25
+**Purpose:** what the viewer should understand by the end of this scene.
+**Starts with:** <screen state, or "empty">
+**Layout:** where things are (center diagram, characters in corners, top bar…), with rough
+positions (e.g. "CPU at center-left (-3, 0)", "ready queue along the bottom, y = -2.5").
+
+| # | Narration (exact words the action lands on) | On screen / animation |
+|---|---|---|
+| 1 | "Imagine you're running…" | `FadeIn` laptop outline at center; Student enters bottom-left (curious). |
+| 2 | "…a browser, a game, music…" | Three app icons pop out of the laptop one by one (`GrowFromCenter`, 0.3 s apart). |
+| 3 | (pause 1 s) | — |
+
+**Characters:** who is on screen, expression changes and when.
+**Ends with:** exact screen state handed to the next scene.
+**Implementation notes:** Manim hints: mobjects, ordering, tricky animations, which book figure is adapted.
+
+(… more scenes)
+
+## New assets needed
+- Props / expressions / helpers that don't exist in `ostep_lib` yet, with a short spec.
+
+## Open questions
+- Visual choices you want the user to confirm.
+```
+
+When you finish, tell the user the file path, the scene count with one line per scene,
+the new assets needed, and the open questions.
