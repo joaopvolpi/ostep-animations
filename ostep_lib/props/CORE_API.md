@@ -56,14 +56,17 @@ Preview: `python -m manim -ql -s ostep_lib/props/preview.py PropSheet`, plus `Pr
   `show(term, hold=1.2, dock=True, size=None, at=None, accent=None, scrim=True)` returns one Succession: veil the
   scene (`scrim()`), write big + underline at the center above it, hold, then lift the veil while the term docks
   top-right (right-aligned, replacing the previous docked term) or fades (`dock=False`). `scrim=False` is only for an empty screen.
+  `show` is the **unveil**, for 3–4 key terms per episode. `note(term, accent=None)` is the light variant for every other term:
+  it fades the term straight into the dock, replacing the previous docked term.
 - Screen zones: `CONTENT_TOP=2.55`, `CHROME_ROW_Y=3.6`, `CRUX_STRIP_Y=3.0`. `scrim(opacity=0.88, z_index=40)`
   returns a full-frame BG veil (`is_scrim=True`; the overlap check ignores text below it).
   Lower level: `write(term)`, `dock_anim()`, `fade_anim()`. Also `clear()`, `set_accent(c)`, attributes `big`, `docked`.
 - `SectionBadge(text, accent=VIRT, font_size=22, corner=(-6.6, 3.6))`: left-aligned at `corner`.
   Parts: `dot, text`. `recolor(accent)` returns an animation.
 - `IllusionSplit(left_title="What each program sees", right_title="What really happens",
-  orientation="vertical"|"horizontal", at=0, title_size=28, color=DIM, top_y=3.5, bottom_y=-3.6,
-  left_x=-6.6, right_x=6.6)`. Vertical: a dashed divider at x=`at`, with titles centered over each half at y=3.0.
+  orientation="vertical"|"horizontal", at=0, title_size=28, color=DIM, top_y=CONTENT_TOP, bottom_y=-3.6,
+  left_x=-6.6, right_x=6.6, title_y=None)`. Vertical: a dashed divider at x=`at`, with titles centered over each half
+  at `title_y` (default `top_y - 0.3` = 2.25, below the top band).
   Horizontal: the divider is at y=`at`; `left_title` is the TOP title (top-left) and `right_title` the BOTTOM title (just under the divider, left).
   Parts: `divider, left_title, right_title`. `draw()`, `left_center()`, `right_center()`, and `merge()` (fades the divider
   and titles; the caller moves the contents).

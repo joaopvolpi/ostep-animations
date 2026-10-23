@@ -54,7 +54,8 @@ and `ostep_lib/props/p04_preview.py` with `P04PropSheet` / `P04IconSheet` (04).
 - `Memory(cells|regions, contents, addresses, title)`: `.cell()`, `.region()`, `.set_content()`, `.fill_cell()`, `.clear_cell()`.
 - `Disk(width, height, label)`: `.top_point()`, `.spin()`.
 - `CruxCard(question, subtitle, accent)`: `.write()`, `.dock()`. `TipCard` / `AsideCard(body, title, icon)`: `.slide_in()`, `.slide_out()`.
-- `TermHighlight(accent)` (manager): `.show(term, hold, dock, size, at, scrim=True)`, `.clear()`. By default
+- `TermHighlight(accent)` (manager): `.note(term)` for secondary terms (slides into the top-right dock, no veil).
+  `.show(term, hold, dock, size, at, scrim=True)` is the unveil, for the 3–4 key terms of an episode only. `.clear()`. By default
   it veils the scene, writes the term at center (0, 0.3), and docks it top-right (≤ 2.6 wide) as the veil lifts.
   Don't pass `at=` near the top band. `scrim=False` is only for an empty screen. `SectionBadge(text, accent)`: `.recolor()`.
 - Screen zones: `CONTENT_TOP` (2.55; scene content stays below), `CHROME_ROW_Y` (3.6), `CRUX_STRIP_Y` (3.0;

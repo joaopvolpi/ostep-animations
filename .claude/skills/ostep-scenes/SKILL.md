@@ -42,12 +42,18 @@ the sound off, and the narration should feel like it's describing what the viewe
    row where the next text appears, so old text never lingers under new text.
 5. **Respect the screen zones** (bible §5, "Screen zones"). The top band (y > 2.55) belongs to the
    chrome: section badge, docked crux strip, docked term. Never place scene titles, captions or
-   labels there. Introduce a new term with the default Term highlight: it veils the scene, writes
-   the term at center and docks it. Write it as "Term highlight: *X*". Don't give it a position
-   unless the screen is empty. Never write a term "at the top" over existing content.
+   labels there. Never write a term "at the top" over existing content.
+   **Terms come in two strengths.** Use the unveil (scene veils, term written at center, then docks)
+   for the episode's **3–4 key terms** only: the ones the crux hinges on. Write it as
+   "Term unveil: *X*", and never use two in neighbouring rows. Every other new term gets
+   "Term note: *X*": it slides into the top-right dock, with no veil. Minor vocabulary needs neither;
+   it is spoken and shows up in the captions. In the Visual overview, list the key terms you chose.
+   A term is unveiled **once in the whole series**, in the episode that teaches it. Dialogue and
+   recap episodes, and callbacks in later episodes, use notes.
 6. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
    bible, characters only in corners/edges and only reacting to beats, no text walls
-   (≤ ~25 words on screen), every term's first appearance uses the Term highlight.
+   (≤ ~25 words on screen), every term's first appearance uses a Term unveil (3–4 key terms) or a
+   Term note (the rest).
 
 ## Output
 

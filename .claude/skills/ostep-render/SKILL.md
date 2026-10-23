@@ -115,8 +115,10 @@ Images are expensive, so frame inspection is the exception, not the rule.
    errors. **Don't Read frames by default.**
 2. **Catch layout problems in code.** Use `next_to`/`arrange` with buffers, and follow the bible's
    **screen zones**: scene content stays below `CONTENT_TOP`, and the top band is for the badge,
-   crux strip and docked term only. Introduce terms with the default `TermHighlight.show(term)`
-   (scrim + center). Don't pass `at=` into an occupied area, and don't set `scrim=False` over a busy
+   crux strip and docked term only. Use "Term unveil" → `terms.show(term)` (scrim + center) for
+   at most 3–4 key terms per episode, and "Term note" → `terms.note(term)` (slides into the dock) for
+   the rest. If an older scene file asks for more unveils, keep the 3–4 most central and demote
+   the others to notes. Log this as a deviation. Don't pass `at=` into an occupied area, and don't set `scrim=False` over a busy
    screen. Fade a label out before new text lands where it was.
    `tools/render.py` runs every scene with `OSTEP_CHECK=1` and ends with
    **"layout check: N warning(s)"**. This check is free (text only), so use it instead of frames:

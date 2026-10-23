@@ -123,7 +123,7 @@ Palette constants live in `ostep_lib/style.py`. Never hard-code colors in scenes
   | Content | y ≤ 2.55 (`CONTENT_TOP`), x ∈ [−6.6, 6.6] | Everything else: diagrams, labels, scene titles, cards. |
   | Characters | bottom corners | Professor / Student / Computer. |
 
-  **Introducing a term** never shares space with the scene. `TermHighlight.show()` veils the
+  **Introducing a key term** never shares space with the scene. `TermHighlight.show()` veils the
   whole scene with a scrim, writes the term large at the center, then lifts the veil while the
   term docks to the chrome row. Scene text never goes in the top band. Fade old labels out
   before new text lands where they were.
@@ -137,7 +137,7 @@ as described. When a new recurring prop is invented, add it here.
 |---|---|---|
 | **Crux card** | Rounded rectangle, accent-colored frame, small "THE CRUX" header, the question in bold. | The book's crux boxes; the central question of the episode or segment. |
 | **Aside / Tip card** | Smaller card, `DIM` frame, "ASIDE" or "TIP" header; slides in from the side. | Book asides and tips; side notes that pause the main story. |
-| **Term highlight** | The scene dims under a veil; the new term is written large at the center, underlined in accent color, then docks top-right as the veil lifts. | First appearance of every key term (*process*, *context switch*…). |
+| **Term highlight** | Two strengths. **Unveil** (`terms.show`): the scene dims under a veil; the term is written large at the center, underlined in accent color, then docks top-right as the veil lifts. **Note** (`terms.note`): the term just slides into the top-right dock. | Unveil: only the episode's **3–4 key terms** (the ones the crux hinges on, e.g. *process*, *context switch*), never two in a row, and each term only once in the series (in the episode that teaches it). Note: every other new term. Minor vocabulary can simply be spoken and appear in the captions. |
 | **CPU** | Yellow square chip with pins; the process currently running sits *on* it. | Anything that executes. Multiple chips for multi-CPU. |
 | **Memory** | Tall blue column of stacked cells with addresses on the left (0 at top). | Physical memory, address spaces (code / heap / free / stack regions). |
 | **Disk** | Green cylinder (platter seen at an angle). | Persistent storage, I/O. |

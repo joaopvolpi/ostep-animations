@@ -578,7 +578,8 @@ class TermHighlight:
 
     ``terms = TermHighlight(accent=VIRT)`` then, in a scene::
 
-        self.play(terms.show("process"))            # veil, write big at center, dock top-right
+        self.play(terms.show("process"))            # KEY term: veil, write big at center, dock
+        self.play(terms.note("PCB"))                # secondary term: just slides into the dock
         self.play(terms.show("easy to use", dock=False))   # write big, then fade
         self.play(terms.show("trap", size=40))      # "(smaller)" variants
 
@@ -642,6 +643,18 @@ class TermHighlight:
         b, self.big = self.big, None
         return FadeOut(b, shift=UP * 0.2, run_time=0.5)
 
+    def note(self, term, accent=None, run_time=0.8):
+        """Secondary term: slides straight into the docked slot (no veil, no big write).
+        Use for every term except the episode's few key terms (those get ``show``)."""
+        self._term, self._term_accent = term, accent or self.accent
+        target = self._make(term, self.dock_size, self._term_accent, self.dock_at,
+                            right_aligned=True, max_width=self.dock_max_width)
+        anims = [FadeIn(target, shift=DOWN * 0.2)]
+        if self.docked is not None:
+            anims.append(FadeOut(self.docked, shift=UP * 0.3))
+        self.docked = target
+        return AnimationGroup(*anims, run_time=run_time)
+
     def show(self, term, hold=1.2, dock=True, size=None, at=None, accent=None, scrim=True):
         w = self.write(term, size=size, at=at, accent=accent)
         end = self.dock_anim() if dock else self.fade_anim()
@@ -693,8 +706,8 @@ class IllusionSplit(VGroup):
     ``IllusionSplit(left_title="What each program sees", right_title="What really happens",
     orientation="vertical", at=0, title_size=28, color=DIM)``.
 
-    * vertical: dashed divider at ``x = at`` (y 3.4 .. -3.6), titles centered over
-      each half at y = 3.0.
+    * vertical: dashed divider at ``x = at`` (y ``top_y`` = CONTENT_TOP .. -3.6), titles
+      centered over each half at ``title_y`` (default ``top_y - 0.3`` = 2.25, below the top band).
     * horizontal: divider at ``y = at`` (x -6.6 .. 6.6); ``left_title`` is the TOP
       half's title (left-aligned just under the top margin... placed at the
       top-left), ``right_title`` the BOTTOM half's (left-aligned just below the divider).
@@ -707,7 +720,7 @@ class IllusionSplit(VGroup):
 
     def __init__(self, left_title="What each program sees", right_title="What really happens",
                  orientation="vertical", at=0.0, title_size=28, color=DIM,
-                 top_y=3.5, bottom_y=-3.6, left_x=-6.6, right_x=6.6, **kwargs):
+                 top_y=CONTENT_TOP, bottom_y=-3.6, left_x=-6.6, right_x=6.6, title_y=None, **kwargs):
         super().__init__(**kwargs)
         self.orientation = orientation
         self.at = at
@@ -719,11 +732,12 @@ class IllusionSplit(VGroup):
         self.divider.set_stroke(color, 3)
         self.left_title = Text(left_title, font=FONT, font_size=title_size, color=TEXT) if left_title else VGroup()
         self.right_title = Text(right_title, font=FONT, font_size=title_size, color=TEXT) if right_title else VGroup()
+        title_y = top_y - 0.3 if title_y is None else title_y
         if orientation == "vertical":
             if left_title:
-                self.left_title.move_to([(left_x + at) / 2, 3.0, 0])
+                self.left_title.move_to([(left_x + at) / 2, title_y, 0])
             if right_title:
-                self.right_title.move_to([(right_x + at) / 2, 3.0, 0])
+                self.right_title.move_to([(right_x + at) / 2, title_y, 0])
         else:
             if left_title:
                 self.left_title.move_to([left_x, top_y - 0.25, 0], aligned_edge=LEFT)
