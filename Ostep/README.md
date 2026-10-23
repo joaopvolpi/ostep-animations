@@ -113,7 +113,20 @@ Palette constants live in `ostep_lib/style.py`. Never hard-code colors in scenes
   `FadeOut` to clean up. Leave a pause (~1 s) after every key reveal. Never cut a diagram away
   abruptly. Transform it into the next one when possible.
 - **Layout:** 16:9, keep a ~0.5 unit safe margin. Center = diagram; bottom corners = characters;
-  top = section badge or term being defined. Avoid more than ~25 words of on-screen text at once.
+  top band = chrome only (see below). Avoid more than ~25 words of on-screen text at once.
+- **Screen zones** (constants in `ostep_lib.props.core`; frame is x ∈ [−7.1, 7.1], y ∈ [−4, 4]):
+
+  | Zone | Where | Holds |
+  |---|---|---|
+  | Chrome row | y ≈ 3.6 (`CHROME_ROW_Y`) | Section badge (left, from x = −6.6); docked term (right-aligned at x = 6.6, ≤ 2.6 wide). |
+  | Crux strip | centered at y = 3.0 (`CRUX_STRIP_Y`), ≤ 8.2 wide | The docked crux question. |
+  | Content | y ≤ 2.55 (`CONTENT_TOP`), x ∈ [−6.6, 6.6] | Everything else: diagrams, labels, scene titles, cards. |
+  | Characters | bottom corners | Professor / Student / Computer. |
+
+  **Introducing a term** never shares space with the scene. `TermHighlight.show()` veils the
+  whole scene with a scrim, writes the term large at the center, then lifts the veil while the
+  term docks to the chrome row. Scene text never goes in the top band. Fade old labels out
+  before new text lands where they were.
 
 ## 6. Recurring visual vocabulary ("props")
 
@@ -124,7 +137,7 @@ as described. When a new recurring prop is invented, add it here.
 |---|---|---|
 | **Crux card** | Rounded rectangle, accent-colored frame, small "THE CRUX" header, the question in bold. | The book's crux boxes; the central question of the episode or segment. |
 | **Aside / Tip card** | Smaller card, `DIM` frame, "ASIDE" or "TIP" header; slides in from the side. | Book asides and tips; side notes that pause the main story. |
-| **Term highlight** | New term written large, underlined in accent color, then shrinks to the top bar. | First appearance of every key term (*process*, *context switch*…). |
+| **Term highlight** | The scene dims under a veil; the new term is written large at the center, underlined in accent color, then docks top-right as the veil lifts. | First appearance of every key term (*process*, *context switch*…). |
 | **CPU** | Yellow square chip with pins; the process currently running sits *on* it. | Anything that executes. Multiple chips for multi-CPU. |
 | **Memory** | Tall blue column of stacked cells with addresses on the left (0 at top). | Physical memory, address spaces (code / heap / free / stack regions). |
 | **Disk** | Green cylinder (platter seen at an angle). | Persistent storage, I/O. |

@@ -24,8 +24,16 @@ CARD_FILL = "#242424"    # card background (slightly lighter than BG)
 PEACH_COLOR = "#FFB07A"
 PEACH_CREASE = "#F88017"
 
+# Screen zones (see the bible, "Screen zones").  The top band belongs to the chrome:
+# section badge (top-left) and docked term (top-right) on row y=3.6, the docked crux
+# strip centered at y=3.0.  Scene content (diagrams, labels, titles) stays below CONTENT_TOP.
+CONTENT_TOP = 2.55
+CHROME_ROW_Y = 3.6
+CRUX_STRIP_Y = 3.0
+SCRIM_Z = 40
+
 __all__ = [
-    "INK", "CARD_FILL", "PEACH_COLOR",
+    "INK", "CARD_FILL", "PEACH_COLOR", "CONTENT_TOP", "CHROME_ROW_Y", "CRUX_STRIP_Y", "scrim",
     "outline_of", "label_text", "mono_text", "wrap_text", "centered_text", "make_translucent",
     "base_point", "place_on", "hop_to", "HopTo",
     "CPU", "Memory", "Disk", "DiskSpin",
@@ -465,7 +473,7 @@ class CruxCard(VGroup):
             anims.append(FadeIn(self.subtitle, shift=UP * 0.1))
         return Succession(AnimationGroup(*anims[:2]), *anims[2:], run_time=run_time)
 
-    def strip(self, point=(0, 3.2, 0), font_size=24, max_width=11.5):
+    def strip(self, point=(0, 3.0, 0), font_size=24, max_width=7.6):
         q = Text(self.question_str, font=FONT, font_size=font_size, color=TEXT, weight=BOLD)
         if q.width > max_width:
             q.scale_to_fit_width(max_width)
@@ -477,7 +485,7 @@ class CruxCard(VGroup):
             return Dot(fr.get_center(), radius=0.001).set_opacity(0)
         return VGroup(fr, ghost(), q, ghost())
 
-    def dock(self, point=(0, 3.2, 0), font_size=24, run_time=1.0):
+    def dock(self, point=(0, 3.0, 0), font_size=24, run_time=1.0):
         """Frame and question morph into the strip; header and subtitle fade out and are
         dropped from the card afterwards (no leftover ghost points)."""
         fr, _, q, _ = self.strip(point, font_size)
@@ -553,28 +561,46 @@ class AsideCard(TipCard):
 # ---------------------------------------------------------------------------
 # Term highlight
 # ---------------------------------------------------------------------------
+def scrim(opacity=0.88, z_index=SCRIM_Z):
+    """Full-frame BG veil that dims everything below ``z_index`` (marked ``is_scrim``,
+    so the overlap check ignores text underneath it)."""
+    s = Rectangle(width=config.frame_width + 1, height=config.frame_height + 1, stroke_width=0)
+    s.set_fill(BG, opacity).set_z_index(z_index)
+    s.is_scrim = True
+    return s
+
+
+_make_scrim = scrim   # TermHighlight.show has a ``scrim`` flag that shadows the name
+
+
 class TermHighlight:
     """Manager for the bible's term highlight (not a mobject itself).
 
     ``terms = TermHighlight(accent=VIRT)`` then, in a scene::
 
-        self.play(terms.show("process"))            # write big, hold, dock top-right
+        self.play(terms.show("process"))            # veil, write big at center, dock top-right
         self.play(terms.show("easy to use", dock=False))   # write big, then fade
         self.play(terms.show("trap", size=40))      # "(smaller)" variants
 
-    ``show(term, hold=1.2, dock=True, size=54, at=(0, 2.9))`` returns one Succession
-    animation.  The docked term replaces the previous docked one at top-right
-    ``(6.6, 3.6)`` (right-aligned, font 26).  Also: ``write(term)``, ``dock_anim()``,
-    ``fade_anim()`` for manual control, ``clear()`` (fades the docked term),
-    ``set_accent(color)``, attributes ``big`` and ``docked``.
+    ``show(term, hold=1.2, dock=True, size=54, at=(0, 0.3), scrim=True)`` returns one
+    Succession.  By default the term gets its own moment: a scrim veils the whole scene,
+    the term is written big at screen center above it, then the scrim lifts while the term
+    docks.  So it can never collide with whatever the scene has on screen.  Pass
+    ``scrim=False`` only when the area at ``at`` is known to be empty.
+    The docked term replaces the previous docked one at top-right ``(6.6, 3.6)``
+    (right-aligned, font 26, at most ``dock_max_width`` wide so it never reaches the crux strip).
+    Also: ``write(term)``, ``dock_anim()``, ``fade_anim()`` for manual control, ``clear()``
+    (fades the docked term), ``set_accent(color)``, attributes ``big`` and ``docked``.
     """
 
-    def __init__(self, accent=VIRT, at=(0, 2.9, 0), size=54, dock_at=(6.6, 3.6, 0), dock_size=26):
+    def __init__(self, accent=VIRT, at=(0, 0.3, 0), size=54, dock_at=(6.6, CHROME_ROW_Y, 0),
+                 dock_size=26, dock_max_width=2.6):
         self.accent = accent
         self.at = np.array(at, dtype=float)
         self.size = size
         self.dock_at = np.array(dock_at, dtype=float)
         self.dock_size = dock_size
+        self.dock_max_width = dock_max_width
         self.big = None
         self.docked = None
 
@@ -582,10 +608,10 @@ class TermHighlight:
         self.accent = color
         return self
 
-    def _make(self, term, size, accent, at=None, right_aligned=False):
+    def _make(self, term, size, accent, at=None, right_aligned=False, max_width=12):
         t = Text(term, font=FONT, font_size=size, color=TEXT)
-        if t.width > 12:
-            t.scale_to_fit_width(12)
+        if t.width > max_width:
+            t.scale_to_fit_width(max_width)
         ul = Line(LEFT, RIGHT).set_width(t.width + size * 0.006)
         ul.next_to(t, DOWN, buff=size * 0.0025 + 0.06).set_stroke(accent, max(2, size / 9))
         g = VGroup(t, ul)
@@ -598,14 +624,14 @@ class TermHighlight:
     def write(self, term, size=None, at=None, accent=None):
         size = size or self.size
         at = self.at if at is None else np.array(at, dtype=float)
-        self.big = self._make(term, size, accent or self.accent, at)
+        self.big = self._make(term, size, accent or self.accent, at).set_z_index(SCRIM_Z + 1)
         self._term = term
         self._term_accent = accent or self.accent
         return AnimationGroup(Write(self.big[0]), Create(self.big[1]), run_time=0.8)
 
     def dock_anim(self):
         target = self._make(self._term, self.dock_size, self._term_accent, self.dock_at,
-                            right_aligned=True)
+                            right_aligned=True, max_width=self.dock_max_width)
         anims = [Transform(self.big, target)]
         if self.docked is not None:
             anims.append(FadeOut(self.docked, shift=UP * 0.3))
@@ -616,10 +642,15 @@ class TermHighlight:
         b, self.big = self.big, None
         return FadeOut(b, shift=UP * 0.2, run_time=0.5)
 
-    def show(self, term, hold=1.2, dock=True, size=None, at=None, accent=None):
+    def show(self, term, hold=1.2, dock=True, size=None, at=None, accent=None, scrim=True):
         w = self.write(term, size=size, at=at, accent=accent)
         end = self.dock_anim() if dock else self.fade_anim()
-        return Succession(w, Wait(hold), end)
+        if not scrim:
+            return Succession(w, Wait(hold), end)
+        veil = _make_scrim()
+        return Succession(AnimationGroup(FadeIn(veil, run_time=0.4), w, lag_ratio=0.4),
+                          Wait(hold),
+                          AnimationGroup(end, FadeOut(veil, run_time=0.6)))
 
     def clear(self, run_time=0.5):
         d, self.docked = self.docked, None

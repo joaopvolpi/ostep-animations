@@ -46,15 +46,18 @@ Preview: `python -m manim -ql -s ostep_lib/props/preview.py PropSheet`, plus `Pr
 
 ## Cards and overlays
 - `CruxCard(question, subtitle=None, accent=VIRT, width=9, header="THE CRUX", question_size=34, subtitle_size=24)`.
-  Parts: `frame, header, question, subtitle`. `write(run_time=1.6)`. `dock(point=(0, 3.2), font_size=24)`
+  Parts: `frame, header, question, subtitle`. `write(run_time=1.6)`. `dock(point=(0, 3.0), font_size=24)`
   transforms the card into a one-line strip with the question (afterwards `self` *is* the strip).
   `strip(point, font_size)` builds the strip without animating.
 - `TipCard(body="", title="TIP", width=5, height=None, accent=DIM, font_size=26, icon=None)` and
   `AsideCard(...)` (header "ASIDE"). `body` is a str (wrapped, centered) or a Mobject. Parts: `frame, rule,
   header, icon, body`. `content_center()`, `slide_in(direction=RIGHT)`, `slide_out(direction=RIGHT)`.
-- `TermHighlight(accent=VIRT, at=(0, 2.9), size=54, dock_at=(6.6, 3.6), dock_size=26)` is a manager, not a mobject.
-  `show(term, hold=1.2, dock=True, size=None, at=None, accent=None)` returns one Succession: write big +
-  underline, hold, then dock top-right (right-aligned, replacing the previous docked term) or fade (`dock=False`).
+- `TermHighlight(accent=VIRT, at=(0, 0.3), size=54, dock_at=(6.6, 3.6), dock_size=26, dock_max_width=2.6)` is a manager, not a mobject.
+  `show(term, hold=1.2, dock=True, size=None, at=None, accent=None, scrim=True)` returns one Succession: veil the
+  scene (`scrim()`), write big + underline at the center above it, hold, then lift the veil while the term docks
+  top-right (right-aligned, replacing the previous docked term) or fades (`dock=False`). `scrim=False` is only for an empty screen.
+- Screen zones: `CONTENT_TOP=2.55`, `CHROME_ROW_Y=3.6`, `CRUX_STRIP_Y=3.0`. `scrim(opacity=0.88, z_index=40)`
+  returns a full-frame BG veil (`is_scrim=True`; the overlap check ignores text below it).
   Lower level: `write(term)`, `dock_anim()`, `fade_anim()`. Also `clear()`, `set_accent(c)`, attributes `big`, `docked`.
 - `SectionBadge(text, accent=VIRT, font_size=22, corner=(-6.6, 3.6))`: left-aligned at `corner`.
   Parts: `dot, text`. `recolor(accent)` returns an animation.

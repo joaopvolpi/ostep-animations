@@ -42,6 +42,7 @@ TEXT_COLOR = "ECECEC"         # style.TEXT
 BG_COLOR = "1C1C1C"           # style.BG
 FONT_NAME = "CMU Serif"
 FONT_FILE = "cmunrm.otf"
+LAYOUT_WARNINGS: list[str] = []   # filled by render_scene, summarized at the end
 
 
 # --------------------------------------------------------------------------- helpers
@@ -245,7 +246,17 @@ def caption_video(src: Path, srt: Path, dst: Path, single_srt_out: Path | None =
 # --------------------------------------------------------------------------- render + assemble
 def render_scene(ep: str, f: Path, cls: str, q: str, out_scenes: Path):
     media = CACHE / "media" / ep
-    run([sys.executable, "-m", "manim", f"-q{q}", "--media_dir", str(media), str(f), cls])
+    # layout checks on: only their [bounds]/[overlap] lines are shown (Manim's log is noise)
+    r = subprocess.run([sys.executable, "-m", "manim", f"-q{q}", "--media_dir", str(media), str(f), cls],
+                       cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                       env={**os.environ, "OSTEP_CHECK": "1", "PYTHONIOENCODING": "utf-8"})
+    if r.returncode:
+        print(r.stdout[-3000:], r.stderr[-6000:], sep="\n")
+        sys.exit(f"manim failed on {f.name} ({r.returncode})")
+    warnings = [l for l in r.stdout.splitlines() if l.startswith(("[bounds]", "[overlap]"))]
+    for l in warnings:
+        print(f"  {l}")
+    LAYOUT_WARNINGS.extend(f"{f.stem}: {l}" for l in warnings)
     vid_dir = media / "videos" / f.stem / QUALITY[q]
     mp4, srt = vid_dir / f"{cls}.mp4", vid_dir / f"{cls}.srt"
     out_scenes.mkdir(parents=True, exist_ok=True)
@@ -294,6 +305,10 @@ def main():
             if not src.exists():
                 sys.exit(f"missing {src}; render it first")
             caption_video(src, out_scenes / f"{f.stem}.srt", out_cap / f"{f.stem}.mp4")
+
+    if not a.no_render:
+        print(f"layout check: {len(LAYOUT_WARNINGS)} warning(s)"
+              + "".join(f"\n  {w}" for w in LAYOUT_WARNINGS))
 
     full = a.scenes is None or a.assemble
     if full and not a.no_assemble:

@@ -38,7 +38,10 @@ imported) and `MONO_FONT = "CMU Typewriter Text"` (code, terminals, addresses).
   and plays the animations stretched or padded to the speaking time (`speech_time(text)`,
   about 2.5 words/s).
 - `self.beat(seconds=1.0)` is a marked pause.
-- Set `OSTEP_CHECK=1` to print a `[bounds]` warning whenever a mobject crosses the frame edge.
+- Set `OSTEP_CHECK=1` to print a `[bounds]` warning whenever a mobject crosses the frame edge, and an
+  `[overlap]` warning whenever two visible texts overlap. The overlap check also samples ~4×/s during
+  animations, must hold for two samples in a row, and ignores text under a scrim. `tools/render.py`
+  always sets it, prints only these lines, and ends with a "layout check: N warning(s)" summary.
 
 ## Props (`ostep_lib.props`)
 `props/__init__.py` auto-imports `core.py` plus every `ov_*.py` and `p<NN>_*.py` module and
@@ -51,7 +54,12 @@ and `ostep_lib/props/p04_preview.py` with `P04PropSheet` / `P04IconSheet` (04).
 - `Memory(cells|regions, contents, addresses, title)`: `.cell()`, `.region()`, `.set_content()`, `.fill_cell()`, `.clear_cell()`.
 - `Disk(width, height, label)`: `.top_point()`, `.spin()`.
 - `CruxCard(question, subtitle, accent)`: `.write()`, `.dock()`. `TipCard` / `AsideCard(body, title, icon)`: `.slide_in()`, `.slide_out()`.
-- `TermHighlight(accent)` (manager): `.show(term, hold, dock, size, at)`, `.clear()`. `SectionBadge(text, accent)`: `.recolor()`.
+- `TermHighlight(accent)` (manager): `.show(term, hold, dock, size, at, scrim=True)`, `.clear()`. By default
+  it veils the scene, writes the term at center (0, 0.3), and docks it top-right (≤ 2.6 wide) as the veil lifts.
+  Don't pass `at=` near the top band. `scrim=False` is only for an empty screen. `SectionBadge(text, accent)`: `.recolor()`.
+- Screen zones: `CONTENT_TOP` (2.55; scene content stays below), `CHROME_ROW_Y` (3.6), `CRUX_STRIP_Y` (3.0;
+  the default `dock()` point, strip ≤ 8.2 wide). `scrim(opacity=0.88)` is a full-frame BG veil at z 40
+  (put anything that must stay on top at z > 40).
 - `IllusionSplit(left, right, orientation="vertical"|"horizontal", at)`: `.draw()`, `.merge()`.
 - `Peach(radius)`: `.virtual_copy()`.
 - Icons: `FileIcon`, `ClockIcon` (`.spin()`), `Spotlight` (`.move_beam_to()`), `GearPair` (`.spin()`), `PauseGlyph`, `PlayGlyph`, `Laptop`.

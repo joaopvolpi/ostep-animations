@@ -16,11 +16,12 @@ import os
 from contextlib import contextmanager
 
 import numpy as np
-from manim import AnimationGroup, Scene, VMobject, config
+from manim import AnimationGroup, MarkupText, Scene, SingleStringMathTex, Text, VMobject, config
 
 from .style import apply_style
 
 WORDS_PER_SECOND = 2.5
+TEXT_TYPES = (Text, MarkupText, SingleStringMathTex)
 
 
 def speech_time(text, min_time=None):
@@ -79,6 +80,65 @@ class NarratedScene(Scene):
         super().play(*args, **kwargs)
         if os.environ.get("OSTEP_CHECK"):
             self._check_bounds()
+            self._check_overlaps()
+
+    def update_to_time(self, t):
+        super().update_to_time(t)
+        # sample text overlaps during animations too (~4x per second): a title written over
+        # a label and then moved away never shows up in the end-of-play check
+        if os.environ.get("OSTEP_CHECK"):
+            n = getattr(self, "_frame_n", 0) + 1
+            self._frame_n = n
+            if n % max(1, round(config.frame_rate / 4)) == 0:
+                self._check_overlaps()
+
+    def _text_boxes(self):
+        """(label, lo, hi) of every visible text mobject, skipping text veiled by a scrim."""
+        veil_z = max((m.z_index for m in self.mobjects if getattr(m, "is_scrim", False)), default=None)
+        boxes = []
+
+        def walk(m):
+            if isinstance(m, TEXT_TYPES):
+                if veil_z is not None and m.z_index <= veil_z:
+                    return
+                # > 0.6: of two texts cross-fading in place, at most one is counted
+                fam = [sm for sm in m.family_members_with_points() if sm.get_fill_opacity() > 0.6]
+                if fam:
+                    pts = np.concatenate([sm.points for sm in fam])
+                    label = getattr(m, "text", None) or getattr(m, "tex_string", "?")
+                    boxes.append((str(label)[:40], pts.min(axis=0)[:2], pts.max(axis=0)[:2]))
+                return
+            for sm in m.submobjects:
+                walk(sm)
+
+        for m in self.mobjects:
+            walk(m)
+        return boxes
+
+    def _check_overlaps(self, frac=0.15):
+        """Debug (env OSTEP_CHECK=1): warn when two visible texts overlap by more than
+        ``frac`` of the smaller one's box (titles over labels, leftovers under new text…)
+        in two consecutive samples (so things merely sliding past each other are ignored)."""
+        seen = getattr(self, "_overlap_seen", set())
+        self._overlap_seen = seen
+        prev, now = getattr(self, "_overlap_prev", set()), set()
+        self._overlap_prev = now
+        boxes = self._text_boxes()
+        for i in range(len(boxes)):
+            for j in range(i + 1, len(boxes)):
+                (ta, alo, ahi), (tb, blo, bhi) = boxes[i], boxes[j]
+                w = min(ahi[0], bhi[0]) - max(alo[0], blo[0])
+                h = min(ahi[1], bhi[1]) - max(alo[1], blo[1])
+                if w <= 0 or h <= 0:
+                    continue
+                small = min(np.prod(ahi - alo), np.prod(bhi - blo))
+                if small > 0 and w * h > frac * small:
+                    key = (ta, tb)
+                    now.add(key)
+                    if key in prev and key not in seen:
+                        seen.add(key)
+                        print(f"[overlap] t={self.time:.1f}s {ta!r} @({(alo[0]+ahi[0])/2:.1f},{(alo[1]+ahi[1])/2:.1f})"
+                              f" x {tb!r} @({(blo[0]+bhi[0])/2:.1f},{(blo[1]+bhi[1])/2:.1f})")
 
     def _check_bounds(self, tol=0.05):
         """Debug (env OSTEP_CHECK=1): warn about visible mobjects that cross the frame

@@ -113,9 +113,17 @@ Images are expensive, so frame inspection is the exception, not the rule.
    renders at 480p15, writes to `Ostep/Renders/<NN-slug>/480p15/`, and captions by default. Add
    `--no-captions` while iterating, if you only need the clean video. Every scene must run without
    errors. **Don't Read frames by default.**
-2. **Catch layout problems in code.** Use `next_to`/`arrange` with buffers. Assert, or print, that
-   key mobjects stay inside the safe area (x ∈ [−6.6, 6.6], y ∈ [−3.6, 3.6]). Check bounding boxes
-   for overlaps between the main elements.
+2. **Catch layout problems in code.** Use `next_to`/`arrange` with buffers, and follow the bible's
+   **screen zones**: scene content stays below `CONTENT_TOP`, and the top band is for the badge,
+   crux strip and docked term only. Introduce terms with the default `TermHighlight.show(term)`
+   (scrim + center). Don't pass `at=` into an occupied area, and don't set `scrim=False` over a busy
+   screen. Fade a label out before new text lands where it was.
+   `tools/render.py` runs every scene with `OSTEP_CHECK=1` and ends with
+   **"layout check: N warning(s)"**. This check is free (text only), so use it instead of frames:
+   - **Every `[overlap]` warning must be fixed** (two texts on top of each other), or justified in
+     the report (e.g. a deliberate stack).
+   - `[bounds]` warnings are fine only for things meant to run past the edge (full-width
+     boundaries, slides in/out).
 3. **Inspect visually only the critical scenes:** crowded ones with many components on screen,
    where overlaps or cut-offs are likely. Pick a few per episode. For each, Read at most **1–2
    frames** (the busiest moment, or the end state via `-s`). Check: nothing cut off, no unintended

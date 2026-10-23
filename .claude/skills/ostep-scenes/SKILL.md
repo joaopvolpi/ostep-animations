@@ -38,7 +38,14 @@ the sound off, and the narration should feel like it's describing what the viewe
    to the exact words it lands on. Leave pauses after reveals.
 4. **Track screen state.** Every scene starts from the previous scene's "state at end". Nothing
    appears or disappears without an animation. Watch clutter: at most ~3 focal elements at once.
-5. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
+   **Remove before you add:** when a label, caption or title has served its beat, fade it out in the
+   row where the next text appears, so old text never lingers under new text.
+5. **Respect the screen zones** (bible §5, "Screen zones"). The top band (y > 2.55) belongs to the
+   chrome: section badge, docked crux strip, docked term. Never place scene titles, captions or
+   labels there. Introduce a new term with the default Term highlight: it veils the scene, writes
+   the term at center and docks it. Write it as "Term highlight: *X*". Don't give it a position
+   unless the screen is empty. Never write a term "at the top" over existing content.
+6. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
    bible, characters only in corners/edges and only reacting to beats, no text walls
    (≤ ~25 words on screen), every term's first appearance uses the Term highlight.
 
