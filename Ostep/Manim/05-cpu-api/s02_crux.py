@@ -19,17 +19,14 @@ class S02Crux(Ep05Scene):
         badge = make_badge()
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT)
         card.move_to(P3(0, 1.1))
-        card.subtitle.set_opacity(0)
         self.play(FadeOut(walker), FadeOut(term), FadeIn(badge, shift=RIGHT * 0.2), run_time=0.8)
-        self.play(FadeIn(card.frame, scale=0.92), Write(card.header), run_time=0.8)
-        self.play(Write(card.question), stu.look_at(card), run_time=1.4)
+        self.say_crux(card, stu.look_at(card), hold=0.6)
 
         # S02.2
         aside = AsideCard("Practical things. Real code. Type it in.", title="INTERLUDES", width=3.6, font_size=22)
         aside.move_to(P3(3.0, -1.9))
         with self.narrate("This is an interlude. A short, practical episode about a real interface, "
                           "with real code you can type in yourself."):
-            self.play(card.subtitle.animate(run_time=1.0).set_opacity(1))
             self.play(aside.slide_in(RIGHT))
             self.wait(2.0)
             self.play(aside.slide_out(RIGHT))
@@ -56,7 +53,7 @@ class S02Crux(Ep05Scene):
                 self.wait(0.1)
 
         # S02.4
-        strip = card.strip((0, 3.2, 0), 24)
+        strip = card.strip()
         with self.narrate("Now we order from that menu, the UNIX way."):
             self.play(FadeOut(menu), FadeOut(hl[0]),
                       ReplacementTransform(card.frame, strip[0], run_time=1.2),

@@ -102,6 +102,29 @@ complete.
   previous scene. End in the "Ends with" state.
 - Respect the character API rules: no two of `change`/`look_at`/`blink` on the same character in one
   `play`, and no `change` together with `.animate` on the same character.
+- **The crux is read aloud.** Never `card.write()`/`FadeIn(card)` silently. Use
+  `self.say_crux(card, *extra_anims, sub_anims=(...), dock=True|False, hold=0.8, **dock_kwargs)`:
+  it narrates "The crux: <question>" while the card writes, reads the subtitle as it fades in, then
+  docks. What's spoken is exactly the card's text, so captions match the screen. A crux shown only
+  as a strip swap gets `self.say("The crux: <question>", ReplacementTransform(old, new))`. Do this
+  even if the scene file's rows don't mention it. Don't hide the subtitle with `set_opacity(0)`.
+- **Continuity (no jumps at cuts).** Each scene must begin exactly where the previous one ended:
+  - Hosts: `host_pair(mode, stu_expr, prof_expr)` and `host_mode_anims(stu, prof, mode)` with the
+    library's `STU_CORNER` / `PROF_CORNER` / `STU_DIALOGUE` / `PROF_DIALOGUE` constants. Never define
+    your own corner constants. Characters are placed by their design anchor, so `move_to` is exact
+    for any expression, and any expression can be set after placing.
+  - Start state == the previous scene's end state, including expressions and gaze. Never snap a face
+    with `set_expression` / `set_look` at the start of a scene to anything but the previous end
+    state. If the story needs a different expression, animate it in the first `play`
+    (`stu.change("curious")`).
+  - Docked term: `terms.docked_now(term)`. Crux strip: `card.strip()` with defaults. Badge:
+    `SectionBadge`. Use the same builder at the end of one scene and the start of the next.
+  - Any prop that persists across a cut is built by one `common.py` function that both scenes call
+    (the end scene's final state == the next scene's start state).
+  - After rendering, run `python tools/continuity.py <NN>`. It compares the last frame of each
+    scene with the first frame of the next and lists changed regions. Fix every flagged boundary
+    unless the cut is deliberate (a cut to an empty screen, a title card), and say which ones
+    are deliberate in the report. This check costs no image tokens.
 - Keep it simple and robust: prefer `Transform`, `FadeIn/Out`, `Create`, `Write`, `MoveAlongPath`,
   updaters only where needed. No external images or SVGs.
 - If the spec is ambiguous or physically impossible (things overlap, don't fit, contradict each
@@ -131,7 +154,8 @@ Images are expensive, so frame inspection is the exception, not the rule.
    frames** (the busiest moment, or the end state via `-s`). Check: nothing cut off, no unintended
    overlaps, text legible at 480p, "Ends with" state as specified. At most 2 fix rounds.
 4. Prop preview sheets: one look at the final version.
-5. Check the duration against the scene's estimate (±30%). A big mismatch usually means
+5. Run `python tools/continuity.py <NN>` (see "Continuity" above) and fix the jumps it flags.
+6. Check the duration against the scene's estimate (±30%). A big mismatch usually means
    narration text is missing, or the pauses are wrong.
 
 ## Step 4: assemble
@@ -147,6 +171,7 @@ Clean up stray `media/` folders and `__pycache__` when done.
 ## Report
 - The files created or changed (code, props, docs).
 - For each scene: status (✅ rendered and verified / ⚠️ issues), the duration vs. the estimate, and the path to the draft video.
+- **Continuity:** the number of boundaries `tools/continuity.py` flags, which ones are deliberate cuts.
 - **Deviations** from the scene spec, and why.
 - New props and expressions added to the library.
 - For `--final`: the episode path, its total length, and the subtitle file.

@@ -70,6 +70,5 @@ class S09RegainControl(Ep06Scene):
 
         # S09.5
         crux = CruxCard(CRUX_Q3, CRUX_SUB3, accent=VIRT).move_to(P3(0, 0.4))
-        self.play(FadeOut(VGroup(lock, lk, zz, leg)), FadeIn(crux, shift=DOWN * 1.5), run_time=1.0)
-        self.beat(1.2)
-        self.play(crux.dock((0, 3.2, 0), 22))
+        self.play(FadeOut(VGroup(lock, lk, zz, leg)), run_time=0.6)
+        self.say_crux(crux, dock=True, font_size=22)

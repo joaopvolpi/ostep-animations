@@ -147,7 +147,7 @@ def docked_save_slot():
 
 def crux_strip():
     card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT)
-    return card.strip((0, 3.2, 0), 24)
+    return card.strip()
 
 
 # ---------------------------------------------------------------------------

@@ -29,9 +29,7 @@ class S02TheCrux(Ep07Scene):
         # S02.2 (card appears)
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT, question_size=32)
         card.move_to(P3(0, 0.9))
-        card.subtitle.set_opacity(0)
-        self.play(FadeIn(card.frame, scale=0.92), Write(card.header), stu.change("neutral"), prof.change("neutral"), run_time=0.8)
-        self.play(Write(card.question), run_time=1.4)
+        self.say_crux(card, stu.change("neutral"), prof.change("neutral"), hold=0.6)
 
         # S02.3
         gears = GearPair(0.5).move_to(P3(-4.2, -1.6))
@@ -60,11 +58,8 @@ class S02TheCrux(Ep07Scene):
                  FadeIn(qq), FadeIn(qa), FadeIn(qb), FadeIn(qc),
                  Transform(spot, spot3))
 
-        # S02.6 (subtitle writes)
-        self.play(card.subtitle.animate.set_opacity(1), run_time=1.0)
-
         # S02.7
-        strip = card.strip((0, 3.2, 0), 24)
+        strip = card.strip()
         self.say("And the answer, as we'll see, is surprisingly full of trade-offs.",
                  ReplacementTransform(card.frame, strip[0], run_time=1.2),
                  ReplacementTransform(card.question, strip[2], run_time=1.2),

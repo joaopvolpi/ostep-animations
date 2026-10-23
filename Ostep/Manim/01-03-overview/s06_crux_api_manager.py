@@ -17,7 +17,7 @@ def s06_end_state():
     stack = make_stack()
     procs = stack_programs()
     crux = CruxCard(CRUX_Q, CRUX_SUB, accent=INTRO)
-    strip = crux.strip((0, 3.2, 0))
+    strip = crux.strip()
     return stack, procs, strip
 
 
@@ -33,13 +33,8 @@ class S06CruxApiManager(NarratedScene):
 
         # S06.1 crux
         crux = CruxCard(CRUX_Q, CRUX_SUB, accent=INTRO).move_to([0, 0.8, 0])
-        self.add_subcaption("THE CRUX: How to virtualize resources? What mechanisms and policies does the OS use "
-                            "to virtualize? How does it do so efficiently? What hardware support is needed?",
-                            duration=5.6)
         self.play(FadeOut(vc), FadeOut(vm), run_time=0.6)
-        self.play(crux.write())
-        self.beat(2.4)
-        self.play(crux.dock((0, 3.2, 0)))
+        self.say_crux(crux, dock=True)
         th.at = np.array([0, 2.35, 0])
 
         # S06.2 system calls

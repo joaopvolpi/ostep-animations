@@ -57,9 +57,9 @@ class S11TimerInterrupt(Ep06Scene):
         new = strip(CRUX_Q4)
         timer = make_timer()
         loop = loop_arrow(0.4).move_to(P3(0, 2.7))
+        self.say("The crux: How to gain control without cooperation?", ReplacementTransform(old, new))
         self.say("The answer was found many years ago, and it's simple: a timer interrupt.",
-                 Succession(AnimationGroup(ReplacementTransform(old, new), FadeIn(timer, shift=LEFT * 0.8)),
-                            self.term("timer interrupt")),
+                 Succession(FadeIn(timer, shift=LEFT * 0.8), self.term("timer interrupt")),
                  Succession(Wait(1.0), AnimationGroup(w.hop_on_chip("A"), FadeIn(loop))))
         a.set_expression("running")
 

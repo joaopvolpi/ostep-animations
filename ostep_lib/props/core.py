@@ -32,8 +32,50 @@ CHROME_ROW_Y = 3.6
 CRUX_STRIP_Y = 3.0
 SCRIM_Z = 40
 
+# Canonical host positions (Student left, Professor right, facing each other).  Characters are
+# placed by their design-frame anchor (see Character.get_critical_point), so these are exact
+# whatever the expression: use them, or `host_pair`, in every scene so cuts never jump.
+HOST_SCALE = 0.75
+STU_CORNER = np.array([-5.8, -2.8, 0.0])
+PROF_CORNER = np.array([5.8, -2.8, 0.0])
+STU_DIALOGUE = np.array([-2.6, -1.2, 0.0])
+PROF_DIALOGUE = np.array([2.6, -1.2, 0.0])
+
+
+def host_pair(mode="corner", stu_expr="neutral", prof_expr="neutral"):
+    """Student (facing right) and Professor (flipped, facing left) in ``"corner"`` or
+    ``"dialogue"`` mode, looking at each other.  ``host_mode_anims`` moves them between modes."""
+    from ..characters.humanoid import Professor, Student
+    stu, prof = Student(stu_expr), Professor(prof_expr).flip()
+    stu.mode_scale = prof.mode_scale = 1.0
+    if mode == "corner":
+        stu.scale(HOST_SCALE).move_to(STU_CORNER)
+        prof.scale(HOST_SCALE).move_to(PROF_CORNER)
+        stu.mode_scale = prof.mode_scale = HOST_SCALE
+    else:
+        stu.move_to(STU_DIALOGUE)
+        prof.move_to(PROF_DIALOGUE)
+    stu.set_look(prof)
+    prof.set_look(stu)
+    return stu, prof
+
+
+def host_mode_anims(stu, prof, mode, run_time=1.0):
+    """List of animations gliding both hosts to ``"corner"`` or ``"dialogue"`` mode."""
+    s = HOST_SCALE if mode == "corner" else 1.0
+    out = []
+    for ch, pos in ((stu, STU_CORNER if mode == "corner" else STU_DIALOGUE),
+                    (prof, PROF_CORNER if mode == "corner" else PROF_DIALOGUE)):
+        f = s / getattr(ch, "mode_scale", 1.0)
+        ch.mode_scale = s
+        out.append(ch.animate(run_time=run_time).scale(f).move_to(pos))
+    return out
+
+
 __all__ = [
     "INK", "CARD_FILL", "PEACH_COLOR", "CONTENT_TOP", "CHROME_ROW_Y", "CRUX_STRIP_Y", "scrim",
+    "HOST_SCALE", "STU_CORNER", "PROF_CORNER", "STU_DIALOGUE", "PROF_DIALOGUE",
+    "host_pair", "host_mode_anims",
     "outline_of", "label_text", "mono_text", "wrap_text", "centered_text", "make_translucent",
     "base_point", "place_on", "hop_to", "HopTo",
     "CPU", "Memory", "Disk", "DiskSpin",
@@ -452,6 +494,7 @@ class CruxCard(VGroup):
         super().__init__(**kwargs)
         self.accent = accent
         self.question_str = question
+        self.subtitle_str = subtitle or ""
         inner = width - 0.8
         self.header = Text(header, font=FONT, font_size=22, color=accent, weight=BOLD)
         self.question = centered_text(question, inner, question_size, TEXT, weight=BOLD)
@@ -468,10 +511,21 @@ class CruxCard(VGroup):
         self.add(self.frame, self.header, self.question, self.subtitle)
 
     def write(self, run_time=1.6):
+        """Silent write of the whole card. Prefer ``NarratedScene.say_crux``: a crux on screen
+        is always read aloud (and so captioned)."""
         anims = [FadeIn(self.frame, scale=0.92), Write(self.header), Write(self.question)]
         if len(self.subtitle):
             anims.append(FadeIn(self.subtitle, shift=UP * 0.1))
         return Succession(AnimationGroup(*anims[:2]), *anims[2:], run_time=run_time)
+
+    def write_head(self, run_time=1.4):
+        """Frame + header + question (the subtitle stays hidden: it is not in the scene yet)."""
+        return Succession(AnimationGroup(FadeIn(self.frame, scale=0.92), Write(self.header)),
+                          Write(self.question), run_time=run_time)
+
+    def write_sub(self, run_time=0.8):
+        """The subtitle fades in (only valid after ``write_head``)."""
+        return FadeIn(self.subtitle, shift=UP * 0.1, run_time=run_time)
 
     def strip(self, point=(0, 3.0, 0), font_size=24, max_width=7.6):
         q = Text(self.question_str, font=FONT, font_size=font_size, color=TEXT, weight=BOLD)
@@ -609,7 +663,11 @@ class TermHighlight:
         self.accent = color
         return self
 
-    def _make(self, term, size, accent, at=None, right_aligned=False, max_width=12):
+    def _make(self, term, size, accent, at=None, right_aligned=False, max_width=None):
+        # the docked (right-aligned) form always obeys dock_max_width, however it is built (the
+        # animations, or a scene's "starts with" builder), so the term never changes size at a cut
+        if max_width is None:
+            max_width = self.dock_max_width if right_aligned else 12
         t = Text(term, font=FONT, font_size=size, color=TEXT)
         if t.width > max_width:
             t.scale_to_fit_width(max_width)
@@ -642,6 +700,15 @@ class TermHighlight:
     def fade_anim(self):
         b, self.big = self.big, None
         return FadeOut(b, shift=UP * 0.2, run_time=0.5)
+
+    def docked_now(self, term, accent=None):
+        """The docked term, built instantly (for a scene's "starts with" state; the caller adds
+        it).  Identical to what ``show``/``note`` leave behind, so a scene that starts from it
+        continues the previous one exactly."""
+        self._term, self._term_accent = term, accent or self.accent
+        self.docked = self._make(term, self.dock_size, self._term_accent, self.dock_at,
+                                 right_aligned=True, max_width=self.dock_max_width)
+        return self.docked
 
     def note(self, term, accent=None, run_time=0.8):
         """Secondary term: slides straight into the docked slot (no veil, no big write).

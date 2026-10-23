@@ -233,7 +233,7 @@ def make_badge():
 
 def crux_strip_mobs():
     card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT)
-    st = card.strip((0, 3.2, 0), 24)
+    st = card.strip()
     return VGroup(st[0], st[2])
 
 

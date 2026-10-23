@@ -55,7 +55,17 @@ and `ostep_lib/props/p04_preview.py` with `P04PropSheet` / `P04IconSheet` (04).
 - `CPU(size, label, pins)`: `.slot_point()`, `.seat(p)`, `.virtual_copy()`.
 - `Memory(cells|regions, contents, addresses, title)`: `.cell()`, `.region()`, `.set_content()`, `.fill_cell()`, `.clear_cell()`.
 - `Disk(width, height, label)`: `.top_point()`, `.spin()`.
-- `CruxCard(question, subtitle, accent)`: `.write()`, `.dock()`. `TipCard` / `AsideCard(body, title, icon)`: `.slide_in()`, `.slide_out()`.
+- `CruxCard(question, subtitle, accent)`: `.write_head()`, `.write_sub()`, `.dock()` (and the silent `.write()`: avoid it). A crux is
+  always read aloud: `self.say_crux(card, *extra_anims, sub_anims=(), dock=False, hold=0.8, **dock_kwargs)` on a `NarratedScene`
+  narrates "The crux: <question>" while the card writes, reads the subtitle as it fades in, then optionally docks. It speaks exactly
+  the card's text. A crux that only appears as a strip swap: `self.say("The crux: <q>", ReplacementTransform(old, new))`.
+- Hosts: `host_pair(mode, stu_expr, prof_expr)` and `host_mode_anims(stu, prof, mode, run_time)` with `STU_CORNER`, `PROF_CORNER`,
+  `STU_DIALOGUE`, `PROF_DIALOGUE`, `HOST_SCALE` (corner = 0.75 at (±5.8, −2.8); dialogue = 1.0 at (±2.6, −1.2)).
+  **A character's `get_center()` / `move_to` / `scale` use a fixed design anchor** (the default-expression body center in its design frame),
+  not the bounding box, so placing a character gives the same position whatever its expression. Edges (`get_top()`, `get_left()`…) still use the real bounding box.
+- `TermHighlight.docked_now(term)`: the docked term built instantly, identical to what `show`/`note` leave behind (for a scene's "starts with" state).
+- `tools/continuity.py <NN>` compares the last frame of each scene with the first of the next and lists changed regions (`--dir` for
+  any folder of scene clips). Aim for ~0%: a jump means a "starts with" state that isn't the previous "ends with". `TipCard` / `AsideCard(body, title, icon)`: `.slide_in()`, `.slide_out()`.
 - `TermHighlight(accent)` (manager): `.note(term)` for secondary terms (slides into the top-right dock, no veil).
   `.show(term, hold, dock, size, at, scrim=True)` is the unveil, for the 3–4 key terms of an episode only. `.clear()`. By default
   it veils the scene, writes the term at center (0, 0.3), and docks it top-right (≤ 2.6 wide) as the veil lifts.

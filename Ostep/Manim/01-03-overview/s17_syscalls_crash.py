@@ -139,12 +139,7 @@ class S17SyscallsCrash(NarratedScene):
         crux = CruxCard("How to store data persistently?",
                         "Correctly, fast, and reliably, even when hardware and software fail.",
                         accent=PERS).move_to([0, 0.5, 0])
-        self.add_subcaption("THE CRUX: How to store data persistently? What techniques are needed to manage "
-                            "persistent data correctly, with high performance, and reliably in the face of "
-                            "failures in hardware and software?", duration=6.0)
-        self.play(crux.write())
-        self.beat(2.8)
-        self.play(crux.dock((0, 3.2, 0)), run_time=0.9)
+        self.say_crux(crux, dock=True, run_time=0.9)
 
         # S17.7
         self.say("So what happens to my file if it crashes halfway?",

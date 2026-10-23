@@ -116,7 +116,7 @@ def make_badge():
 
 
 def crux_strip():
-    return CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT).strip((0, 3.2, 0), 24)
+    return CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT).strip()
 
 
 def dock_term_now(terms, text):

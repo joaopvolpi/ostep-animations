@@ -21,7 +21,7 @@ class S02TheCrux(Ep08Scene):
         badge = SectionBadge(BADGE_TEXT, accent=VIRT)
         self.play(FadeOut(hist), stu.animate.scale(CHAR_SCALE).move_to(STUDENT_CORNER),
                   prof.animate.scale(CHAR_SCALE).move_to(PROF_CORNER), run_time=1.2)
-        self.play(stu.change("curious", look_at=card), prof.change("neutral"), card.write(run_time=2.2))
+        self.say_crux(card, stu.change("curious", look_at=card), prof.change("neutral"), hold=0.6)
 
         # S02.2
         self.say("Today's answer is one of the most famous ideas in scheduling: the Multi-Level Feedback Queue, or MLFQ.",

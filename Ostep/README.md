@@ -48,7 +48,9 @@ File names keep the chapter number and slug from `Ostep/Chapters/INDEX.md`
   narration becomes dialogue. Tone: warm, precise, lightly witty (like the book). No hype.
 - **Problem first.** Every concept appears as the answer to a problem the viewer already feels.
   The book's **THE CRUX** boxes are the backbone. Each crux is posed as an explicit question
-  on screen, and the episode is the journey to its answer.
+  on screen, and the episode is the journey to its answer. **A crux on screen is always read
+  aloud** (and so captioned), word for word as written on the card: "The crux: …" + the question +
+  the follow-up text. The crux is part of the narration, not a silent graphic.
 - **The Student asks the viewer's questions** at the moment the viewer would ask them:
   confusion, objections, "wait, why not just…?". Naive ideas are welcome. We try them,
   watch them fail, and learn why.
@@ -82,6 +84,10 @@ Usage rules:
 - Characters are **commentators**: they appear at the edges (usually bottom corners) and react.
   The concept diagram owns the center of the screen.
 - Professor and Student face each other in dialogue (Student on the left, Professor on the right).
+- **Standard host positions** (library constants, in every episode): corner mode = scale 0.75 at
+  (−5.8, −2.8) and (5.8, −2.8); dialogue mode = scale 1.0 at (−2.6, −1.2) and (2.6, −1.2). A character is
+  positioned by a fixed design anchor, not by its bounding box, so the same position holds for every
+  expression and scale. Use `host_pair` and `host_mode_anims`, and never redefine the positions.
 - Use expressions to **mark the emotional beat**: confusion before an explanation, excitement at
   the payoff, worry when a design has a flaw.
 - Processes are both characters and diagram elements. A process keeps the **same color and label
@@ -135,7 +141,7 @@ as described. When a new recurring prop is invented, add it here.
 
 | Prop | Look | Used for |
 |---|---|---|
-| **Crux card** | Rounded rectangle, accent-colored frame, small "THE CRUX" header, the question in bold. | The book's crux boxes; the central question of the episode or segment. |
+| **Crux card** | Rounded rectangle, accent-colored frame, small "THE CRUX" header, the question in bold, the follow-up in `DIM`. Read aloud as it writes (`say_crux`), then docks to a strip at y = 3.0. | The book's crux boxes; the central question of the episode or segment. |
 | **Aside / Tip card** | Smaller card, `DIM` frame, "ASIDE" or "TIP" header; slides in from the side. | Book asides and tips; side notes that pause the main story. |
 | **Term highlight** | Two strengths. **Unveil** (`terms.show`): the scene dims under a veil; the term is written large at the center, underlined in accent color, then docks top-right as the veil lifts. **Note** (`terms.note`): the term just slides into the top-right dock. | Unveil: only the episode's **3–4 key terms** (the ones the crux hinges on, e.g. *process*, *context switch*), never two in a row, and each term only once in the series (in the episode that teaches it). Note: every other new term. Minor vocabulary can simply be spoken and appear in the captions. |
 | **CPU** | Yellow square chip with pins; the process currently running sits *on* it. | Anything that executes. Multiple chips for multi-CPU. |
@@ -178,4 +184,7 @@ CPU busy = `CPU_COLOR`; done = empty.
 - Each script beat has an ID (`B01`, `B02`...); scenes reference beats so the two files stay in sync.
 - Each scene has an ID (`S01`...), an estimated duration, and a "state at end" so the next scene
   knows what is already on screen.
+- **Continuity:** a scene starts exactly where the previous one ended (same positions, scale,
+  expressions, docked term, crux strip). Only a deliberate cut may differ. `tools/continuity.py <NN>`
+  compares the last frame of every scene with the first frame of the next and flags jumps.
 - Anything uncertain or worth discussing goes in a final **Open questions** section rather than being guessed.

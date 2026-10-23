@@ -28,10 +28,7 @@ class S02TheCrux(Ep09Scene):
         # S02.2 (card appears)
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT, question_size=34, subtitle_size=22)
         card.move_to(P3(0, 0.5))
-        card.subtitle.set_opacity(0)
-        self.play(FadeIn(card.frame, scale=0.92), Write(card.header), stu.change("neutral"), run_time=0.8)
-        self.play(Write(card.question), run_time=1.4)
-        self.play(card.subtitle.animate.set_opacity(1), stu.look_at(card), run_time=1.0)
+        self.say_crux(card, stu.change("neutral"), sub_anims=(stu.look_at(card),), hold=0.6)
 
         # S02.3
         self.say("This kind of scheduler is called proportional-share, or sometimes fair-share.",

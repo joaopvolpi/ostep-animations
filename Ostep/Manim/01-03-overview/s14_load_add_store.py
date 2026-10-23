@@ -77,18 +77,13 @@ class S14LoadAddStore(NarratedScene):
         crux = CruxCard("How to build correct concurrent programs?",
                         "Many threads, one memory: what primitives from the OS? from the hardware?",
                         accent=CONC).move_to([0, 0.2, 0])
-        self.add_subcaption("THE CRUX: How to build correct concurrent programs? When many threads execute "
-                            "concurrently in the same memory space, how can we build a correctly working program? "
-                            "What primitives does the OS need to provide, and what does the hardware need to provide?",
-                            duration=6.5)
-        self.play(crux.write())
-        self.beat(3.0)
+        self.say_crux(crux)
 
         # S14.7 tag, dock, fade
         tag = next_tag("→ Ep. 26–28", 20).next_to(crux, DOWN, buff=0.2)
         self.play(FadeIn(tag), run_time=0.4)
         self.wait(0.6)
-        self.play(crux.dock((0, 3.2, 0)), FadeOut(tag), run_time=0.9)
+        self.play(crux.dock(), FadeOut(tag), run_time=0.9)
         self.wait(0.8)
         demo_all = VGroup(demo, demo.step_label, *demo.reg_texts, demo.cell_value, ghost, crack, cap)
         self.play(FadeOut(demo_all), FadeOut(crux), th.clear(), run_time=0.8)

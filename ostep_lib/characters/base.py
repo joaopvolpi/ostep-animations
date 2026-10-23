@@ -314,6 +314,30 @@ class Character(VGroup):
         self.submobjects = [self.ref, VGroup(), VGroup()]
         self._rebuild()
 
+    # --------------------------------------------------------------- center
+    # A character's "center" (``get_center``, ``move_to``, ``scale``, ``center_base``...) is the
+    # center of its DEFAULT-expression body in the design frame, mapped to the scene.  The plain
+    # bounding-box center moves with the expression (raised arms, props, extras), so placing
+    # "Student(excited)" with ``move_to(P)`` used to land ~0.4 units away from where a neutral
+    # Student had been standing: characters visibly jumped at scene cuts.  Edges
+    # (``get_top()``, ``get_left()``...) still use the real bounding box.
+    _DESIGN_CENTERS: dict = {}
+
+    def _design_center(self):
+        key = type(self)
+        c = Character._DESIGN_CENTERS.get(key)
+        if c is None:
+            core, _ = self._build(self.DEFAULT_EXPRESSION, np.array(self.DEFAULT_LOOK, dtype=float), False)
+            pts = np.concatenate([m.points for m in core.get_family() if len(m.points)])
+            c = (pts.min(axis=0) + pts.max(axis=0)) / 2
+            Character._DESIGN_CENTERS[key] = c
+        return c
+
+    def get_critical_point(self, direction):
+        if len(self.submobjects) == 3 and not np.any(direction):
+            return self.to_global(self._design_center())
+        return super().get_critical_point(direction)
+
     # ---------------------------------------------------------------- frame
     @property
     def core(self):

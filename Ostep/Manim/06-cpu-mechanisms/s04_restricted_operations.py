@@ -39,12 +39,13 @@ class S04RestrictedOperations(Ep06Scene):
         a = bottom_to(proc("A", "ready", scale=0.9), S4_A)
         arrow = Arrow(a.get_right() + UP * 0.1, S4_DISK + LEFT * 1.0 + UP * 0.1, buff=0, stroke_width=5, color=COL["A"])
         rd = Text("read", font=MONO_FONT, font_size=22, color=COL["A"]).next_to(arrow, UP, buff=0.1)
-        self.say("Problem number one. What if the process wants to do something restricted, like reading from the disk?",
+        self.say("The crux: How to perform restricted operations?",
                  AnimationGroup(chart.animate.scale(0.4).move_to(P3(-4.4, 1.4)).set_opacity(0.3),
                                 fast.animate.scale(0.6).move_to(P3(-4.4, 2.75)),
                                 n1.animate.move_to(P3(-6.3, 1.4)), FadeOut(n2),
-                                ReplacementTransform(old, new), run_time=1.5),
-                 Succession(Wait(1.5), AnimationGroup(FadeIn(disk), FadeIn(a)), Wait(1.0),
+                                ReplacementTransform(old, new), run_time=1.5))
+        self.say("Problem number one. What if the process wants to do something restricted, like reading from the disk?",
+                 Succession(AnimationGroup(FadeIn(disk), FadeIn(a)), Wait(1.0),
                             AnimationGroup(GrowArrow(arrow), FadeIn(rd))))
 
         # S04.2

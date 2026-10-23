@@ -90,7 +90,7 @@ def snippet(text, font_size=20, color=TEXT, pad=0.18):
 
 
 def strip(q, font_size=22):
-    return CruxCard(q, accent=VIRT).strip((0, 3.2, 0), font_size)
+    return CruxCard(q, accent=VIRT).strip(font_size=font_size)
 
 
 def tag(text, color=DIM, font_size=20, fill=CARD_FILL):

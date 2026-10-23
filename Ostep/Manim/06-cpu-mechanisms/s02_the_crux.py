@@ -34,13 +34,12 @@ class S02TheCrux(Ep06Scene):
         self.play(FadeOut(VGroup(*stage), run_time=0.8), AnimationGroup(
             stu.animate.scale(0.75).move_to(cs.get_center()), prof.animate.scale(0.75).move_to(cp.get_center())),
             run_time=1.0)
-        self.play(crux.write())
-        self.beat(3.0)
+        self.say_crux(crux)
 
         # S02.2
         sl = slices_strip()
         self.say("To virtualize the CPU, the OS has to share it among many processes by time sharing.",
-                 crux.dock((0, 3.2, 0), 22), Succession(Wait(1.0), FadeIn(sl, lag_ratio=0.15, run_time=1.5)))
+                 crux.dock(font_size=22), Succession(Wait(1.0), FadeIn(sl, lag_ratio=0.15, run_time=1.5)))
 
         # S02.3
         p = proc("A", "ready", scale=1.1).move_to(P3(0, 0.0))

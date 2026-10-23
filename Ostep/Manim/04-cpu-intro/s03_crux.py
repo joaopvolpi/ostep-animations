@@ -32,10 +32,7 @@ class S03Crux(Ep04Scene):
         # S03.2 (card appears)
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT)
         card.move_to(P3(0, 0.6))
-        card.subtitle.set_opacity(0)
-        self.play(FadeIn(card.frame, scale=0.92), Write(card.header), run_time=0.8)
-        self.play(Write(card.question), stu.look_at(card), run_time=1.4)
-        self.beat(0.8)
+        self.say_crux(card, stu.look_at(card), hold=0.6)
 
         # S03.3
         term = terminal_thumb(width=6.4, height=1.25)
@@ -52,13 +49,12 @@ class S03Crux(Ep04Scene):
         # S03.4
         with self.narrate("Today we find out what it's actually juggling."):
             self.play(FadeOut(VGroup(term, cmd, out_line), run_time=0.6))
-            self.play(card.subtitle.animate(run_time=1.0).set_opacity(1))
-        self.beat(1.5)
+        self.beat(0.6)
 
         # S03.5
         # Work-around: CruxCard.dock collapses the subtitle into a leftover dot,
         # so fade the subtitle separately and dock an empty placeholder instead.
-        strip = card.strip((0, 3.2, 0), 24)
+        strip = card.strip()
         self.say("Answering this question introduces the most fundamental idea the operating "
                  "system gives us.",
                  ReplacementTransform(card.frame, strip[0], run_time=1.2),

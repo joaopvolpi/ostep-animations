@@ -50,7 +50,16 @@ the sound off, and the narration should feel like it's describing what the viewe
    it is spoken and shows up in the captions. In the Visual overview, list the key terms you chose.
    A term is unveiled **once in the whole series**, in the episode that teaches it. Dialogue and
    recap episodes, and callbacks in later episodes, use notes.
-6. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
+6. **The crux is read aloud.** A crux card or strip on screen always has narration: the Narrator says
+   "The crux: <question>" while the card writes, then reads the card's follow-up text as it fades
+   in. Give those their own table rows (narration column = the exact words on the card), then dock.
+   A crux that only changes in the docked strip (a second crux) is read too.
+7. **Make hand-offs exact.** "Ends with" must list every persistent element with its exact position
+   and state: hosts (mode: corner or dialogue, and expression), badge, docked term, crux strip,
+   and each prop's place. The next scene's "Starts with" is a verbatim copy of it. A scene that
+   deliberately starts from a different screen says so ("cut to empty"). Characters always sit at
+   the library's standard host positions (`host_pair` modes) unless a row says they move.
+8. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
    bible, characters only in corners/edges and only reacting to beats, no text walls
    (≤ ~25 words on screen), every term's first appearance uses a Term unveil (3–4 key terms) or a
    Term note (the rest).

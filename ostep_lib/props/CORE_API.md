@@ -10,6 +10,9 @@ Preview: `python -m manim -ql -s ostep_lib/props/preview.py PropSheet`, plus `Pr
 
 ## Scene base: `ostep_lib/narration.py`
 - `NarratedScene(Scene)`: `setup()` applies the style.
+- `say_crux(card, *head_anims, sub_anims=(), dock=False, hold=0.8, prefix="The crux:", **dock_kwargs)`: shows a `CruxCard`
+  AND reads it: "The crux: <question>" over the frame/header/question write (+ `head_anims`), then the subtitle over its
+  fade-in (+ `sub_anims`), then optionally `card.dock(**dock_kwargs)`. Always use it for a crux on screen.
 - `say(text, *anims, min_time=None, stretch=False)`: plays the anims together and adds a subcaption.
   The call lasts max(words/2.5, min_time, anim time). If the anims are shorter, it pads with a wait,
   or stretches them when `stretch=True`. With no anims, it just waits.
@@ -46,7 +49,8 @@ Preview: `python -m manim -ql -s ostep_lib/props/preview.py PropSheet`, plus `Pr
 
 ## Cards and overlays
 - `CruxCard(question, subtitle=None, accent=VIRT, width=9, header="THE CRUX", question_size=34, subtitle_size=24)`.
-  Parts: `frame, header, question, subtitle`. `write(run_time=1.6)`. `dock(point=(0, 3.0), font_size=24)`
+  Parts: `frame, header, question, subtitle` (+ `question_str`, `subtitle_str`). `write_head()` / `write_sub()` are the pieces `say_crux`
+  uses; `write(run_time=1.6)` is the silent whole-card write (avoid). `dock(point=(0, 3.0), font_size=24)`
   transforms the card into a one-line strip with the question (afterwards `self` *is* the strip).
   `strip(point, font_size)` builds the strip without animating.
 - `TipCard(body="", title="TIP", width=5, height=None, accent=DIM, font_size=26, icon=None)` and
