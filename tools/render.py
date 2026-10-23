@@ -246,8 +246,10 @@ def caption_video(src: Path, srt: Path, dst: Path, single_srt_out: Path | None =
 # --------------------------------------------------------------------------- render + assemble
 def render_scene(ep: str, f: Path, cls: str, q: str, out_scenes: Path):
     media = CACHE / "media" / ep
-    # layout checks on: only their [bounds]/[overlap] lines are shown (Manim's log is noise)
-    r = subprocess.run([sys.executable, "-m", "manim", f"-q{q}", "--media_dir", str(media), str(f), cls],
+    # layout checks on: only their [bounds]/[overlap] lines are shown (Manim's log is noise).
+    # No caching: cached animations skip their frames, and with them the mid-animation checks.
+    r = subprocess.run([sys.executable, "-m", "manim", f"-q{q}", "--disable_caching", "--media_dir", str(media),
+                        str(f), cls],
                        cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
                        env={**os.environ, "OSTEP_CHECK": "1", "PYTHONIOENCODING": "utf-8"})
     if r.returncode:
@@ -277,7 +279,10 @@ def concat(files: list[Path], dst: Path):
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    # Windows consoles are cp1252: never crash while printing a Manim traceback or a warning
+    for s in (sys.stdout, sys.stderr):
+        s.reconfigure(errors="replace")
+    ap =argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("episode", help="episode folder or prefix, e.g. 04 or 01-03")
     ap.add_argument("--scenes", help="e.g. S05, S05-S07, S01,S09")
     ap.add_argument("-q", "--quality", default="l", choices=QUALITY, help="l=480p15 (draft), h=1080p60 (final)")

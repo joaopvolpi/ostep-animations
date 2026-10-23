@@ -661,9 +661,12 @@ class TermHighlight:
         if not scrim:
             return Succession(w, Wait(hold), end)
         veil = _make_scrim()
-        return Succession(AnimationGroup(FadeIn(veil, run_time=0.4), w, lag_ratio=0.4),
-                          Wait(hold),
-                          AnimationGroup(end, FadeOut(veil, run_time=0.6)))
+        # the veil is fully up before the term is written, and lifts only once the term has
+        # docked, so the big term never shares the screen with readable scene text.
+        # Veil + write sit in one AnimationGroup (lag_ratio=1 = sequential): a Succession adds
+        # all its mobjects at the start but begins Write only later, so the term would flash.
+        return Succession(AnimationGroup(FadeIn(veil, run_time=0.4), w, lag_ratio=1),
+                          Wait(hold), end, FadeOut(veil, run_time=0.4))
 
     def clear(self, run_time=0.5):
         d, self.docked = self.docked, None

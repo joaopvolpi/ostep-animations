@@ -41,7 +41,9 @@ imported) and `MONO_FONT = "CMU Typewriter Text"` (code, terminals, addresses).
 - Set `OSTEP_CHECK=1` to print a `[bounds]` warning whenever a mobject crosses the frame edge, and an
   `[overlap]` warning whenever two visible texts overlap. The overlap check also samples ~4×/s during
   animations, must hold for two samples in a row, and ignores text under a scrim. `tools/render.py`
-  always sets it, prints only these lines, and ends with a "layout check: N warning(s)" summary.
+  always sets it, prints only these lines, and ends with a "layout check: N warning(s)" summary. It renders with
+  `--disable_caching`, because cached animations skip their frames and so skip the mid-animation samples. If you run
+  manim yourself, pass that flag too, or the check under-reports.
 
 ## Props (`ostep_lib.props`)
 `props/__init__.py` auto-imports `core.py` plus every `ov_*.py` and `p<NN>_*.py` module and
@@ -108,11 +110,42 @@ and `ostep_lib/props/p04_preview.py` with `P04PropSheet` / `P04IconSheet` (04).
 - `CrystalBall` (`glow_up`, `glow_down`, `crack`), `Cart(boxes)`, `Checkout` (`blink`), `milk_carton`, `checkbook_icon`.
 - **`Timeline` extensions** (additive): kwargs `row_kinds` (process/cpu/disk/os), `label_mode="boundary"`, `unit_per_tick`, `label_every`; methods `row_top`, `fill_span` / `set_span` (fractional ticks), `move_block`, `arrival_marker`, `completion_marker`, `bracket(style="solid"|"dashed")`.
 
+**MLFQ props (`p08_*.py`)** (preview: `p08_preview.py` -> `P08PropSheet`)
+- `MLFQLadder(levels, …)`: stacked priority lanes. `lane_point`, `place`, `promote`, `demote`, `boost_all`, `serve` / `glow_lane`, `collapse_to`, `register`. Positions break under scaling, so build it at its final size (11 uses its native size).
+- `RuleBoard`: an accumulating rules panel. `skeleton`, `place_now`, `add(tag, text)`, `glow`, `hold_glow`, `merge`, `warn`, `ok`, `outline`, `set_dim`. Keep its frame at `z_index=-1` when animating it, or it covers the rows.
+- `AllotmentGauge`: `drain`, `reset`, `chunk` (ledger mode), `attach_to`.
+- Icons (`p08_icons`):
+  - `gamer_shades` and `put_shades` are the series' sunglasses for Process B, the scheduler-gamer.
+  - Also `tag_chip`, `mystery_box`, `history_clock`, `rr_ring`, `io_button`, `Dial`, `SliderPanel`, `voodoo_glyph`, `mini_pie`, `medal_glyph`, `config_glyph`, `neural_glyph`, `fork_glyph`, `cache_grid`, `bookmark_glyph`.
+
+**Proportional-share props (`p09_*.py`)** (preview: `p09_preview.py` -> `P09PropSheet`)
+- `RaffleDrum`, `Ticket`, `TicketStack` (tickets colored by process). `RaffleDrum.draw()` returns `(ball, anim)`. Play the draw in its own `play`, not nested in a `Succession` with other `.animate` calls, or its text is duplicated.
+- `Seesaw` (`tilt(angle)`, two pans for labels).
+- `TargetPie`, `NumberStrip`, `JobList`, `PassLane`, `PassTable`, `VruntimeMeter` (level is a fraction of `max_value`).
+- `RBTree` (generic red/black tree; `RB_SPEC` is Fig 9.5), `FairnessPlot`.
+- Icons (`p09_icons`): `cloud_icon`, `vm_window`, `coin_icon`, `die_icon`, `handshake_icon`, `paper_chip`, `bad_luck_cloud`, `sched_chip`, `text_editor_icon`.
+
+**Episode 11 icons (`p11_icons.py`)**: `Flame(height)` (`flicker`, `stop_flicker`), `puzzle_piece`, `censor_bar(width, height)`, `neck_bolts`.
+
+**Multi-CPU props (`p10_*.py`)** (preview: `p10_preview.py` -> `P10PropSheet`)
+- `EyeIcon(width, iris, opened)`: `look_at(target)`, `set_look`, `open_lids()`, `close_lids()`, `blink()`; used for snooping and peeking (and by episode 11).
+- `CacheCPU(label, size, n_cells=3)`: a `CPU` with a cache strip under it. `store(value, color)`, `set_value(i, text, color)`, `invalidate(i)`, `warmth(level, color)`, `clear()`, `pulse()`; points `slot_point()`, `cache_point()`, `cache_bottom()`, `cell_point(i)`. Parts: `cpu`, `strip`, `cells`, `texts`.
+- `ScheduleGrid(rows, columns, cell_w, cell_h, colors, row_labels, repeat_label)`: the book's CPU x time-slice table colored by job letter. `fill(row, col, job)`, `fill_row`, `fill_column`, `hatch(row, col)`, `set` / `set_row` (instant), `highlight_job`, `unhighlight`, `clear`, `cell_center`, `cell_mobs(job)`.
+- `bus_pulse(bus, a, b, color, run_time)`: a bright dot travels along `Bus.path(a, b)` (the dot hides inside the bus).
+- Icons (`p10_icons`): `suitcase_icon` (migration), `pin_icon` (affinity), `flame_icon` (warmth), `hand_up_icon`.
+
 **Gotchas**
 - Don't define a method named `dim` on a `VGroup` subclass; it shadows Manim's `Mobject.dim`.
 - `FadeOut` of a block inside a `Timeline` doesn't detach it; call `Timeline.purge()` after clearing.
 - `PrivilegeGauge` can't be scaled after creation (`set_level` rebuilds from unscaled geometry). Build it at its final size.
 - To build an instant "starts with" state from an animation: `anim.begin(); anim.finish()`.
+- **`Succession` flashes later introducers.** It adds every sub-animation's mobject at t=0, but begins
+  each one only when its turn comes. So a `Write`/`FadeIn`/`Create` that isn't first shows the finished
+  mobject until it starts. Make introducers first in a `Succession`, or group the sequence as
+  `AnimationGroup(a, b, lag_ratio=1)`, which begins everything at t=0. Don't put a `Transform` of a
+  mobject in the same `AnimationGroup` as its introducer: it would capture the empty start state.
+- Scrims and other animated mobjects sit nested inside animation groups in `scene.mobjects`. Search
+  `get_family()`, not just the top level.
 
 Known quirk: a character's `.width` / `.height` are unreliable (empty submobjects count in
 Manim's bounding box). Use `get_left()` / `get_right()` / `get_top()` / `get_bottom()`.

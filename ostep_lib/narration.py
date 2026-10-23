@@ -94,10 +94,17 @@ class NarratedScene(Scene):
 
     def _text_boxes(self):
         """(label, lo, hi) of every visible text mobject, skipping text veiled by a scrim."""
-        veil_z = max((m.z_index for m in self.mobjects if getattr(m, "is_scrim", False)), default=None)
-        boxes = []
+        # a scrim only hides what's under it once it is mostly opaque
+        # (animations nest their mobjects in groups, so search whole families)
+        veil_z = max((sm.z_index for m in self.mobjects for sm in m.get_family()
+                      if getattr(sm, "is_scrim", False) and sm.get_fill_opacity() >= 0.6), default=None)
+        boxes, visited = [], set()
 
         def walk(m):
+            # a mobject can sit in several groups (nested Successions); the renderer draws it once
+            if id(m) in visited:
+                return
+            visited.add(id(m))
             if isinstance(m, TEXT_TYPES):
                 if veil_z is not None and m.z_index <= veil_z:
                     return
@@ -147,6 +154,8 @@ class NarratedScene(Scene):
         seen = getattr(self, "_bounds_seen", set())
         self._bounds_seen = seen
         for m in self.mobjects:
+            if any(getattr(sm, "is_scrim", False) for sm in m.get_family()):   # full-frame by design
+                continue
             fam = [sm for sm in m.get_family() if isinstance(sm, VMobject) and len(sm.points)
                    and (sm.get_fill_opacity() > 0.02 or sm.get_stroke_opacity() > 0.02)]
             if not fam:

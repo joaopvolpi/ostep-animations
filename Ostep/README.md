@@ -159,6 +159,10 @@ as described. When a new recurring prop is invented, add it here.
 | **OS token** | A small red "OS" badge (`KernelToken`) that rides on the CPU chip when the kernel is running. | Who is on the CPU: the OS or a process (traps, timer interrupts, context switches). |
 | **Alarm clock** | `AlarmClock` that rings. | The timer interrupt, wherever it appears. |
 | **Padlock** | `Padlock`: red when closed, green when open. | Assumptions, protection, locks: one padlock design for the series. |
+| **MLFQ ladder** | `MLFQLadder`: stacked priority lanes, with jobs moving between them. | Multi-level queues (08, plus small versions in 10/11). |
+| **Raffle drum** | `RaffleDrum` with process-colored `Ticket`s. | Proportional share and lottery (09, and 08's teaser). |
+| **Cache CPU** | `CacheCPU`: a CPU chip with a small cache strip under it. | Caches, coherence and affinity (10); later TLBs. |
+| **Eye** | `EyeIcon` with a moving pupil. | Watching or snooping, and "the program doesn't notice" (10–15). |
 | **Metric readout** | `MetricReadout`: the average formula written term by term, with the final value boxed green or red. | Every scheduling metric (turnaround, response). |
 
 **Timeline state encoding (series standard):** running = solid process color; ready = process-color
