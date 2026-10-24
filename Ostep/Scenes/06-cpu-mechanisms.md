@@ -97,7 +97,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Problem number one. What if the process wants to do something *restricted*, like reading from the disk?" | The crux strip writes in at the top. A walks to the left of the screen; a request arrow "read" leaves A toward the Disk. |
+| 1 | "Which gives us the first question to answer: How to perform restricted operations? Problem number one. What if the process wants to do something *restricted*, like reading from the disk?" | The crux strip writes in at the top. A walks to the left of the screen; a request arrow "read" leaves A toward the Disk. |
 | 2 | "So just let it. It's *its* program." | Student (curious). The arrow goes straight to the Disk; data flows back. |
 | 3 | "A file system checks permissions before it opens a file." | Professor (worried). The arrow is rewound; the gate/booth appears in its path and checks a badge (green check on A's own file). |
 | 4 | "If any process could talk to the disk directly, it would skip the check…" | A second request arrow goes around the booth, straight to the Disk. |
@@ -213,7 +213,7 @@
 | 2 | "But if a process is running on the CPU, then by definition the OS is *not* running." | Professor (thinking). A is on the chip. The OS token goes translucent (dims to 0.3) with a small "zZ". The dotted arrows break. |
 | 3 | "And if the OS isn't running…" | The token's arms flail at the boundary; nothing. |
 | 4 | "…it can't do anything about it." | Student (confused). A "locked out" padlock on the token. |
-| 5 | (crux card) | A Crux strip drops from the top (accent `VIRT`): **"How to regain control of the CPU?"** with the subtitle "...so that it can switch between processes?" (font 22). Hold 1.2 s, then it docks as a thin strip. |
+| 5 | "Which brings us to the crux: How to regain control of the CPU? ...so that it can switch between processes?" then "There are two answers. Let's start with the polite one." (the card docks under this line) | A Crux strip drops from the top (accent `VIRT`): **"How to regain control of the CPU?"** with the subtitle "...so that it can switch between processes?" (font 22). Hold 1.2 s, then it docks as a thin strip. |
 
 **Characters:** Professor (thinking), Student (confused).
 **Ends with:** LDE world (A running, B on the bench, the OS token dim), crux strip at top.
@@ -232,7 +232,7 @@
 | 5 | "And if a program loops forever, and never makes a system call?" | Student (curious). A hops back on; A spins with the loop arrow. A tick counter beside the chip reads "tick 1, 2, 3 …" climbing. The OS token sleeps (dim). |
 | 6 | "Then there's one cure, the oldest in computing: reboot the machine." | Professor (worried). The Computer pops up at bottom-center (0, −2.9), scale 0.6, overwhelmed → error. A power switch (`PowerSwitch`) flips off and on. The screen blinks to black for 0.3 s and comes back with a fresh, empty CPU. |
 | 7 | "That's the plan?" | Student (sad). Pause 1 s. |
-| 8 | (short tip) | A small Tip card slides in from the right, "TIP: Reboot is useful" with three short rows: "known state", "reclaims leaked resources", "easy to automate". It stays 2.5 s, then slides out. |
+| 8 | "Reboot is more useful than it sounds: it returns the software to a known state, reclaims leaked resources, and is easy to automate." | A small Tip card slides in from the right, "TIP: Reboot is useful" with three short rows, stays while it is read, then slides out. |
 
 **Characters:** Student (curious → sad), Professor (worried), Computer (overwhelmed → error).
 **Ends with:** the LDE world, empty user seat (A gone after the reboot), the OS token awake. Transition: A and B respawn on their benches (ready) in S11.
@@ -245,7 +245,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "The answer was found many years ago, and it's simple: a **timer interrupt**." | The crux strip transforms to the new question. The timer box slides in. Term highlight "timer interrupt". A runs on the chip in an infinite loop (loop arrow). |
+| 1 | "Which leaves us with a harder question: How to gain control without cooperation? The answer was found many years ago, and it's simple: a **timer interrupt**." | The crux strip transforms to the new question. The timer box slides in. Term highlight "timer interrupt". A runs on the chip in an infinite loop (loop arrow). |
 | 2 | "A timer device can be programmed to raise an interrupt every few milliseconds." | The alarm clock face's hand spins; every 1 s a small bell ring animation (waves) fires. A small label "every X ms" with a tick mark on a mini Timeline. |
 | 3 | "When it fires, the running process is halted, whatever it was doing…" | The timer rings; a lightning bolt flies from the timer to the CPU chip. A freezes (outline), regardless of the loop. |
 | 4 | "…and a pre-configured **interrupt handler** in the OS runs." | The chip rides down across the line (gauge → KERNEL); the OS token hops on. Term highlight "interrupt handler". The trap table's `timer` row lights; a handler box lights. |
@@ -256,7 +256,7 @@
 | 9 | "So the process doesn't even notice?" | Student (curious). A's frozen face has no expression change. |
 | 10 | "Like a movie paused and played again." | Professor (happy). A play/pause glyph pair (`PauseGlyph` / `PlayGlyph`) toggles over A; A resumes after return-from-trap (the chip rides up, A hops on). |
 | 11 | "This is the **non-cooperative** approach: the OS takes control by force, with hardware help." | Term highlight "non-cooperative". The "trust" ribbon from S10 flips to "no trust needed". The timer box glows. A small Tip card "TIP: Use the timer interrupt to regain control" slides in briefly. |
-| 12 | (tip) | A second tiny tip: "Misbehaving process? One strike, and you're out." (`TIP: Dealing with application misbehavior`), 3 s. |
+| 12 | "And a process that misbehaves gets one strike: it's out." | The first tip slides out; a second tiny tip: "Misbehaving process? One strike, and you're out." slides in, then out. |
 
 **Characters:** Student (excited → curious), Professor (happy).
 **Ends with:** LDE world with the timer active (ticking every 1 s), A frozen at the end of the scene, chip at the kernel seat. Timer, trap table (3 rows filled), `k-stack(A)` with A's packet.
@@ -352,7 +352,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "This is how the world works, too." | The playroom draws in. A (smaller, scale 0.6) sits on a rug. |
+| 1 | "One more picture to hold onto. This is how the world works, too." | The playroom draws in. A (smaller, scale 0.6) sits on a rug. |
 | 2 | "When parents baby-proof a room, they lock the cabinets with dangerous things and cover the electrical sockets." | A cabinet with a `padlock` appears (left), then a wall socket with a cover. Each icon pops in `GrowFromCenter`. |
 | 3 | "Once that's done, the baby can roam freely, and the parents can relax." | A wanders happily left and right; a small happy parent figure (just a Professor head-and-shoulders, scale 0.5, neutral → happy) in a corner of the room. |
 | 4 | "The OS baby-proofs the CPU." | The room's three items map to the LDE world on the right with arrows: cabinet lock → user mode (dashed boundary); socket cover → trap table; wall clock → timer. The LDE world un-dims. |

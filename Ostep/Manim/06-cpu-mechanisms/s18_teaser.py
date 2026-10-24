@@ -10,7 +10,7 @@ from s17_recap import build_end as s17_end  # noqa: E402
 
 class S18Teaser(Ep06Scene):
     def construct(self):
-        stu, prof = corner_chars(False, "neutral", "neutral")
+        stu, prof = corner_chars(True, "neutral", "neutral")
         d = s17_end()
         recap = VGroup(d["header"], d["lines"], *d["icons"])
         self.add(recap, stu, prof)
@@ -36,12 +36,11 @@ class S18Teaser(Ep06Scene):
 
         # S18.3
         pts = [P3(p.get_center()[0], 0.3) for p in ps]
-        self.say("The machinery is done. Next time we meet the scheduler.",
-                 Succession(spot.animate(run_time=1.0).move_beam_to(pts[0]), spot.animate(run_time=1.0).move_beam_to(pts[1]),
-                            spot.animate(run_time=1.0).move_beam_to(pts[2]), spot.animate(run_time=1.0).move_beam_to(pts[1] + UP * 0.1)))
-        self.play(FadeOut(Group(*self.mobjects)), run_time=0.5)
         dot = Dot(radius=0.1).set_fill(VIRT, 1)
         nxt = Text("Next: 07 · CPU Scheduling", font_size=40, color=TEXT)
         card = VGroup(dot, nxt).arrange(RIGHT, buff=0.25).move_to(ORIGIN)
-        self.play(FadeIn(card))
-        self.beat(2.0)
+        everything = Group(*self.mobjects)
+        self.say("The machinery is done. Next time we meet the scheduler.",
+                 Succession(spot.animate(run_time=0.8).move_beam_to(pts[0]), spot.animate(run_time=0.8).move_beam_to(pts[1]),
+                            spot.animate(run_time=0.8).move_beam_to(pts[2]),
+                            FadeOut(everything, run_time=0.5), FadeIn(card)))

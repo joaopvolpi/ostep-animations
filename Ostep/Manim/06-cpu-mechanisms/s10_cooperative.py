@@ -45,7 +45,7 @@ class S10Cooperative(Ep06Scene):
         mac = Text("early Mac, Xerox Alto", font_size=20, color=DIM).move_to(P3(4.0, 2.6))
         self.say("Early systems, like the first Macintosh, took the cooperative approach: the OS trusts processes "
                  "to give up the CPU periodically.",
-                 Succession(self.term("cooperative approach"), AnimationGroup(Write(rib), FadeIn(mac))))
+                 Succession(self.note("cooperative approach"), AnimationGroup(Write(rib), FadeIn(mac))))
 
         # S10.2
         self.say("And most do, through system calls.",
@@ -97,6 +97,6 @@ class S10Cooperative(Ep06Scene):
                       Text("reclaims leaked resources", font_size=22, color=DIM),
                       Text("easy to automate", font_size=22, color=DIM)).arrange(DOWN, buff=0.12)
         tip = TipCard(body, width=4.2).move_to(P3(3.6, 1.2))
-        self.play(tip.slide_in())
-        self.beat(2.5)
-        self.play(tip.slide_out())
+        self.say("Reboot is more useful than it sounds: it returns the software to a known state, reclaims leaked "
+                 "resources, and is easy to automate.",
+                 Succession(tip.slide_in(), Wait(3.5), tip.slide_out()))

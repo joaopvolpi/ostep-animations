@@ -90,10 +90,7 @@ class S08WholeProtocol(Ep06Scene):
 
         # S08.12
         bar = chart.sweep(PR)
-        self.say("The program ran directly on the CPU nearly the whole time.",
-                 Succession(FadeIn(bar), Wait(2.0), FadeOut(bar)))
-        self.beat(1.5)
-
-        # S08 end: the chart shrinks to the legend
         leg = chart_legend()
-        self.play(ReplacementTransform(chart, leg), FadeOut(thumb), run_time=1.2)
+        self.say("The program ran directly on the CPU nearly the whole time.",
+                 Succession(FadeIn(bar), Wait(1.5), FadeOut(bar),
+                            AnimationGroup(ReplacementTransform(chart, leg), FadeOut(thumb), run_time=1.2)))

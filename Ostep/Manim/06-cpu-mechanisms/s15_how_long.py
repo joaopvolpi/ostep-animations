@@ -13,7 +13,7 @@ class S15HowLong(Ep06Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("context switch")
-        stu, prof = corner_chars(False, "neutral", "neutral")
+        stu, prof = corner_chars(True, "neutral", "neutral")
         d = s13_end()
         w, b, pA = d["w"], d["b"], d["pA"]
         w.boundary.set_z_index(-5)
@@ -40,7 +40,7 @@ class S15HowLong(Ep06Scene):
 
         l1, b1, v1 = row("system call", 4, cy + 0.15, r"\approx 4\,\mu\mathrm{s}")
         l2, b2, v2 = row("context switch", 6, cy - 0.5, r"\approx 6\,\mu\mathrm{s}")
-        src = Text("Linux 1.3.37 · 200 MHz", font_size=16, color=DIM).move_to(P3(left, cy + 0.85), aligned_edge=LEFT)
+        src = Text("Linux 1.3.37 · 200 MHz", font_size=16, color=DIM).move_to(P3(left, cy - 1.1), aligned_edge=LEFT)
 
         # S15.2
         self.say("In 1996, on a 200-megahertz machine, a system call took about four microseconds, and a context "
@@ -67,7 +67,7 @@ class S15HowLong(Ep06Scene):
         cl.next_to(cb2, UP, buff=0.05)
         ml.next_to(mb2, UP, buff=0.05)
         self.say("Not everything speeds up with the CPU, though: many OS operations are bound by memory bandwidth.",
-                 Succession(AnimationGroup(FadeIn(cb), FadeIn(mb)), AnimationGroup(Transform(cb, cb2), Transform(mb, mb2),
+                 Succession(AnimationGroup(FadeOut(VGroup(l1, l2, b1, b2, nv1, nv2, src)), FadeIn(cb), FadeIn(mb)), AnimationGroup(Transform(cb, cb2), Transform(mb, mb2),
                                                                                     FadeIn(cl), FadeIn(ml))))
 
         # S15.5
@@ -76,7 +76,7 @@ class S15HowLong(Ep06Scene):
         bang = Text("!", font_size=48, color=RED_BAD, weight=BOLD)
         bl = bolt(0.3).move_to(timer.get_center())
         self.say("What if a timer interrupt fires during a system call?", stu.change("confused"),
-                 Succession(AnimationGroup(card.slide_out(), FadeOut(VGroup(l1, l2, b1, b2, nv1, nv2, src, cb, mb, cl, ml)), FadeOut(sw)),
+                 Succession(AnimationGroup(card.slide_out(), FadeOut(VGroup(cb, mb, cl, ml)), FadeOut(sw)),
                             w.down("B"),
                             AnimationGroup(FadeIn(prog_bg.move_to(P3(0, -0.15))), FadeIn(prog.move_to(prog_bg.get_left(), aligned_edge=LEFT))),
                             prog.animate(run_time=1.0).stretch_to_fit_width(0.5, about_edge=LEFT),
@@ -92,10 +92,10 @@ class S15HowLong(Ep06Scene):
         # S15.7
         gate = ShieldGate(1.0).move_to(P3(2.6, 0.2))
         bolts = [bolt(0.22).move_to(timer.get_center()) for _ in range(3)]
-        clk = ClockIcon(0.3).move_to(P3(4.3, -0.4))
-        too = Text("too long?", font_size=18, color=DIM).next_to(clk, DOWN, buff=0.1)
+        clk = ClockIcon(0.3).move_to(P3(4.7, 0.1))
+        too = Text("too long?", font_size=18, color=DIM).next_to(clk, UP, buff=0.1)
         self.say("One simple trick is to disable interrupts while handling one, but not for long, or you lose some.",
-                 Succession(self.term("disable interrupts"), FadeOut(bang), FadeIn(gate, shift=DOWN * 0.8),
+                 Succession(self.note("disable interrupts"), FadeOut(bang), FadeIn(gate, shift=DOWN * 0.8),
                             AnimationGroup(*[Succession(Wait(0.3 * k), PacketFly(bolts[k], P3(3.3 + 0.35 * k, 0.6 + 0.1 * k), arc=0.3, run_time=0.8))
                                              for k in range(3)]),
                             AnimationGroup(FadeIn(clk), FadeIn(too)), clk.spin(1.0, 1.5),
@@ -104,7 +104,7 @@ class S15HowLong(Ep06Scene):
         # S15.8
         lock = padlock_icon(0.35, KERNEL_COLOR).move_to(pA.get_corner(UR) + P3(0.0, 0.1))
         self.say("Real kernels also use locking to protect their data structures.",
-                 Succession(AnimationGroup(FadeOut(VGroup(clk, too)), FadeIn(lock, scale=1.6)), self.term("locking")))
+                 Succession(AnimationGroup(FadeOut(VGroup(clk, too)), FadeIn(lock, scale=1.6)), self.note("locking")))
 
         # S15.9
         pt = ep_tag("→ Part II").move_to(P3(0, 1.8))

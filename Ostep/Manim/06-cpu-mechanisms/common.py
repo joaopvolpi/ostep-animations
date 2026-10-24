@@ -280,6 +280,9 @@ class Ep06Scene(NarratedScene):
     def term(self, text, **kw):
         return self.terms.show(text, **kw)
 
+    def note(self, text, **kw):
+        return self.terms.note(text, **kw)
+
 
 # ---------------------------------------------------------------------------
 # Small builders
@@ -386,13 +389,13 @@ def build_s03_end():
         apply_now(s03_write(chart, i))
     apply_now(chart.link(5, 6))
     apply_now(chart.link(7, 8))
-    chart.cursor.set_fill(CPU_COLOR, 0)
-    for it in chart.items:
-        it.set_opacity(1)
     fast = tag("FAST", GREEN_OK, 24).move_to(P3(3.2, 1.55))
-    n1 = numeral(1).move_to(P3(6.1, 1.3))
-    n2 = numeral(2).move_to(P3(6.1, 0.1))
-    return dict(chart=chart, fast=fast, n1=n1, n2=n2)
+    n1 = numeral(1).move_to(P3(6.15, 1.5))
+    n2 = numeral(2).move_to(P3(6.15, 0.3))
+    icon_cpu = CPU(0.5, label=None, pins=2).move_to(P3(6.1, -0.6))
+    wall = Rectangle(width=0.08, height=0.6).set_fill(USER_COLOR, 0.4).set_stroke(USER_COLOR, 2).move_to(P3(6.1, -1.3))
+    ib = proc("B", "ready", scale=0.3).next_to(wall, DOWN, buff=0.02)
+    return dict(chart=chart, fast=fast, n1=n1, n2=n2, extras=VGroup(icon_cpu, wall, ib))
 
 
 def numeral(n, color=VIRT, radius=0.3):

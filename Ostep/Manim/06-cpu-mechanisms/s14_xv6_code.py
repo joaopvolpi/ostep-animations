@@ -26,12 +26,12 @@ class S14Xv6Code(Ep06Scene):
 
         # S14.1
         code = swtch_code(18).move_to(P3(-2.4, 0.3))
-        cap = Text("xv6 (Figure 6.4, trimmed)", font_size=18, color=DIM).next_to(code, DOWN, buff=0.15)
+        cap = Text("xv6 (Figure 6.4, trimmed)", font_size=18, color=DIM).next_to(code, UP, buff=0.15)
         old_slot = VGroup(save_slot(0.7, COL["A"]), Text("old", font_size=20, color=TEXT)).arrange(DOWN, buff=0.08).move_to(P3(3.6, 2.2))
         new_slot = VGroup(save_slot(0.7, COL["B"]), Text("new", font_size=20, color=TEXT)).arrange(DOWN, buff=0.08).move_to(P3(5.2, 2.2))
         cpu_g = CPU(0.8, label=None, pins=3).move_to(P3(4.4, 0.4))
-        t1 = KernelStack("old stack", width=1.3, height=1.0, slots=2).move_to(P3(3.7, -1.5))
-        t2 = KernelStack("new stack", width=1.3, height=1.0, slots=2).move_to(P3(5.2, -1.5))
+        t1 = KernelStack("old stack", width=1.3, height=1.0, slots=2).move_to(P3(3.3, -2.0))
+        t2 = KernelStack("new stack", width=1.3, height=1.0, slots=2).move_to(P3(4.8, -2.0))
         ptr = Arrow(cpu_g.get_bottom() + DOWN * 0.05, t1.get_top() + UP * 0.35, buff=0, color=CPU_COLOR, stroke_width=4)
         overlay = Rectangle(width=16, height=9).set_fill(BG, 0.8).set_stroke(width=0).set_z_index(8)
         for m in (code, cap, old_slot, new_slot, cpu_g, t1, t2, ptr):

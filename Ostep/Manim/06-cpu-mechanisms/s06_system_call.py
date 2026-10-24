@@ -37,10 +37,10 @@ class S06SystemCall(Ep06Scene):
         self.add(w.boundary, w.gauge, w.chip, w.token, disk, stu, prof)
 
         # S06.1
-        self.say("But then how does a program ever read a file?", stu.change("confused"))
-        self.play(AnimationGroup(FadeIn(ks), FadeIn(hb), FadeIn(ring), FadeIn(a),
-                                 disk.animate.scale(0.6).move_to(S6_DISK), run_time=1.0))
-        self.play(w.up("A"))
+        self.say("But then how does a program ever read a file?", stu.change("confused"),
+                 Succession(AnimationGroup(FadeIn(ks), FadeIn(hb), FadeIn(ring), FadeIn(a),
+                                           disk.animate.scale(0.6).move_to(S6_DISK), run_time=1.0),
+                            w.up("A")))
 
         # S06.2
         door = door_in_line().move_to(P3(0, BY)).set_z_index(1)
@@ -70,7 +70,7 @@ class S06SystemCall(Ep06Scene):
         trap_code = snippet("trap", 24, CPU_COLOR).move_to(P3(1.7, 1.7))
         self.say("To make one, the program runs a special instruction: a trap.",
                  Succession(FadeIn(trap_code, shift=LEFT * 0.2), Indicate(trap_code, color=CPU_COLOR)),
-                 Succession(Wait(1.0), self.term("trap")))
+                 late(1.0, self.note("trap")))
 
         # S06.6
         pk = RegPacket(COL["A"]).move_to(a.get_center())
@@ -95,7 +95,7 @@ class S06SystemCall(Ep06Scene):
                             w.ride("user", riders=(data,), rt=0.9),
                             AnimationGroup(w.hop_on_chip("A"), ks.pop(to=P3(0, 1.6), fade=True, run_time=0.9)),
                             Wiggle(a, scale_value=1.08, rotation_angle=0.05, run_time=0.6)),
-                 Succession(Wait(0.5), self.term("return-from-trap")))
+                 late(0.5, self.note("return-from-trap")))
         self.remove(pk)
         self.play(FadeOut(data), run_time=0.3)
 
@@ -107,9 +107,10 @@ class S06SystemCall(Ep06Scene):
 
         # S06.10
         lab = RegPacket(COL["A"], labels=["PC", "flags", "..."]).move_to(ks.slot_point(0))
+        kl = Text("kernel stack", font_size=22, color=KERNEL_COLOR).move_to(P3(-3.6, -2.75))
         self.say("On x86, it pushes the program counter, the flags and a few more onto a per-process kernel stack.",
                  Succession(AnimationGroup(FadeOut(saved), ReplacementTransform(pk2, lab)),
-                            self.terms.show("kernel stack", dock=False, size=32, at=P3(-3.6, -0.75), hold=1.2)))
+                            AnimationGroup(FadeIn(kl, shift=UP * 0.1), Wait(1.5)), FadeOut(kl)))
         ks.items[-1] = lab
 
         # S06.11
@@ -138,6 +139,5 @@ class S06SystemCall(Ep06Scene):
         # S06.14
         hand = tag("hand-coded assembly", CPU_COLOR, 18).move_to(box.get_bottom() + DOWN * 0.0)
         self.say("Somebody wrote that assembly for you.", prof.change("proud"),
-                 FadeIn(hand, scale=1.2), min_time=2.0)
-        self.play(prof.blink())
-        self.beat(0.8)
+                 Succession(FadeIn(hand, scale=1.2), Wait(1.0), FadeOut(VGroup(box, cl, sn, chips, hand), run_time=0.6)),
+                 min_time=2.2)

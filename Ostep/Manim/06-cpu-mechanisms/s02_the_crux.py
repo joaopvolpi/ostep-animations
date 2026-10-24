@@ -27,14 +27,13 @@ class S02TheCrux(Ep06Scene):
         stage = [d[k] for k in ("cpu", "a", "mem", "scr", "disk", "book", "comp", "loop")]
         stu, prof = d["stu"], d["prof"]
         self.add(*stage, stu, prof)
-        cs, cp = corner_chars(False, "neutral", "explaining")
+        cs, cp = corner_chars(True, "neutral", "explaining")
 
         # S02.1
         crux = CruxCard(CRUX_Q1, CRUX_SUB1, accent=VIRT).move_to(P3(0, 0.4))
-        self.play(FadeOut(VGroup(*stage), run_time=0.8), AnimationGroup(
-            stu.animate.scale(0.75).move_to(cs.get_center()), prof.animate.scale(0.75).move_to(cp.get_center())),
-            run_time=1.0)
-        self.say_crux(crux)
+        self.say_crux(crux, FadeOut(VGroup(*stage), run_time=0.8), AnimationGroup(
+            stu.animate.scale(0.6).move_to(cs.get_center()), prof.animate.scale(0.6).move_to(cp.get_center()),
+            run_time=1.0), lead="Which brings us to the real question: {q}")
 
         # S02.2
         sl = slices_strip()
@@ -66,7 +65,7 @@ class S02TheCrux(Ep06Scene):
         self.say("The answer is a technique with a long name: limited direct execution.",
                  AnimationGroup(ReplacementTransform(VGroup(al, ar), line), Rotate(p, 0.18, about_point=p.get_bottom()),
                                 FadeOut(sw), FadeOut(wl), FadeOut(sw_l), FadeOut(wl_l)),
-                 Succession(Wait(1.0), self.term("limited direct execution", hold=1.0)))
+                 late(1.0, self.term("limited direct execution", hold=1.0)))
 
         # S02.7
         direct = Text("direct", font_size=48, color=TEXT).move_to(P3(-2.2, 0.9))

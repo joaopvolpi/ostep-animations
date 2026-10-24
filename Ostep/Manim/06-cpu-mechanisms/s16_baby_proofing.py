@@ -54,7 +54,7 @@ class S16BabyProofing(Ep06Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("locking")
-        stu, prof = corner_chars(False, "neutral", "neutral")
+        stu, prof = corner_chars(True, "neutral", "neutral")
         d = s13_end()
         w = d["w"]
         w.boundary.set_z_index(-5)
@@ -68,7 +68,7 @@ class S16BabyProofing(Ep06Scene):
                                    self.terms.dock_at, right_aligned=True)
 
         # S16.1
-        self.say("This is how the world works, too.",
+        self.say("One more picture to hold onto. This is how the world works, too.",
                  AnimationGroup(FadeOut(VGroup(*stage), run_time=1.0), Transform(self.terms.docked, newterm, run_time=1.0),
                                 FadeIn(m, run_time=1.0), FadeIn(dimmer, run_time=1.0)),
                  Succession(Wait(0.8), AnimationGroup(FadeIn(r["room"]), FadeIn(r["rug"]), FadeIn(r["baby"]))))

@@ -13,7 +13,7 @@ class S03NaiveProtocol(Ep06Scene):
         self.add_docked_term("limited direct execution")
         st = strip(CRUX_Q1)
         self.add(st)
-        stu, prof = corner_chars(True, "neutral", "explaining")
+        stu, prof = corner_chars(True, "curious", "explaining")
         self.add(stu, prof)
         chart = make_s03_chart()
         self.add(chart)

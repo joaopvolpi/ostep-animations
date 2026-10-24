@@ -15,7 +15,7 @@ class S05TwoModes(Ep06Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("limited direct execution")
-        stu, prof = corner_chars(False, "neutral", "neutral")
+        stu, prof = corner_chars(True, "neutral", "neutral")
         d = s04_end()
         glyph, lk, disk, a, st = d["glyph"], d["lock"], d["disk"], d["a"], d["strip"]
         self.add(stu, prof, st, disk, a, glyph, lk)
@@ -29,7 +29,7 @@ class S05TwoModes(Ep06Scene):
                                 ReplacementTransform(VGroup(glyph, lk), w.chip),
                                 FadeIn(w.gauge)),
                  Succession(Wait(1.6), hop_bottom(a, w.chip_slot(), run_time=0.7)),
-                 Succession(Wait(1.0), self.term("user mode / kernel mode")))
+                 late(1.0, self.term("user mode / kernel mode")))
         a.set_expression("running")
 
         # S05.2

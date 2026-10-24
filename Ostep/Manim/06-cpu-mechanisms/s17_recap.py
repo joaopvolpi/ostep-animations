@@ -69,7 +69,7 @@ def build_end():
 class S17Recap(Ep06Scene):
     def construct(self):
         self.add_badge()
-        stu, prof = corner_chars(False, "neutral", "neutral")
+        stu, prof = corner_chars(True, "neutral", "neutral")
         d = s16_end()
         r, m = d["r"], d["m"]
         term = self.add_docked_term("limited direct execution")

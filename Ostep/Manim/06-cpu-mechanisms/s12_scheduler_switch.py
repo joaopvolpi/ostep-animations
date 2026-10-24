@@ -53,13 +53,13 @@ class S12SchedulerSwitch(Ep06Scene):
         # S12.3
         tg = ep_tag("→ Ep. 07-10").next_to(spot.lamp, RIGHT, buff=0.2)
         self.say("That's the job of the scheduler, and its policies fill the next episodes.",
-                 Succession(self.term("scheduler"), FadeIn(tg, scale=1.3)))
+                 Succession(self.note("scheduler"), FadeIn(tg, scale=1.3)))
 
         # S12.4
         gears = GearPair(0.2).next_to(w.token, UP, buff=0.05)
         self.say("If the decision is to switch, the OS runs a low-level piece of code: the context switch.",
                  AnimationGroup(spot.animate(run_time=1.2).move_beam_to(P3(3.4, 1.7)), FadeOut(tg)),
-                 Succession(Wait(1.0), FadeIn(gears), gears.spin(TAU, 1.5)), Succession(Wait(1.0), self.term("context switch")))
+                 Succession(Wait(1.0), FadeIn(gears), gears.spin(TAU, 1.5)), late(1.0, self.term("context switch")))
 
         # S12.5
         big = save_slot(0.9).move_to(P3(0, 1.2))

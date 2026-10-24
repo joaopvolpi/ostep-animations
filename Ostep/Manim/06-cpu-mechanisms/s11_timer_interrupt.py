@@ -57,7 +57,7 @@ class S11TimerInterrupt(Ep06Scene):
         new = strip(CRUX_Q4)
         timer = make_timer()
         loop = loop_arrow(0.4).move_to(P3(0, 2.7))
-        self.say("The crux: How to gain control without cooperation?", ReplacementTransform(old, new))
+        self.say("Which leaves us with a harder question: How to gain control without cooperation?", ReplacementTransform(old, new))
         self.say("The answer was found many years ago, and it's simple: a timer interrupt.",
                  Succession(FadeIn(timer, shift=LEFT * 0.8), self.term("timer interrupt")),
                  Succession(Wait(1.0), AnimationGroup(w.hop_on_chip("A"), FadeIn(loop))))
@@ -80,7 +80,7 @@ class S11TimerInterrupt(Ep06Scene):
         # S11.4
         self.say("…and a pre-configured interrupt handler in the OS runs.",
                  Succession(w.down("A"), tt.highlight_row(1), Wait(0.5)),
-                 Succession(Wait(1.5), self.term("interrupt handler")))
+                 late(1.5, self.note("interrupt handler")))
 
         # S11.5
         t1 = tag("keep A?", DIM, 20).move_to(P3(-1.7, -0.75))
@@ -131,12 +131,10 @@ class S11TimerInterrupt(Ep06Scene):
         tip = TipCard("Use the timer interrupt to regain control", width=5.0, font_size=24).move_to(P3(0, 1.9))
         rib2 = trust_ribbon("no trust needed")
         self.say("This is the non-cooperative approach: the OS takes control by force, with hardware help.",
-                 Succession(self.term("non-cooperative"), AnimationGroup(Transform(rib, rib2), timer.ring(0.8)), tip.slide_in(LEFT)))
-        self.beat(1.0)
-        self.play(tip.slide_out(LEFT))
+                 Succession(self.note("non-cooperative"), AnimationGroup(Transform(rib, rib2), timer.ring(0.8)), tip.slide_in(LEFT)))
+
 
         # S11.12
         tip2 = TipCard("Misbehaving process? One strike, and you're out.", title="TIP", width=5.0, font_size=24).move_to(P3(0, 1.9))
-        self.play(tip2.slide_in(LEFT))
-        self.beat(3.0)
-        self.play(tip2.slide_out(LEFT))
+        self.say("And a process that misbehaves gets one strike: it's out.",
+                 Succession(tip.slide_out(LEFT), tip2.slide_in(LEFT), Wait(1.0), tip2.slide_out(LEFT)))

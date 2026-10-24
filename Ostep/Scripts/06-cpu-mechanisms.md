@@ -73,7 +73,7 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 > **THE CRUX: HOW TO PERFORM RESTRICTED OPERATIONS**
 > A process must be able to perform I/O and some other restricted operations, but without giving the process complete control over the system. How can the OS and hardware work together to do so?
 
-**Narrator (V.O.):** Problem number one. What if the process wants to do something *restricted*, like reading from the disk?
+**Narrator (V.O.):** Which gives us the first question to answer: *How to perform restricted operations?* Problem number one. What if the process wants to do something *restricted*, like reading from the disk?
 
 **Student** (curious): So just let it. It's *its* program.
 
@@ -142,7 +142,7 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 > **THE CRUX: HOW TO REGAIN CONTROL OF THE CPU**
 > How can the operating system regain control of the CPU so that it can switch between processes?
 
-**Narrator (V.O.):** Early systems, like the first Macintosh, took the **cooperative approach**: the OS *trusts* processes to give up the CPU periodically. And most do, through system calls. Some systems even have an explicit `yield` call that does nothing but hand over the CPU. A process that does something illegal, like dividing by zero, also traps into the OS, which will probably terminate it.
+**Narrator (V.O.):** There are two answers. Let's start with the polite one. Early systems, like the first Macintosh, took the **cooperative approach**: the OS *trusts* processes to give up the CPU periodically. And most do, through system calls. Some systems even have an explicit `yield` call that does nothing but hand over the CPU. A process that does something illegal, like dividing by zero, also traps into the OS, which will probably terminate it.
 
 **Student** (curious): And if a program loops forever, and never makes a system call?
 
@@ -150,13 +150,15 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 
 **Student** (sad): That's the plan?
 
+**Professor** (neutral): Reboot is more useful than it sounds: it returns the software to a known state, reclaims leaked resources, and is easy to automate.
+
 *Visual idea:* A and B share the CPU. A calls `yield()`; the CPU passes to B (the cooperative case). Then A enters an infinite loop with a loop arrow, B waits ready and a clock ticks, the Computer overwhelmed, a "reboot" power switch flips. A small tip card: "Reboot is useful: known state, reclaims leaked resources, easy to automate."
 
 ### B09 — The alarm clock  `build-up` (~1:10)
 > **THE CRUX: HOW TO GAIN CONTROL WITHOUT COOPERATION**
 > How can the OS gain control of the CPU even if processes are not being cooperative? What can the OS do to ensure a rogue process does not take over the machine?
 
-**Narrator (V.O.):** The answer was found many years ago, and it's simple: a **timer interrupt**.
+**Narrator (V.O.):** Which leaves us with a harder question: *How to gain control without cooperation?* The answer was found many years ago, and it's simple: a **timer interrupt**.
 
 **Narrator (V.O.):** A timer device can be programmed to raise an interrupt every few milliseconds. When it fires, the running process is halted, whatever it was doing, and a pre-configured **interrupt handler** in the OS runs. The OS has regained control. It can stop this process and start another.
 
@@ -164,7 +166,7 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 
 **Student** (curious): So the process doesn't even notice?
 
-**Professor** (happy): Like a movie paused and played again. This is the **non-cooperative** approach: the OS takes control by force, with hardware help.
+**Professor** (happy): Like a movie paused and played again. This is the **non-cooperative** approach: the OS takes control by force, with hardware help. And a process that misbehaves gets one strike: it's out.
 
 *Visual idea:* The same infinite loop as B08, but now an alarm clock icon on the OS side rings every tick. A flash across the boundary, the gauge flips, A is pulled off the CPU, and the OS token takes the chip. A tip card: "Misbehaving process? One strike and you're out."
 
@@ -199,7 +201,7 @@ Time sharing needs two things that pull in opposite directions: programs that ru
 *Visual idea:* A stopwatch with "4 µs" and "6 µs" (1996) shrinking to "< 1 µs" today. An Aside card. Then a second timer interrupt arrives while the kernel runs; a gate (a small shield) closes in front of it: "disable interrupts"; a tag "→ Concurrency".
 
 ### B12 — Baby-proofing the CPU  `big picture` (~0:40)
-**Narrator (V.O.):** This is how the world works, too. When parents baby-proof a room, they lock the cabinets with dangerous things and cover the electrical sockets. Once that's done, the baby can roam freely, and the parents can relax.
+**Narrator (V.O.):** One more picture to hold onto. This is how the world works, too. When parents baby-proof a room, they lock the cabinets with dangerous things and cover the electrical sockets. Once that's done, the baby can roam freely, and the parents can relax.
 
 **Narrator (V.O.):** The OS baby-proofs the CPU. At boot it sets up the trap handlers and starts the timer. Then it runs processes only in restricted mode, at full speed, and steps in only for privileged operations, or when a process has held the CPU too long.
 

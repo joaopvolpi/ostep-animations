@@ -71,4 +71,5 @@ class S09RegainControl(Ep06Scene):
         # S09.5
         crux = CruxCard(CRUX_Q3, CRUX_SUB3, accent=VIRT).move_to(P3(0, 0.4))
         self.play(FadeOut(VGroup(lock, lk, zz, leg)), run_time=0.6)
-        self.say_crux(crux, dock=True, font_size=22)
+        self.say_crux(crux, hold=0.3, lead="Which brings us to the crux: {q}")
+        self.say("There are two answers. Let's start with the polite one.", crux.dock(font_size=22))

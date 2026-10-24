@@ -184,7 +184,8 @@ class S13WatchingASwitch(Ep06Scene):
         g2 = Text("trapped from B", font_size=16, color=DIM).move_to(P3(1.0, -1.1)).shift(UP * 0.55)
         self.say("That second save makes the system look as if it trapped into the kernel from B, not from A.",
                  Succession(AnimationGroup(FadeOut(p2), FadeOut(t2), FadeIn(ghost), FadeIn(g1)),
-                            AnimationGroup(ghost.animate(run_time=1.5).move_to(P3(1.0, -1.1)), ReplacementTransform(g1, g2),
+                            AnimationGroup(ghost.animate(run_time=1.5).move_to(P3(1.0, -1.1)), FadeOut(g1, run_time=0.5),
+                                           late(1.0, FadeIn(g2, run_time=0.5)),
                                            CyclicReplace(ksA.label, ksB.label, run_time=1.5)),
                             CyclicReplace(ksA.label, ksB.label, run_time=0.6), FadeOut(ghost), FadeOut(g2)))
 

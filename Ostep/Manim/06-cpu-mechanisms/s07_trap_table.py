@@ -68,7 +68,7 @@ class S07TrapTable(Ep06Scene):
             steps += [w.token.reach(P3(tt.get_left()[0] + 0.05, TT_POS[1] + 0.4 - 0.4 * i), run_time=0.5),
                       tt.add_row(i), w.token.retract(0.3)]
         self.say("One of the first things the OS does is install a trap table…",
-                 Succession(*steps), Succession(Wait(0.3), self.term("trap table")))
+                 Succession(*steps), late(0.3, self.note("trap table")))
 
         # S07.6
         hbx = handler_boxes()
@@ -85,7 +85,7 @@ class S07TrapTable(Ep06Scene):
         # S07.7
         lk = padlock_icon(0.3, GREEN_OK).move_to(slot.get_right() + RIGHT * 0.3)
         self.say("Those are the trap handlers, and the hardware remembers them until the next reboot.",
-                 Succession(self.term("trap handlers"), FadeIn(lk, scale=1.6)))
+                 Succession(self.note("trap handlers"), FadeIn(lk, scale=1.6)))
 
         # S07.8
         load = Arrow(tt.get_bottom() + LEFT * 1.3, slot.get_right() + RIGHT * 0.65, buff=0.08, color=KERNEL_COLOR, stroke_width=4)
@@ -111,7 +111,7 @@ class S07TrapTable(Ep06Scene):
         eax[1].move_to(eax[0].get_left() + RIGHT * 0.4)
         card = tag("#5", CPU_COLOR, 22).move_to(mine.get_right() + UP * 0.5)
         self.say("The program doesn't give an address. It gives a system-call number.",
-                 Succession(AnimationGroup(FadeOut(mt), FadeIn(eax), FadeIn(card), self.term("system-call number")),
+                 Succession(AnimationGroup(FadeOut(mt), FadeIn(eax), FadeIn(card), self.note("system-call number")),
                             PacketFly(card, eax[0].get_right() + LEFT * 0.35, arc=0.3, run_time=0.8)))
 
         # S07.12
@@ -125,10 +125,10 @@ class S07TrapTable(Ep06Scene):
         # S07.13
         t1 = VGroup(Text("jump to an address", font_size=22, color=TEXT), x_mark(0.2)).arrange(RIGHT, buff=0.15)
         t2 = VGroup(Text("system-call number", font_size=22, color=TEXT), tick_mark(0.2)).arrange(RIGHT, buff=0.15)
-        both = VGroup(t1, t2).arrange(DOWN, aligned_edge=LEFT, buff=0.2).move_to(P3(3.6, 1.8))
+        both = VGroup(t1, t2).arrange(DOWN, aligned_edge=LEFT, buff=0.2).move_to(P3(3.6, 1.6))
+        pr_l = Text("protection", font_size=26, color=KERNEL_COLOR, weight=BOLD).move_to(P3(3.6, 2.4))
         self.say("That indirection is protection: user code can only request a service.",
-                 Succession(FadeOut(ok), self.terms.show("protection", dock=False, size=34, at=P3(3.6, 2.7), hold=0.8),
-                            FadeIn(both)))
+                 Succession(FadeOut(ok), FadeIn(pr_l), FadeIn(both)))
 
         # S07.14
         tip = TipCard("Be wary of user inputs.", width=4.0, font_size=26).move_to(P3(3.6, 1.7))
@@ -140,6 +140,6 @@ class S07TrapTable(Ep06Scene):
         x2 = x_mark(0.4).move_to(kmem[0].get_center())
         self.say("And the kernel stays suspicious even then. A write() whose buffer points inside kernel memory must "
                  "be refused.", prof.change("proud"),
-                 Succession(AnimationGroup(FadeOut(both), FadeOut(VGroup(mine, eax, hit)), tip.slide_in()),
+                 Succession(AnimationGroup(FadeOut(both), FadeOut(pr_l), FadeOut(VGroup(mine, eax, hit)), tip.slide_in()),
                             AnimationGroup(FadeIn(wcode), FadeIn(kmem)), GrowArrow(bufarr), FadeIn(x2, scale=1.8)))
         self.play(tip.slide_out(), FadeOut(VGroup(wcode, kmem, bufarr, x2)), run_time=0.8)
