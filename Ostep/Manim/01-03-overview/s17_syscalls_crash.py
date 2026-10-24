@@ -146,16 +146,12 @@ class S17SyscallsCrash(NarratedScene):
         blk = w["dblocks"][2]
         half_g.move_to(blk.get_center() + LEFT * 0.125)
         half_r.move_to(blk.get_center() + RIGHT * 0.125)
-        black = Rectangle(width=16, height=10).set_fill("#000000", 1).set_stroke(width=0)
         with self.narrate("And it has to survive a crash in the middle of all that,"):
             self.play(FadeIn(comp, shift=UP * 0.3), run_time=0.4)
             req2 = letter_icon(0.35).move_to(w["drv"].get_center())
             self.play(req2.animate.move_to(disk.top.get_center()), disk.spin(0.7, run_time=0.6))
             self.play(FadeIn(half_g), comp.change("error"), FadeOut(req2), run_time=0.4)
-            self.add(black)
-            self.wait(0.3)
-            self.remove(black)
-            self.add(half_r)
+            self.play(FadeIn(half_r, run_time=0.3))
             self.wait(0.3)
 
         # S17.5 journaling / copy-on-write
