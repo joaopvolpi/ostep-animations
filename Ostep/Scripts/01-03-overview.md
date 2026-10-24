@@ -214,9 +214,6 @@ same address! And yet each one counts up on its own: 1, 1, 2, 2, 3, 3. They neve
 private **virtual address space**, and the OS maps it onto the real, physical memory. Same address
 on the outside, different bytes underneath. That's **virtualizing memory**.
 
-**Professor** (worried): A small honesty note: on a real machine you'd have to turn off a security
-feature called address-space randomization to see identical addresses. We'll explain why later.
-
 *Visual idea:* Memory column as a strip of cells. Two Process creatures (PID 24113, PID 24114)
 each hold a card "p = 0x200000". Each one has its own private Memory column (virtual). Then the
 Illusion split: arrows from both virtual 0x200000 cells map to two *different* cells in one
@@ -391,7 +388,7 @@ orange. "Next: 04 · The Process".
 - **The "dialogues are for thinking" exchange** and "not much of a life outside this book" joke: cut for time.
 - **Detailed history asides** (Multics, BSD/Bill Joy, Sun, the UNIX lawsuits, GNU, NeXTStep):
   compressed to one line each, or dropped.
-- **Address-space randomization / stack smashing** (footnote): reduced to a one-line honesty note in B06.
+- **Address-space randomization / stack smashing** (footnote): cut (no mention in the episode).
 - **"Should be using Emacs"** footnote joke: cut (optional Easter egg on screen).
 - Every mechanism mentioned here is deferred to its own episode: scheduling (07–10), address
   translation (15+), threads and locks (26+), file systems (39+), journaling (42).

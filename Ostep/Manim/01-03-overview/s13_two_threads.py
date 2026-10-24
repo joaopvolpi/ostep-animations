@@ -63,7 +63,7 @@ def s13_end():
 
 class S13TwoThreads(NarratedScene):
     def construct(self):
-        stu, prof = make_hosts("corner", stu_expr="confused", prof_expr="worried")
+        stu, prof = make_hosts("corner", stu_expr="confused", prof_expr="proud")
         th = terms(VIRT)
         bdg = badge(VIRT)
         w12 = s12_end_world()
@@ -72,6 +72,7 @@ class S13TwoThreads(NarratedScene):
 
         # S13.1
         card = piece_card(1).move_to([0, 2.0, 0])
+        card.icons.add(mini_conc_icon().move_to(icon_slot(card)))
         with self.narrate("Second piece: concurrency."):
             self.play(FadeOut(w12["all"]), bdg.recolor(CONC), run_time=0.7)
             self.play(FadeIn(card, scale=0.8), run_time=0.4)

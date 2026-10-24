@@ -267,8 +267,6 @@
 | 7 | "Each process gets its own private **virtual address space**…" | The top strips get dashed outlines in their process colors and the label "virtual address space". Term highlight "virtual address space". |
 | 8 | "…and the OS maps it onto the real, physical memory." | Arrows: lilac `0x200000` → physical cell 3; pink `0x200000` → physical cell 11. The physical cells take the processes' colors and *also* tick up in sync. |
 | 9 | "Same address on the outside, different bytes underneath. That's **virtualizing memory**." | Both arrows pulse together. Term highlight "virtualizing memory". |
-| 10 | "A small honesty note: on a real machine you'd have to turn off a security feature called address-space randomization…" | Professor (worried). No aside card (removed). |
-| 11 | "We'll explain why later." | The Aside card fades. |
 
 **Characters:** Student (confused), Professor (proud → worried).
 **Ends with:** the horizontal illusion split with the mapping arrows.

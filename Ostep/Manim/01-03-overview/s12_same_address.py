@@ -188,10 +188,4 @@ class S12SameAddress(NarratedScene):
         self.say("Same address on the outside, different bytes underneath. That's virtualizing memory.",
                  arrows.pulse(), late(0.8, th.note("virtualizing memory")))
 
-        # S12.10 aside
-        self.say("A small honesty note: on a real machine you'd have to turn off a security feature called "
-                 "address-space randomization to see identical addresses.",
-                 prof.change("worried"))
-        # S12.11
-        self.say("We'll explain why later.", min_time=1.4)
         self.beat(0.5)
