@@ -37,7 +37,7 @@ class S12StackHeapGo(Ep04Scene):
         with self.narrate("Step two: the stack. C programs use it for local variables, function parameters "
                           "and return addresses."):
             self.play(new_tag(2, "stack"), fill_region("stack"))
-            self.play(self.term("stack", size=40, at=S11_TERM_AT, hold=0.8))
+            self.play(self.note("stack"))
 
         # S12.2
         st = mem.region("stack")
@@ -61,7 +61,7 @@ class S12StackHeapGo(Ep04Scene):
         with self.narrate("Step three, maybe: a heap. That's for data the program asks for while it runs, with "
                           "malloc(), and gives back with free()."):
             self.play(new_tag(3, "heap"), fill_region("heap"))
-            self.play(self.term("heap", size=40, at=S11_TERM_AT, hold=0.6))
+            self.play(self.note("heap"))
             self.play(FadeIn(mal), run_time=0.3)
             self.play(blk.animate.move_to(heap.get_center() + RIGHT * 0.45), run_time=0.6)
             self.play(FadeIn(fre), run_time=0.3)
@@ -101,7 +101,7 @@ class S12StackHeapGo(Ep04Scene):
                           "your keyboard and print to your terminal from line one."):
             self.play(new_tag(4, "I/O"))
             self.play(LaggedStart(*[FadeIn(p, shift=LEFT * 0.3) for p in plugs], lag_ratio=0.3), run_time=1.2)
-            self.play(self.term("file descriptors", size=36, at=S11_TERM_AT, hold=0.8))
+            self.play(self.note("file descriptors"))
             self.play(FadeIn(kb), FadeIn(term_ic), Create(cables), run_time=1.0)
 
         # S12.6

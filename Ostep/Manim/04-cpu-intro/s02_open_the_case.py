@@ -40,7 +40,8 @@ class S02OpenTheCase(Ep04Scene):
         cpu = CPU(CPU_SIZE).move_to(CPU_HOME)
         cg, _, cnum = counter_group(137, 1)
         crow = VGroup(cg[2], cg[3])
-        self.say("One.", GrowFromCenter(cpu, run_time=0.8), FadeIn(crow, run_time=0.6), min_time=1.2)
+        self.say("We might have many things running at once, but inside the machine there's just one CPU.",
+                 GrowFromCenter(cpu, run_time=0.8), FadeIn(crow, run_time=0.6))
 
         # S02.3
         ghosts = VGroup(*[cpu.virtual_copy().move_to(p) for p in (P3(-2.2, 0.6), P3(2.2, 0.6), P3(0, 2.0))])

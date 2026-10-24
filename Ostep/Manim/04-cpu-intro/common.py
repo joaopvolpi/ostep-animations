@@ -194,8 +194,12 @@ class Ep04Scene(NarratedScene):
         return m
 
     def term(self, text, **kw):
-        """Animation: the term highlight (write big, hold, dock)."""
+        """Animation: the big center unveil. ONLY for the episode's key concepts."""
         return self.terms.show(text, **kw)
+
+    def note(self, text, **kw):
+        """Animation: a secondary term slides into the dock (no veil, no big text)."""
+        return self.terms.note(text, **kw)
 
 
 # ---------------------------------------------------------------------------
@@ -213,7 +217,8 @@ def counter_group(programs=137, cpus=None, at=P3(4.8, 3.0)):
     """'programs: N' (+ optional 'CPUs: N' below). Returns (group, prog_num, cpu_num)."""
     lab = Text("programs:", font_size=28, color=TEXT)
     num = Integer(programs, font_size=34, color=TEXT)
-    num.next_to(lab, RIGHT, buff=0.15).align_to(lab, DOWN)
+    num.next_to(lab, RIGHT, buff=0.15)
+    num.shift(UP * (lab[1].get_bottom()[1] - num.get_bottom()[1]))   # share the baseline ('r' has no descender)
     g = VGroup(lab, num)
     cnum = None
     if cpus is not None:
@@ -222,7 +227,8 @@ def counter_group(programs=137, cpus=None, at=P3(4.8, 3.0)):
         crow = VGroup(clab, cnum)
         clab.align_to(lab, LEFT)
         clab.next_to(lab, DOWN, buff=0.25, aligned_edge=LEFT)
-        cnum.next_to(clab, RIGHT, buff=0.15).align_to(clab, DOWN)
+        cnum.next_to(clab, RIGHT, buff=0.15)
+        cnum.shift(UP * (clab[0].get_bottom()[1] - cnum.get_bottom()[1]))
         g.add(clab, cnum)
     g.shift(at - VGroup(lab, num).get_center())
     return g, num, cnum
@@ -430,8 +436,6 @@ def build_s06_parts(final=True):
         vps[n] = vp
     d["vcpus"], d["vps"] = vcpus, vps
     d["tl"] = s06_timeline()
-    d["vlabel"] = Text("virtual", font_size=24, color=DIM).move_to(P3(-3.5, -0.25))
-    d["plabel"] = Text("physical", font_size=24, color=CPU_COLOR).next_to(d["cpu"], RIGHT, buff=0.35)
     d["gauges"] = VGroup(*[SpeedGauge(1.0, width=1.2).move_to(P3(S06_VX[n], -1.0)) for n in "ABC"])
     if final:
         fill_s06_timeline(d["tl"])
@@ -447,7 +451,7 @@ def build_s06_parts(final=True):
 def add_s06_world(scene, d, extras=True):
     scene.add(d["split"], d["vcpus"], *d["vps"].values(), d["cpu"], *d["ps"].values(), d["tl"])
     if extras:
-        scene.add(d["vlabel"], d["plabel"], d["gauges"])
+        scene.add(d["gauges"])
 
 
 def s06_timeline():

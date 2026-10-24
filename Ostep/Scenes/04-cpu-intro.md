@@ -27,7 +27,7 @@
 | Timeline home | Along the bottom, **y = −2.2**, x from −5 to 5 | One row per process, rows 0.45 tall. |
 | Characters (corner mode) | Student at **(−5.8, −2.8)**, scale 0.75, facing right. Professor at **(5.8, −2.8)**, scale 0.75, `flip()` (facing left) | Default. "Dialogue mode" (S01, S22): Student (−2.6, −1.2) and Professor (2.6, −1.2), scale 1. |
 | Section badge | Top-left at (−6.6, 3.6), left-aligned: small `VIRT` dot + "04 · The Process", font 22, `DIM` | Appears in S03, stays on until S21. |
-| Term highlight | New term written at (0, 2.9), font 54, `TEXT`, with a `VIRT` underline; after ~1.5 s it shrinks to font 26 at top-right (6.6, 3.6, right-aligned), replacing the previous term | Used for every bolded term's first appearance. |
+| Term highlight | New term written at (0, 2.9), font 54, `TEXT`, with a `VIRT` underline; after ~1.5 s it shrinks to font 26 at top-right (6.6, 3.6, right-aligned), replacing the previous term | **Unveil only for the episode's key concepts**: process, time sharing, mechanism, policy, machine state, process state, Process Control Block. Every other bolded term is a *note* (`terms.note`): it slides straight into the dock, with no veil and no big text. |
 
 ### Timeline state encoding (used in S06, S14–S16, S20)
 | State | Block look |
@@ -68,7 +68,7 @@
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | "Is it? Let's open the case and count the CPUs." | Professor enters right (thinking). The app icons fade; the camera zooms into the laptop screen (scale the laptop ×4 around center while fading it), revealing a dark-green motherboard rectangle with faint traces. |
-| 2 | "One." | The CPU chip `GrowFromCenter` at (0, 0.6). A second counter "CPUs: **1**" appears under "programs: 137". |
+| 2 | "We might have many things running at once, but inside the machine there's just one CPU." | The CPU chip `GrowFromCenter` at (0, 0.6). A second counter "CPUs: **1**" appears under "programs: 137". |
 | 3 | "Maybe four, or eight. Not a hundred." | Three ghost chips appear briefly at (±2.2, 0.6) and (0, 2), counter flickers 4 → 8, then the ghosts fade and the counter returns to 1. |
 | 4 | "Each CPU can only follow one stream of instructions at a time." | A thin bright line (instruction stream) enters the chip from the left; a single dot travels along it. |
 | 5 | "And yet every one of those programs behaves as if it had a CPU all to itself." | Five small process-colored copies of the chip appear in a row along y = 2.6, each with a tiny app icon above. They shimmer (opacity 0.4 ↔ 0.8). The real chip stays solid. |
@@ -86,8 +86,8 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | (transition) | Motherboard, virtual CPUs and counters `FadeOut`. The real CPU shrinks and moves to the top-left as a tiny icon inside the forming **Section badge** "04 · The Process". The Computer exits down. Characters glide to corner mode. |
-| 2 | (card appears) | Crux card: `VIRT` frame, "THE CRUX" header (font 22, `VIRT`), question in bold (font 34): **"How to provide the illusion of many CPUs?"** `Write`. |
+| 1 | "Let's put that as a question." (transition) | Motherboard, virtual CPUs and counters `FadeOut`. The real CPU shrinks and moves to the top-left as a tiny icon inside the forming **Section badge** "04 · The Process". The Computer exits down. Characters glide to corner mode. |
+| 2 | "So, the crux is: How to provide the illusion of many CPUs?" (card appears; the subtitle is read as it writes in) | Crux card: `VIRT` frame, "THE CRUX" header (font 22, `VIRT`), question in bold (font 34): **"How to provide the illusion of many CPUs?"** `Write`. |
 | 3 | "Last time, we watched the OS pull off this trick with four copies of a tiny program, printing A, B, C and D." | A small terminal thumbnail slides in under the card (0, −1.8) showing the `./cpu` output "A B D C A B D C" scrolling (callback to 01–03). |
 | 4 | "Today we find out what it's actually juggling." | Terminal thumbnail fades. The card's subtitle writes in, smaller and `DIM`: "Although there are only a few physical CPUs available, how can the OS provide the illusion of a nearly-endless supply of said CPUs?" |
 | 5 | "…introduces the most fundamental idea the operating system gives us." | The card shrinks to the top-center (0, 3.2) as a one-line strip, "How to provide the illusion of many CPUs?", font 24, kept for S04–S06. |
@@ -102,7 +102,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "First, a distinction. A **program** is a lifeless thing." | The crux strip fades out. Disk (`DISK_COLOR` cylinder) `FadeIn` at (−4, −0.3). A grey file icon (page with folded corner, labeled `browser`) sits on top. |
+| 1 | "To get there, first a distinction. A **program** is a lifeless thing." | The crux strip fades out. Disk (`DISK_COLOR` cylinder) `FadeIn` at (−4, −0.3). A grey file icon (page with folded corner, labeled `browser`) sits on top. |
 | 2 | "It's a file on your disk, a bunch of instructions and maybe some static data." | The file icon opens briefly to show 4 grey lines of pseudo-instructions and a small "data" block. Everything is `DIM`, no motion. |
 | 3 | "It just sits there, waiting to spring into action." | Hold. A tiny "zZ" above the file. |
 | 4 | "Think of sheet music. Sheet music is not a song." | Beside the disk, the file icon morphs (`Transform`) into a sheet of music (five staff lines + notes), still grey. |
@@ -143,7 +143,7 @@
 | 4 | "Then C. Then back to A." | Same for C, then A. |
 | 5 | "Each slice lasts only a few milliseconds." | The tick labels on the timeline read "ms". The hopping speeds up ×4 (8 more slices in 2 s), until the processes blur into a flicker on the CPU. |
 | 6 | "To any human, and in a sense to each program, it looks like they're all running at once." | Left side: all three virtual processes are steadily "running" with no flicker. Hold 1 s so the contrast is clear. |
-| 7 | "This is **virtualizing the CPU**: turning one physical CPU into what looks like many virtual ones." | Term highlight "virtualizing the CPU". Labels "virtual" (left, under the translucent CPUs) and "physical" (right, under the real CPU). |
+| 7 | "This is **virtualizing the CPU**: turning one physical CPU into what looks like many virtual ones." | Term note "virtualizing the CPU" (docks, no veil). |
 | 8 | "It's our peach again: snatch it from whoever isn't using it, and hand it to the next eater." | A small peach icon (callback to 01–03) appears on the real CPU for 1.5 s, then morphs back into the chip. |
 | 9 | "The basic technique is called **time sharing**." | Term highlight "time sharing". The timeline's alternating colored slices `Indicate`. |
 | 10 | "It's like a juggler! Only one ball in the hand at a time, but they're all in the air." | Student (excited). A small thought-bubble from the Student with three balls (coral, mint, gold) juggled in an arc above one hand (`thinks` with a custom mobject, looped 2 s). |
@@ -161,7 +161,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "By the way, time sharing has a sibling: **space sharing**." | The illusion split dims to 30%. The Tip card slides in ("TIP" header, `DIM` frame). Term highlight "space sharing", but smaller (inside the card, no move to the top bar). |
+| 1 | "By the way, time sharing has a sibling: **space sharing**." | The illusion split dims to 30%. The Tip card slides in ("TIP" header, `DIM` frame). Term note "space sharing" (docks, no veil), but smaller (inside the card, no move to the top bar). |
 | 2 | "Instead of taking turns, you split the resource up. Your disk works like this." | Inside the card: a horizontal disk bar (`DISK_COLOR` outline) divided into 8 blocks. |
 | 3 | "A block given to one file stays with that file until the file is deleted." | Blocks fill: 3 coral ("file A"), 2 mint ("file B"); they stay put while a clock icon spins. A small comparison row: "time sharing: take turns ⟳ / space sharing: split up ▦". |
 | 4 | (end) | The Tip card slides out; the illusion split un-dims. |
@@ -175,18 +175,18 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Wait, but somebody has to *do* the switching. And somebody has to decide who's next." | Left half (virtual side) fades; the right world slides to center. A is on the CPU (running), B and C in the queue. Student (confused). Two question marks pop: one over the CPU ("do?"), one over the queue ("who?"). |
+| 1 | "Wait, back to taking turns. Somebody has to *do* the switching. And somebody has to decide who's next." | Left half (virtual side) fades; the right world slides to center. A is on the CPU (running), B and C in the queue. Student (confused). Two question marks pop: one over the CPU ("do?"), one over the queue ("who?"). |
 | 2 | "Two different jobs. You've just spotted one of the best design ideas in operating systems." | Professor (proud). The screen splits into the two panels. A copy of the CPU + A goes to the left panel; a copy of the queue B, C goes to the right. |
 | 3 | "The first job is a **mechanism**." | Term highlight "mechanism". The left panel header "HOW" writes. |
 | 4 | "That's low-level machinery that answers a *how* question." | Two meshing gears appear in the left panel and rotate. |
 | 5 | "*How* do we stop one program and start another?" | A robotic arm built from simple lines (mechanism) lifts A off the CPU and sets a placeholder process on it. |
-| 6 | "That mechanism is called a **context switch**, and it gets its own episode later." | Term highlight "context switch". A small tag "→ Ep. 06" sticks onto the gear. |
+| 6 | "That mechanism is called a **context switch**, and it gets its own episode later." | Term note "context switch" (docks, no veil). A small tag "→ Ep. 06" sticks onto the gear. |
 | 7 | "The second job is a **policy**." | Term highlight "policy". The right panel header "WHICH" writes. |
 | 8 | "*which* one should run now? That's a **scheduling policy**." | A pointing hand (or a spotlight cone from above) sweeps across B and C and stops on C. Term "scheduling policy" (small, in the panel). |
 | 9 | "It might look at history (who ran the most in the last minute?)…" | Above the queue, three small chips appear one by one: a mini bar chart "history"… |
 | 10 | "…at what kind of programs these are…" | …a tag icon "workload"… |
 | 11 | "…or at what we're optimizing for: snappy interaction or total throughput." | …a dial with two ends, "interactive ↔ throughput". |
-| 12 | "Keeping the two apart is a form of **modularity**." | Term highlight "modularity". The divider between the panels becomes a clean seam; a Tip card title "Separate policy and mechanism" appears across the top center. |
+| 12 | "Keeping the two apart is a form of **modularity**." | Term note "modularity" (docks, no veil). The divider between the panels becomes a clean seam; a Tip card title "Separate policy and mechanism" appears across the top center. |
 | 13 | "You can swap in a smarter policy without rebuilding the machinery underneath." | The right panel's spotlight is replaced by a different one (it slides out, a new one slides in, now pointing at B) while the left gears keep turning, unaffected. |
 
 **Characters:** Student (confused), Professor (proud).
@@ -200,14 +200,14 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "…if the OS is going to stop a process and resume it later, it needs to know exactly what a process *is*." | A is running on the CPU, with speed lines. |
+| 1 | "Let's get back to the process itself. 'A running program' is a nice slogan. But if the OS is going to stop a process and resume it later, it needs to know exactly what a process *is*." | A is running on the CPU, with speed lines. |
 | 2 | "Suppose we freeze a process mid-step." | **Freeze:** the whole screen desaturates (overlay at 40% `BG`), A's speed lines stop, and a pause glyph ⏸ appears over A. A camera-shutter flash (white rectangle, opacity 0.6 → 0, 0.2 s). |
 | 3 | "What would we have to write down to bring it back perfectly?" | A blank clipboard / notepad appears at the bottom center (0, −2.4) with "To resume A:" and three empty bullet lines. |
 | 4 | "In other words: what parts of the machine can this program read or change? That's its **machine state**." | Professor (explaining). Term highlight "machine state". |
 | 5 | "First, **memory**. The instructions live in memory. So does the data the program reads and writes." | The Memory column `Create`s at left, with coral-tinted regions top to bottom: code, static data, heap, (free gap), stack. A line from A to the column. |
-| 6 | "The memory a process can address is its **address space**." | A dashed coral brace around the coral regions. Term highlight "address space". The notepad's line 1 fills: "memory (address space)". |
+| 6 | "The memory a process can address is its **address space**." | A dashed coral brace around the coral regions. Term note "address space" (docks, no veil). The notepad's line 1 fills: "memory (address space)". |
 | 7 | "Second, **registers**. Lots of instructions read and update them directly." | The register bank fades in at the right: 8 boxes with tiny values (e.g. `eax 42`, `ebx 7`…). The values flicker as if being written. |
-| 8 | "The **program counter**, sometimes called the instruction pointer, says which instruction runs *next*." | One box labeled `PC` turns yellow. An arrow from it points into the memory column's code region, at a highlighted line. Term highlight "program counter (PC)". |
+| 8 | "The **program counter**, sometimes called the instruction pointer, says which instruction runs *next*." | One box labeled `PC` turns yellow. An arrow from it points into the memory column's code region, at a highlighted line. Term note "program counter (PC)" (docks, no veil). |
 | 9 | "Lose it and the process forgets where it was." | The PC arrow flickers off for 0.3 s and A looks confused (no expression change; just the arrow vanishing and a "?" over the code). Then it comes back. |
 | 10 | "The **stack pointer** and **frame pointer** keep track of the stack: function parameters, local variables, return addresses." | Two boxes `SP` and `FP` highlight in `MEM_COLOR`; arrows point to the stack region, where three small frames stack up (labeled params / locals / return addr). Terms highlighted in sequence. Notepad line 2: "registers (PC, SP, FP…)". |
 | 11 | "Third, **I/O information**… the list of files it currently has open." | The open-files list appears below the register bank: `0 stdin`, `1 stdout`, `2 stderr`, `3 notes.txt`. Notepad line 3: "open files". |
@@ -225,7 +225,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "…every OS needs a way to work with them. We'll meet the real API in the next episode." | The S09 panels collapse into A (`Transform` the panels into a small glow that fades), leaving the CPU + A. These slide right to the demo stage. The menu card `FadeIn` with a "→ Ep. 05" tag in the corner. |
+| 1 | "Now that we know what a process is, what can the OS actually do with one? It turns out to be a short menu of actions. We'll meet the real API in the next episode, but any operating system offers something like this." | The S09 panels collapse into A (`Transform` the panels into a small glow that fades), leaving the CPU + A. These slide right to the demo stage. The menu card `FadeIn` with a "→ Ep. 05" tag beside its top-right corner (outside the card, never over the title). |
 | 2 | "**Create**: you double-click an icon or type a command, and a new process is born." | Menu row 1 highlights. Stage: a cursor double-clicks a small icon, and B (mint) pops into existence beside A (`GrowFromCenter` with a bounce). |
 | 3 | "**Destroy**: most processes exit on their own, but a runaway one can be killed." | Row 2. B spins around frantically (runaway), then a small "✕" stamps on it and it poofs (scale to 0 + puff particles). |
 | 4 | "**Wait**: pause until some process finishes." | Row 3. A new process C appears and runs with a progress ring; A stands next to it with a clock icon (A expression blocked) until the ring completes, then A → ready. |
@@ -244,12 +244,12 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Okay, but 'create' hides a lot. How does a file on disk actually *become* a running process?" | Student (curious). A hops off the CPU and exits right (waving). The CPU slides to (−2.6, 1.6). The Memory column (empty, with address marks) and the bus `Create`; the Disk rises in from below. |
+| 1 | "But before we order from that menu, 'create' hides a lot. How does a file on disk actually *become* a running process?" | Student (curious). A hops off the CPU and exits right (waving). The CPU slides to (−2.6, 1.6). The Memory column (empty, with address marks) and the bus `Create`; the Disk rises in from below. |
 | 2 | "Step one: **load**. Programs start out on disk, or on a flash-based SSD, in an **executable format**." | A step counter tag "1 / 5 · load" at top-center (0, 3.2). The grey "program" file on the disk opens to show two labeled chunks: "code", "static data" (`DIM`). Term highlights "load", then "executable format" (smaller). |
 | 3 | "The CPU can't run instructions sitting on disk." | A dotted arrow from CPU straight to the Disk gets a red ✕. |
 | 4 | "So the OS reads the code and static data, like initialized variables, into memory, into the new process's address space." | The code chunk and the static-data chunk copy up along the bus (moving along the path disk → bus → memory) and land in the top two regions of the Memory column, turning from `DIM` to the new process's color (sky, `PROCESS_COLORS[3]`, this will be process **D**). A dashed sky outline appears around the column: "address space of D". |
-| 5 | "Early, simple systems did this **eagerly**: everything, all at once, before running." | Rewind the copy; replay it as one big block moving all at once. Label "eager". Term highlight "eagerly". |
-| 6 | "Modern systems are **lazy**. They load pieces of code and data only when the program actually needs them." | Rewind again; now only a thin slice moves up, then later another slice on demand (a small "need this!" spark at the PC). Label "lazy". Term highlight "lazily". |
+| 5 | "Early, simple systems did this **eagerly**: everything, all at once, before running." | Rewind the copy; replay it as one big block moving all at once. Label "eager". Term note "eagerly" (docks, no veil). |
+| 6 | "Modern systems are **lazy**. They load pieces of code and data only when the program actually needs them." | Rewind again; now only a thin slice moves up, then later another slice on demand (a small "need this!" spark at the PC). Label "lazy". Term note "lazily" (docks, no veil). |
 | 7 | "How that works needs paging and swapping, which come later in the series." | Tag "→ Ep. 18, 21" briefly next to "lazy". |
 | 8 | "For now, just remember that the bits have to get from disk to memory." | Hold. The column shows code + static data in sky. |
 
@@ -262,11 +262,11 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Step two: the **stack**. C programs use it for local variables, function parameters and return addresses." | Tag "2 / 5 · stack". The bottom region of the column fills in sky: "stack". Term highlight "stack". |
+| 1 | "Step two: the **stack**. C programs use it for local variables, function parameters and return addresses." | Tag "2 / 5 · stack". The bottom region of the column fills in sky: "stack". Term note "stack" (docks, no veil). |
 | 2 | "…and fills in the arguments to `main()`: `argc` and the `argv` array." | Two small cells slot into the top of the stack: `argc = 2`, `argv → ["./d", "x"]`. |
-| 3 | "Step three, maybe: a **heap**. That's for data the program asks for while it runs, with `malloc()`, and gives back with `free()`." | Tag "3 / 5 · heap". A small heap region appears just below static data. Term highlight "heap". A `malloc()` label shoots a block into the heap; `free()` pulls a block out. |
+| 3 | "Step three, maybe: a **heap**. That's for data the program asks for while it runs, with `malloc()`, and gives back with `free()`." | Tag "3 / 5 · heap". A small heap region appears just below static data. Term note "heap" (docks, no veil). A `malloc()` label shoots a block into the heap; `free()` pulls a block out. |
 | 4 | "Linked lists, hash tables, trees. It starts small, and the OS can grow it on request." | Tiny node-and-arrow linked-list glyph inside the heap; the heap region grows downward a bit (`stretch`). |
-| 5 | "Step four: I/O setup. On UNIX, every process starts with three open **file descriptors**: standard input, standard output, and standard error." | Tag "4 / 5 · I/O". Three small plugs labeled `0 stdin`, `1 stdout`, `2 stderr` attach to the right side of the memory column, each with a cable out to a tiny keyboard icon (stdin) and a terminal icon (stdout/stderr). Term highlight "file descriptors". |
+| 5 | "Step four: I/O setup. On UNIX, every process starts with three open **file descriptors**: standard input, standard output, and standard error." | Tag "4 / 5 · I/O". Three small plugs labeled `0 stdin`, `1 stdout`, `2 stderr` attach to the right side of the memory column, each with a cable out to a tiny keyboard icon (stdin) and a terminal icon (stdout/stderr). Term note "file descriptors" (docks, no veil). |
 | 6 | "And finally, the OS jumps to the entry point, `main()`, using a special mechanism we'll see soon…" | Tag "5 / 5 · run". A bright arrow jumps from the CPU into the code region and lands on a highlighted line `main()`. "→ Ep. 06" tag beside it. |
 | 7 | "…and hands the CPU over to the new process. The performance begins." | The address space (dashed sky outline) "condenses" into a sky Process creature **D** that pops out of the memory column, eyes opening (`blink`), and hops onto the CPU → running. The Computer pops in bottom-center (0, −2.9), scale 0.6, happy. Its LED turns green. |
 
@@ -286,8 +286,8 @@
 | 3 | "**Ready**: it could run right now, but the OS has chosen to run someone else for the moment." | A (coral) and B (mint) appear in the Ready circle (→ ready), bouncing slightly. |
 | 4 | "**Blocked**: it did something that means it *can't* run until some event happens." | The Blocked circle pulses. |
 | 5 | "The classic example is asking the disk for data and waiting for the answer." | The small Disk icon at (2.4, −2.6), near Blocked. |
-| 6 | "Moving from ready to running is being **scheduled**." | D quietly steps off the CPU into Ready (→ ready; the Running → Ready arrow pulses faintly, unlabeled). Then A hops from Ready into Running along the Ready → Running arrow (→ running). Arrow label "scheduled" writes. Term highlight "scheduled". |
-| 7 | "Moving from running back to ready is being **descheduled**." | A hops back to Ready along the lower arrow; label "descheduled" writes. Term highlight "descheduled". D is scheduled again → Running. |
+| 6 | "Moving from ready to running is being **scheduled**." | D quietly steps off the CPU into Ready (→ ready; the Running → Ready arrow pulses faintly, unlabeled). Then A hops from Ready into Running along the Ready → Running arrow (→ running). Arrow label "scheduled" writes. Term note "scheduled" (docks, no veil). |
+| 7 | "Moving from running back to ready is being **descheduled**." | A hops back to Ready along the lower arrow; label "descheduled" writes. Term note "descheduled" (docks, no veil). D is scheduled again → Running. |
 | 8 | "A running process that starts an I/O becomes blocked." | D sends a small request packet down to the Disk, then walks along the arrow "I/O: initiate" into Blocked → blocked (clock icon). |
 | 9 | "It stays there until the I/O completes." | The disk spins; a progress dot travels back. |
 | 10 | "Then it goes back to ready, and maybe straight to running again, if the OS decides so." | The packet returns; label "I/O: done" writes; D walks to Ready → ready. |
@@ -305,7 +305,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Let's watch two processes, zero and one, each needing just four ticks of CPU and no I/O." | D, A and B fade out of the legend. **P0** (coral) and **P1** (mint) appear next to the CPU; each holds a small "work: ▮▮▮▮" bar (4 cells). The empty timeline grid draws, with row labels "P0" and "P1". The legend now holds mini P0/P1 dots that track their state. |
+| 1 | "To see that in action, let's watch two processes, zero and one, each needing just four ticks of CPU and no I/O." | D, A and B fade out of the legend. **P0** (coral) and **P1** (mint) appear next to the CPU; each holds a small "work: ▮▮▮▮" bar (4 cells). The empty timeline grid draws, with row labels "P0" and "P1". The legend now holds mini P0/P1 dots that track their state. |
 | 2 | "Process zero runs for four ticks while process one waits, ready." | P0 on the CPU → running; P1 ready. Ticks 1–4 fill one by one (0.5 s each): row P0 running (solid coral), row P1 ready (mint outline). P0's work bar empties a cell per tick. |
 | 3 | "At tick four, process zero is done." | P0 → done (check mark) and fades to half opacity at the side. Its row ends. |
 | 4 | "Process one runs for ticks five to eight." | P1 hops onto the CPU; ticks 5–8 fill (row P1 solid). Tick 8: P1 → done. |
@@ -346,7 +346,7 @@
 | 8 | "Second, when the I/O finished, it did *not* switch back to process zero right away." | Marker "②" at the 7|8 boundary with a big "?" in `TEXT`. |
 | 9 | "It let process one finish first. Was that a good choice?" | An alternative ghost timeline briefly overlays ticks 7–10 (P0 running at 7–8, P1 at 9–10) in translucent colors, then fades, which shows that the other choice was possible. |
 | 10 | "Uh… depends?" | Student (confused). |
-| 11 | "That's the right answer more often than you'd think. Decisions like these are made by the OS's **scheduler**…" | Professor (happy). Term highlight "scheduler". A small figure (a referee's whistle or a conductor's baton icon) appears next to the CPU, labeled "scheduler". |
+| 11 | "That's the right answer more often than you'd think. Decisions like these are made by the OS's **scheduler**…" | Professor (happy). Term note "scheduler" (docks, no veil). A small figure (a referee's whistle or a conductor's baton icon) appears next to the CPU, labeled "scheduler". |
 | 12 | "…and we'll spend several episodes on them." | A tag "→ Ep. 07–10" on the scheduler icon. |
 
 **Characters:** Computer (busy), Student (confused), Professor (happy).
@@ -363,7 +363,7 @@
 | 1 | "One last question. How does the OS *remember* all this? It's a program too, and like any program, it keeps data structures." | The state diagram fills with A, B, C, D. A thin outline labeled "OS" (in `KERNEL_COLOR`) draws around the right half of the screen, empty for now. |
 | 2 | "For each process, it keeps a record. That record is called a **Process Control Block**, or **PCB**…" | A's PCB card slides out of A into the OS area: header color = coral, fields "pid: 1 · state: running · memory: … · files: …". Term highlight "Process Control Block (PCB)". |
 | 3 | "(sometimes a process descriptor)" | A small `DIM` alias label under the term. |
-| 4 | "All of those records together form the **process list**, also called the task list." | Cards for B, D (ready) and C (blocked) slide out in turn and stack. A bracket labeled "process list". Term highlight "process list". |
+| 4 | "All of those records together form the **process list**, also called the task list." | Cards for B, D (ready) and C (blocked) slide out in turn and stack. A bracket labeled "process list". Term note "process list" (docks, no veil). |
 | 5 | "…who's ready, who's running, who's blocked and waiting on what…" | Each card's "state" field `Indicate`s as it's mentioned. C's card shows "waiting on: disk". |
 | 6 | "…so the right one can be woken when its I/O completes." | A packet arrives from a small disk icon; the OS looks up C's card (it highlights), C moves Blocked → Ready in the diagram, and the card's state field changes "blocked" → "ready" (`Transform` the text). |
 
@@ -376,9 +376,9 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Here's a real one, from a small teaching operating system called xv6." | The other cards and the diagram fade to 20%. A's card expands and `Transform`s into the Code block (adapted from Figure 4.5, trimmed): `struct proc {` / `char *mem;` / `uint sz;` / `enum proc_state state;` / `int pid;` / `struct proc *parent;` / `struct file *ofile[NOFILE];` / `struct context context;` / `...` / `};`. Caption "xv6 (Figure 4.5, simplified)". |
+| 1 | "Here's a real process control block, from a small teaching operating system called xv6." | The other cards and the diagram fade to 20%. A's card expands and `Transform`s into the Code block (adapted from Figure 4.5, trimmed): `struct proc {` / `char *mem;` / `uint sz;` / `enum proc_state state;` / `int pid;` / `struct proc *parent;` / `struct file *ofile[NOFILE];` / `struct context context;` / `...` / `};`. Caption "xv6 (Figure 4.5, simplified)". |
 | 2 | "Each process has an ID, a state, a pointer to its memory, its open files, its parent." | Highlight bars move line by line: `pid`, `state`, `mem`, `ofile`, `parent` (0.5 s each). |
-| 3 | "And look at this field: the **register context**." | The `context` line highlights in yellow. Term highlight "register context". |
+| 3 | "And look at this field: the **register context**." | The `context` line highlights in yellow. Term note "register context" (docks, no veil). |
 | 4 | "When a process is stopped, its registers get saved right here." | The docked "SAVE SLOT" icon from S09 flies down from the top-right corner and lands on the `context` line. A small register grid (from S09) appears next to it, and values stream from it into the save slot. |
 | 5 | "To resume it, the OS loads them back into the real CPU." | A CPU chip appears at the right (4.4, 0.2); the values stream from the save slot into the CPU. |
 | 6 | "That's the video-game save slot!" | Student (excited). |
@@ -393,10 +393,10 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Real systems also have a couple more states." | The code block swaps to the `enum proc_state` line (Transform). `EMBRYO` and `ZOMBIE` glow. |
-| 2 | "There's an **initial** state while a process is being created." | Term highlight "initial". A child process (sky) assembles from fragments at (1.5, −0.6), still translucent (EMBRYO). |
-| 3 | "And there's a **final** state, where a process has exited but hasn't been cleaned up yet. On UNIX that's called the **zombie** state." | The child → done briefly, then droops into zombie (grey, stitches). Term highlight "zombie". |
-| 4 | "It sounds spooky, but it's useful. It lets the process's **parent**, the process that created it…" | A coral parent process appears at (−1.5, −0.6). A thin line labeled "parent" connects them. Term highlight "parent". |
+| 1 | "Back to states for a moment. Real systems also have a couple more." | The code block swaps to the `enum proc_state` line (Transform). `EMBRYO` and `ZOMBIE` glow. |
+| 2 | "There's an **initial** state while a process is being created." | Term note "initial" (docks, no veil). A child process (sky) assembles from fragments at (1.5, −0.6), still translucent (EMBRYO). |
+| 3 | "And there's a **final** state, where a process has exited but hasn't been cleaned up yet. On UNIX that's called the **zombie** state." | The child → done briefly, then droops into zombie (grey, stitches). Term note "zombie" (docks, no veil). |
+| 4 | "It sounds spooky, but it's useful. It lets the process's **parent**, the process that created it…" | A coral parent process appears at (−1.5, −0.6). A thin line labeled "parent" connects them. Term note "parent" (docks, no veil). |
 | 5 | "…check its return code. Zero usually means success, anything else means something went wrong." | A tag hangs from the zombie: "exit code: 0 ✓" (green). Briefly, an alternative "1 ✗" flips in (red), then back to "0 ✓". |
 | 6 | "The parent calls `wait()`, reads the result, and the OS cleans up." | The parent shows a speech bubble "wait()". The tag flies to the parent. The zombie fades away (`FadeOut` + shrink) and its PCB card (if visible in the dimmed list) is removed. |
 | 7 | "Zombies. In my operating system." | Student (surprised). |

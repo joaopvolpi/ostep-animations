@@ -51,7 +51,7 @@ class S05MoreCPUs(Ep04Scene):
             ch = chip_under(e.copy().move_to(sp), 0.4)
             extras.add(VGroup(e, ch))
         counter = VGroup(Text("CPUs needed:", font_size=28, color=CPU_COLOR),
-                         Integer(3, font_size=34, color=CPU_COLOR)).arrange(RIGHT, buff=0.15)
+                         Integer(3, font_size=34, color=CPU_COLOR)).arrange(RIGHT, buff=0.15, aligned_edge=DOWN)
         counter.move_to(P3(0, 2.45))
         num = counter[1]
         with self.narrate("One CPU per process? We'd need a hundred chips…"):

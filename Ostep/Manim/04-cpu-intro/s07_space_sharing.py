@@ -24,8 +24,7 @@ class S07SpaceSharing(Ep04Scene):
         term_at = cc + UP * 1.05
         with self.narrate("By the way, time sharing has a sibling: space sharing."):
             self.play(FadeIn(dim), card.slide_in(RIGHT), run_time=0.8)
-            self.play(self.terms.write("space sharing", size=36, at=term_at))
-        term_big = self.terms.big
+            self.play(self.note("space sharing"))
 
         # S07.2
         n = 8
@@ -52,7 +51,6 @@ class S07SpaceSharing(Ep04Scene):
         self.beat(0.8)
 
         # S07.4
-        content = VGroup(term_big, blocks, dlab, fa, fb, clock, cmp)
+        content = VGroup(blocks, dlab, fa, fb, clock, cmp)
         self.play(FadeOut(VGroup(card, content), shift=RIGHT * 1.5), FadeOut(dim), run_time=0.8)
-        self.terms.big = None
         self.wait(0.3)

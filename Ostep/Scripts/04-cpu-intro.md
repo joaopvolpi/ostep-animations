@@ -51,7 +51,8 @@ hundreds of programs, all running *at the same time*.
 
 **Professor** (thinking): Is it? Let's open the case and count the CPUs.
 
-**Narrator (V.O.):** One. Maybe four, or eight. Not a hundred. Each CPU can only follow one
+**Narrator (V.O.):** We might have many things running at once, but inside the machine there's just
+one CPU. Maybe four, or eight. Not a hundred. Each CPU can only follow one
 stream of instructions at a time. And yet every one of those programs behaves as if it had a CPU
 all to itself.
 
@@ -67,14 +68,16 @@ all to itself.
 > Although there are only a few physical CPUs available, how can the OS provide the illusion of a
 > nearly-endless supply of said CPUs?
 
-**Narrator (V.O.):** Last time, we watched the OS pull off this trick with four copies of a tiny
+**Narrator (V.O.):** Let's put that as a question. So, the crux is: How to provide the illusion of many
+CPUs? Although there are only a few physical CPUs available, how can the OS provide the illusion of a
+nearly-endless supply of said CPUs? Last time, we watched the OS pull off this trick with four copies of a tiny
 program, printing A, B, C and D. Today we find out what it's actually juggling. Answering this
 question introduces the most fundamental idea the operating system gives us.
 
 *Visual idea:* Crux card in the Virtualization accent color (orange); section badge "04 · The Process" appears top-left.
 
 ### B03 — A program is not a process  `build-up` (~0:55)
-**Narrator (V.O.):** First, a distinction. A **program** is a lifeless thing. It's a file on your
+**Narrator (V.O.):** To get there, first a distinction. A **program** is a lifeless thing. It's a file on your
 disk, a bunch of instructions and maybe some static data. It just sits there, waiting to spring
 into action.
 
@@ -123,7 +126,7 @@ shows the real single CPU with processes hopping on and off, and a Timeline fill
 slices. Small Tip card for space sharing: a disk bar divided into colored blocks.
 
 ### B05 — How vs. which  `build-up` (~1:05)
-**Student** (confused): Wait, but somebody has to *do* the switching. And somebody has to decide
+**Student** (confused): Wait, back to taking turns. Somebody has to *do* the switching. And somebody has to decide
 who's next.
 
 **Professor** (proud): Two different jobs. You've just spotted one of the best design ideas in
@@ -146,7 +149,7 @@ process being lifted off the CPU) and "WHICH: policy" (a judge-like pointer choo
 Queue of processes). Tip card: "Separate policy and mechanism".
 
 ### B06 — What *is* a process, exactly?  `build-up` (~1:30)
-**Narrator (V.O.):** "A running program" is a nice slogan. But if the OS is going to stop a process
+**Narrator (V.O.):** Let's get back to the process itself. "A running program" is a nice slogan. But if the OS is going to stop a process
 and resume it later, it needs to know exactly what a process *is*. Here's a good way to think
 about it. Suppose we freeze a process mid-step. What would we have to write down to bring it back
 perfectly?
@@ -177,9 +180,9 @@ highlighted pointing at a line of code, a small "open files" list. They group un
 "machine state".
 
 ### B07 — What can you do with a process?  `build-up` (~0:45)
-**Narrator (V.O.):** If processes are the thing the OS hands us, then every OS needs a way to work
-with them. We'll meet the real API in the next episode. But any operating system offers something
-like this.
+**Narrator (V.O.):** Now that we know what a process is, what can the OS actually do with one? It
+turns out to be a short menu of actions. We'll meet the real API in the next episode, but any
+operating system offers something like this.
 
 **Narrator (V.O.):** **Create**: you double-click an icon or type a command, and a new process is
 born. **Destroy**: most processes exit on their own, but a runaway one can be killed. **Wait**:
@@ -194,7 +197,7 @@ while, then resume it. And **status**: how long has it run, and what state is it
 existence, poofs away, a clock while another finishes, a pause/play icon, an info tag.
 
 ### B08 — How a process is born  `build-up` (~1:50)
-**Student** (curious): Okay, but "create" hides a lot. How does a file on disk actually *become* a
+**Student** (curious): But before we order from that menu, "create" hides a lot. How does a file on disk actually *become* a
 running process?
 
 **Narrator (V.O.):** Step one: **load**. Programs start out on disk, or on a flash-based SSD, in an
@@ -255,7 +258,7 @@ waiting area with a clock). A Process walks each arrow as it is named; arrow lab
 scheduled, descheduled, I/O: initiate, I/O: done.
 
 ### B10 — A trace: CPU only  `build-up` (~0:40)
-**Narrator (V.O.):** Let's watch two processes, zero and one, each needing just four ticks of
+**Narrator (V.O.):** To see that in action, let's watch two processes, zero and one, each needing just four ticks of
 CPU and no I/O.
 
 **Narrator (V.O.):** Process zero runs for four ticks while process one waits, ready. At tick four,
@@ -307,7 +310,7 @@ the **process list**, also called the task list. It's the OS's roll call of ever
 ready, who's running, who's blocked and waiting on what, so the right one can be woken when its
 I/O completes.
 
-**Narrator (V.O.):** Here's a real one, from a small teaching operating system called xv6. Each
+**Narrator (V.O.):** Here's a real process control block, from a small teaching operating system called xv6. Each
 process has an ID, a state, a pointer to its memory, its open files, its parent. And look at this
 field: the **register context**. When a process is stopped, its registers get saved right here.
 To resume it, the OS loads them back into the real CPU.
@@ -316,7 +319,7 @@ To resume it, the OS loads them back into the real CPU.
 
 **Professor** (proud): That's the one. Restoring it is the context switch.
 
-**Narrator (V.O.):** Real systems also have a couple more states. There's an **initial** state while
+**Narrator (V.O.):** Back to states for a moment. Real systems also have a couple more. There's an **initial** state while
 a process is being created. And there's a **final** state, where a process has exited but hasn't
 been cleaned up yet. On UNIX that's called the **zombie** state. It sounds spooky, but it's useful.
 It lets the process's **parent**, the process that created it, check its return code. Zero usually

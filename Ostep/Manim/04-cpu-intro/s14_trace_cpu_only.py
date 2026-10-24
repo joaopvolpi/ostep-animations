@@ -25,7 +25,7 @@ class S14TraceCPUOnly(Ep04Scene):
         d1 = sd.make_dot(COL["P1"], label="1", radius=0.13)
 
         # S14.1
-        with self.narrate("Let's watch two processes, zero and one, each needing just four ticks of CPU and no I/O."):
+        with self.narrate("To see that in action, let's watch two processes, zero and one, each needing just four ticks of CPU and no I/O."):
             self.play(FadeOut(VGroup(w["a"], w["b"], w["d"], w["disk"])), run_time=0.5)
             self.play(sd.to_legend(LEGEND_POS, LEGEND_SCALE, run_time=1.0), FadeIn(cpu), run_time=1.0)
             sd.place_dot(d0, "ready").place_dot(d1, "ready")
@@ -66,7 +66,7 @@ class S14TraceCPUOnly(Ep04Scene):
         with self.narrate("Eight ticks of work, eight ticks of time. The CPU never idled."):
             self.play(LaggedStart(*[tl.fill_cpu(k, "busy") for k in range(1, 9)], lag_ratio=0.15), run_time=1.6)
             self.play(Write(busy), run_time=0.7)
-        self.beat(2.0)
+        self.beat(0.6)
 
         # transition: blocks clear; P0/P1 reset to ready beside the CPU
         p0.set_opacity(1)

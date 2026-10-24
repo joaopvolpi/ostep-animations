@@ -20,14 +20,14 @@ class S10ProcessMenu(Ep04Scene):
         menu = MenuCard("Process API", ["Create", "Destroy", "Wait", "Misc. control", "Status"],
                         width=4.0, height=4.4, font_size=28)
         menu.move_to(P3(-3.6, 0.35))
-        tag = ep_tag("→ Ep. 05").scale(0.85).next_to(menu.card.get_corner(UR), DL, buff=0.12)
+        tag = ep_tag("→ Ep. 05").scale(0.85).next_to(menu.card, RIGHT, buff=0.2, aligned_edge=UP).shift(DOWN * 0.1)
         glow = Circle(radius=0.6).set_fill(COL["A"], 0.4).set_stroke(width=0).move_to(a)
         world = VGroup(cpu, a)
-        with self.narrate("If processes are the thing the OS hands us, then every OS needs a way to work with "
-                          "them. We'll meet the real API in the next episode. But any operating system offers "
-                          "something like this."):
+        with self.narrate("Now that we know what a process is, what can the OS actually do with one?"):
             self.play(Transform(panels, glow), stu.change("neutral"), prof.change("neutral"), run_time=1.2)
             self.play(FadeOut(panels), world.animate.shift(S10_CPU - cpu.get_center()), run_time=1.0)
+        with self.narrate("It turns out to be a short menu of actions. We'll meet the real API in the next "
+                          "episode, but any operating system offers something like this."):
             self.play(FadeIn(menu, shift=RIGHT * 0.3), FadeIn(tag), run_time=0.8)
 
         hl = [None]

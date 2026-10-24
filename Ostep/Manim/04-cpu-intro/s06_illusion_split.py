@@ -105,13 +105,9 @@ class S06IllusionSplit(Ep04Scene):
         self.beat(1.0)
 
         # S06.7
-        vlabel, plabel = d["vlabel"], d["plabel"]
-        titles = VGroup(split.left_title, split.right_title)
         with self.narrate("This is virtualizing the CPU: turning one physical CPU into what looks like many virtual ones."):
-            self.play(self.terms.write("virtualizing the CPU"), titles.animate.set_opacity(0), run_time=0.8)
-            self.play(FadeIn(vlabel, shift=UP * 0.2), FadeIn(plabel, shift=LEFT * 0.2), run_time=0.8)
-            self.wait(0.6)
-            self.play(self.terms.dock_anim(), titles.animate.set_opacity(1), run_time=0.8)
+            self.play(self.note("virtualizing the CPU"))
+            self.play(Indicate(vcpus, scale_factor=1.05, color=None), Indicate(cpu, color=CPU_COLOR), run_time=1.2)
 
         # S06.8
         peach = Peach(radius=0.42).move_to(cpu.die)
@@ -123,9 +119,7 @@ class S06IllusionSplit(Ep04Scene):
         # S06.9
         with self.narrate("The basic technique is called time sharing. One resource is used for a little "
                           "while by one, then by another."):
-            self.play(self.terms.write("time sharing"), titles.animate.set_opacity(0), run_time=0.8)
-            self.wait(1.0)
-            self.play(self.terms.dock_anim(), titles.animate.set_opacity(1), run_time=0.8)
+            self.play(self.term("time sharing", hold=1.0))
             self.play(LaggedStart(*[Indicate(b, scale_factor=1.2, color=None) for b in tl.blocks_in(None)],
                                   lag_ratio=0.02, run_time=1.5))
 

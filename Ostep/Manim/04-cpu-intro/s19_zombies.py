@@ -32,7 +32,7 @@ class S19Zombies(Ep04Scene):
 
         # S19.1
         emb, zom = code_word(enum, 0, "EMBRYO"), code_word(enum, 1, "ZOMBIE")
-        with self.narrate("Real systems also have a couple more states."):
+        with self.narrate("Back to states for a moment. Real systems also have a couple more."):
             self.play(ReplacementTransform(VGroup(code, cbar), enum), FadeOut(cap), FadeOut(cpu), FadeOut(tag),
                       stu.change("neutral"), prof.change("neutral"), run_time=1.2)
             self.play(emb.animate.set_color(VIRT), zom.animate.set_color(VIRT), run_time=0.4)
@@ -45,7 +45,7 @@ class S19Zombies(Ep04Scene):
         frags = VGroup(*[Square(0.12).set_fill(COL["D"], 0.8).set_stroke(width=0)
                          .move_to(child_pos + P3(np.cos(a) * 1.6, np.sin(a) * 1.3)) for a in np.linspace(0, TAU, 9)[:-1]])
         with self.narrate("There's an initial state while a process is being created."):
-            self.play(self.term("initial", hold=0.7))
+            self.play(self.note("initial"))
             self.play(FadeIn(frags), run_time=0.3)
             self.play(*[f.animate.move_to(child_pos).scale(0.3) for f in frags], run_time=0.8)
             self.play(FadeOut(frags), FadeIn(child, scale=0.6), run_time=0.5)
@@ -57,7 +57,7 @@ class S19Zombies(Ep04Scene):
             self.play(child.change("done"), run_time=0.7)
             self.wait(1.2)
             self.play(child.change("zombie"), run_time=0.9)
-            self.play(self.term("zombie", hold=0.7))
+            self.play(self.note("zombie"))
 
         # S19.4
         parent = proc("A", "ready", label="parent").move_to(parent_pos)
@@ -67,7 +67,7 @@ class S19Zombies(Ep04Scene):
             self.wait(1.2)
             self.play(FadeIn(parent, shift=RIGHT * 0.3), run_time=0.6)
             self.play(Create(link), FadeIn(llab), run_time=0.6)
-            self.play(self.term("parent", hold=0.6))
+            self.play(self.note("parent"))
 
         # S19.5
         ok = exit_tag(0).next_to(child, DOWN, buff=0.15)

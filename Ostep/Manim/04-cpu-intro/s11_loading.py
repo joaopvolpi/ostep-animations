@@ -31,7 +31,7 @@ class S11Loading(Ep04Scene):
         file = s11_file()
 
         # S11.1
-        with self.narrate("Okay, but “create” hides a lot. How does a file on disk actually become a running process?"):
+        with self.narrate("But before we order from that menu, “create” hides a lot. How does a file on disk actually become a running process?"):
             self.play(stu.change("curious", look_at=cpu), run_time=0.6)
             self.play(hop_to(a, base_point(a) + RIGHT * 2.2, run_time=0.6))
             self.play(a.animate.shift(RIGHT * 6), run_time=0.8)
@@ -45,9 +45,9 @@ class S11Loading(Ep04Scene):
         data_c = chunk("static data").next_to(code_c, DOWN, buff=0.12)
         with self.narrate("Step one: load. Programs start out on disk, or on a flash-based SSD, in an executable format."):
             self.play(FadeIn(tag, shift=DOWN * 0.2), run_time=0.5)
-            self.play(self.term("load", size=40, at=S11_TERM_AT, hold=0.6))
+            self.play(self.note("load"))
             self.play(GrowFromPoint(code_c, file.get_right()), GrowFromPoint(data_c, file.get_right()), run_time=0.6)
-            self.play(self.terms.show("executable format", size=36, at=S11_TERM_AT, hold=0.6))
+            self.play(self.note("executable format"))
 
         # S11.3
         start = cpu.get_bottom() + LEFT * 0.4 + DOWN * 0.15
@@ -78,7 +78,7 @@ class S11Loading(Ep04Scene):
         with self.narrate("So the OS reads the code and static data, like initialized variables, into memory, "
                           "into the new process's address space."):
             self.play(FadeOut(no), FadeOut(x), run_time=0.4)
-            self.play(load_anim(code_c, rc), Succession(Wait(0.4), load_anim(data_c, rd)))
+            self.play(load_anim(code_c, rc), late(0.4, load_anim(data_c, rd)))
             self.play(land(code_c, rc, "code"), land(data_c, rd, "static data"))
             self.play(Create(outline), FadeIn(olab), run_time=0.8)
 
@@ -98,7 +98,7 @@ class S11Loading(Ep04Scene):
             self.play(load_anim(big, both, run_time=1.2))
             self.play(FadeOut(big), *[mem.region(n).animate.set_fill(COL["D"], 0.6) for n in ("code", "static data")],
                       *[mem.texts[mem.index_of(n)].animate.set_opacity(1) for n in ("code", "static data")], run_time=0.4)
-            self.play(self.term("eagerly", size=40, at=S11_TERM_AT, hold=0.6))
+            self.play(self.note("eagerly"))
 
         # S11.6 lazy
         lazy = Text("lazy", font_size=28, color=TEXT, weight="BOLD").move_to(label_pos)
@@ -119,7 +119,7 @@ class S11Loading(Ep04Scene):
             self.add(slice2)
             self.play(load_anim(slice2, piece2, run_time=1.0), FadeOut(spark))
             self.play(FadeOut(slice2), FadeIn(piece2), run_time=0.3)
-            self.play(self.term("lazily", size=40, at=S11_TERM_AT, hold=0.6))
+            self.play(self.note("lazily"))
 
         # S11.7
         ep = ep_tag("→ Ep. 18, 21").scale(0.85).next_to(lazy, DOWN, buff=0.12)

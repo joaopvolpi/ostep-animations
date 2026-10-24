@@ -45,18 +45,18 @@ class S15TraceJustWait(Ep04Scene):
             self.play(stu.change("curious", look_at=cpu), FadeIn(banner, scale=1.2), run_time=0.7)
 
         # S15.4
+        comp = Computer("idle").scale(0.6).move_to(P3(2.75, 0.3))
         with self.narrate("We could. Watch what happens if we do: three ticks where the CPU does nothing."):
             p0.set_expression("blocked")
             self.play(sd.move_dot(d0, "blocked"), run_time=0.5)
             for k in range(4, 7):
                 self.play(tl.fill_column(k, {"P0": "blocked", "P1": "ready"}, cpu="idle", run_time=0.55),
                           disk.spin(0.5, run_time=0.55))
+            # S15.5 (Computer snores)
+            self.play(FadeIn(comp, shift=UP * 0.3), run_time=0.5)
+            self.play(comp.change("sleeping"), run_time=0.6)
+            self.wait(1.0)
 
-        # S15.5 (Computer snores)
-        comp = Computer("idle").scale(0.6).move_to(TRACE_COMP_POS)
-        self.play(FadeIn(comp, shift=UP * 0.3), run_time=0.5)
-        self.play(comp.change("sleeping"), run_time=0.6)
-        self.wait(2.0)
 
         # S15.6 (rewind)
         self.play(tl.unfill_ticks([4, 5, 6], run_time=0.8), FadeOut(banner), sd.move_dot(d0, "running"))

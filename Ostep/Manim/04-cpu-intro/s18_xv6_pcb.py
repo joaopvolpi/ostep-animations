@@ -26,7 +26,7 @@ class S18Xv6PCB(Ep04Scene):
         cap = Text("xv6 (Figure 4.5, simplified)", font_size=20, color=DIM).next_to(code, DOWN, buff=0.15)
 
         # S18.1
-        with self.narrate("Here's a real one, from a small teaching operating system called xv6."):
+        with self.narrate("Here's a real process control block, from a small teaching operating system called xv6."):
             veil = Rectangle(width=16, height=9).set_fill(BG, 0.8).set_stroke(width=0)
             self.add(veil, cards["A"], stu, prof, self.badge, self.terms.docked, slot)
             self.play(FadeIn(veil), run_time=0.6)
@@ -45,7 +45,7 @@ class S18Xv6PCB(Ep04Scene):
         cbar = code_line_bar(code, LINE["context"], color=CPU_COLOR, opacity=0.3)
         with self.narrate("And look at this field: the register context."):
             self.play(ReplacementTransform(bar, cbar), run_time=0.5)
-            self.play(self.term("register context", size=44, at=P3(-0.8, 2.95)))
+            self.play(self.note("register context"))
 
         # S18.4
         land = cbar.get_right() + LEFT * 0.45

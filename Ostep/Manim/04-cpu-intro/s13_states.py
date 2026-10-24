@@ -71,14 +71,14 @@ class S13States(Ep04Scene):
             self.play(to_zone(a, run_pt, "running", run_time=0.8), sd.pulse_arrow("scheduled", run_time=0.8))
             self.play(b.animate.shift(rp2[0] - b.get_bottom()), d.animate.shift(rp2[1] - d.get_bottom()),
                       show_label("scheduled"), run_time=0.7)
-            self.play(self.term("scheduled", hold=0.8))
+            self.play(self.note("scheduled"))
 
         # S13.7 descheduled: A -> Ready, then D scheduled again
         with self.narrate("Moving from running back to ready is being descheduled."):
             self.play(b.animate.shift(rp3[0] - b.get_bottom()), d.animate.shift(rp3[1] - d.get_bottom()), run_time=0.4)
             self.play(to_zone(a, rp3[2], "ready", run_time=0.8), sd.pulse_arrow("descheduled", run_time=0.8))
             self.play(show_label("descheduled"))
-            self.play(self.term("descheduled", hold=0.8))
+            self.play(self.note("descheduled"))
             self.play(to_zone(d, run_pt, "running", run_time=0.7))
             self.play(b.animate.shift(rp2[0] - b.get_bottom()), a.animate.shift(rp2[1] - a.get_bottom()), run_time=0.4)
 

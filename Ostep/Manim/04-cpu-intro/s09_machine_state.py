@@ -27,10 +27,10 @@ class S09MachineState(Ep04Scene):
 
         # S09.1
         world = VGroup(cpu, a)
-        self.say("“A running program” is a nice slogan. But if the OS is going to stop a process and resume "
+        self.say("Let's get back to the process itself. “A running program” is a nice slogan. But if the OS is going to stop a process and resume "
                  "it later, it needs to know exactly what a process is.",
                  world.animate(run_time=1.2).shift(S09_CPU_POS - CPU_HOME),
-                 Succession(Wait(1.4), Wiggle(a, scale_value=1.05, rotation_angle=0.02, run_time=1.2)))
+                 late(1.4, Wiggle(a, scale_value=1.05, rotation_angle=0.02, run_time=1.2)))
 
         # S09.2 freeze
         overlay = Rectangle(width=16, height=9).set_fill(BG, 0.45).set_stroke(width=0)
@@ -53,7 +53,7 @@ class S09MachineState(Ep04Scene):
         self.say("In other words: what parts of the machine can this program read or change? "
                  "That's its machine state.",
                  prof.change("explaining", look_at=a),
-                 Succession(Wait(2.4), self.term("machine state")))
+                 late(2.4, self.term("machine state")))
 
         # S09.5
         mem = s09_memory(colored=False)
@@ -71,7 +71,7 @@ class S09MachineState(Ep04Scene):
         l1 = pad.line_text(0, "memory (address space)")
         with self.narrate("The memory a process can address is its address space."):
             self.play(Create(aspace), run_time=0.8)
-            self.play(self.term("address space"))
+            self.play(self.note("address space"))
             self.play(Write(l1), run_time=0.8)
 
         # S09.7
@@ -87,7 +87,7 @@ class S09MachineState(Ep04Scene):
         with self.narrate("A few are special. The program counter, sometimes called the instruction pointer, "
                           "says which instruction runs next."):
             self.play(regs.highlight("PC", CPU_COLOR), run_time=0.6)
-            self.play(self.term("program counter (PC)", size=44))
+            self.play(self.note("program counter (PC)"))
             self.play(TransformFromCopy(regs.name_texts["PC"], pc_tag[1]), GrowArrow(pc_tag[0]),
                       FadeIn(hl), run_time=0.9)
 
@@ -115,12 +115,12 @@ class S09MachineState(Ep04Scene):
         with self.narrate("The stack pointer and frame pointer keep track of the stack: function parameters, "
                           "local variables, return addresses."):
             self.play(regs.highlight("SP", MEM_COLOR), regs.highlight("FP", USER_COLOR),
-                      self.terms.write("stack pointer & frame pointer", size=40), run_time=0.8)
+                      self.note("stack pointer & frame pointer"), run_time=0.8)
             self.play(FadeOut(st_text), LaggedStart(*[FadeIn(f, shift=DOWN * 0.2) for f in frames], lag_ratio=0.4),
                       run_time=1.4)
             self.play(TransformFromCopy(regs.name_texts["SP"], sp_tag[1]), GrowArrow(sp_tag[0]),
                       TransformFromCopy(regs.name_texts["FP"], fp_tag[1]), GrowArrow(fp_tag[0]), run_time=0.9)
-            self.play(self.terms.dock_anim(), Write(l2), run_time=0.8)
+            self.play(Write(l2), run_time=0.8)
 
         # S09.11
         files = s09_files()

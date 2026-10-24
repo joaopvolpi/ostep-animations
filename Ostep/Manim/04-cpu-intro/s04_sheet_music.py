@@ -17,7 +17,7 @@ class S04SheetMusic(Ep04Scene):
         # S04.1
         disk = Disk().move_to(S04_DISK)
         file = s04_file(disk)
-        self.say("First, a distinction. A program is a lifeless thing.",
+        self.say("To get there, first a distinction. A program is a lifeless thing.",
                  FadeOut(strip, run_time=0.6), FadeIn(disk, run_time=0.8), FadeIn(file, shift=DOWN * 0.3, run_time=0.8))
 
         # S04.2

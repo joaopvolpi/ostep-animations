@@ -16,23 +16,24 @@ class S03Crux(Ep04Scene):
 
         # S03.1 (transition)
         badge = make_badge()
-        self.play(
-            FadeOut(board), FadeOut(vcpus), FadeOut(counter),
-            Transform(cpu, badge.dot),
-            FadeIn(badge.text, shift=RIGHT * 0.2),
-            FadeOut(comp, shift=DOWN * 1.5),
-            stu.animate.scale(CHAR_SCALE).move_to(STUDENT_CORNER),
-            prof.animate.scale(CHAR_SCALE).move_to(PROF_CORNER),
-            run_time=1.6,
-        )
-        self.remove(cpu)
-        self.add(badge)
-        self.play(stu.change("neutral"), prof.change("neutral"), run_time=0.5)
+        with self.narrate("Let's put that as a question."):
+            self.play(
+                FadeOut(board), FadeOut(vcpus), FadeOut(counter),
+                Transform(cpu, badge.dot),
+                FadeIn(badge.text, shift=RIGHT * 0.2),
+                FadeOut(comp, shift=DOWN * 1.5),
+                stu.animate.scale(CHAR_SCALE).move_to(STUDENT_CORNER),
+                prof.animate.scale(CHAR_SCALE).move_to(PROF_CORNER),
+                run_time=1.6,
+            )
+            self.remove(cpu)
+            self.add(badge)
+            self.play(stu.change("neutral"), prof.change("neutral"), run_time=0.5)
 
         # S03.2 (card appears)
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT)
         card.move_to(P3(0, 0.6))
-        self.say_crux(card, stu.look_at(card), hold=0.6)
+        self.say_crux(card, stu.look_at(card), hold=0.6, lead="So, the crux is: {q}")
 
         # S03.3
         term = terminal_thumb(width=6.4, height=1.25)

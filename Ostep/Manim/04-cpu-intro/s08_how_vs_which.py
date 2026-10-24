@@ -41,7 +41,7 @@ def arm_move(arm, target, carry=None, offset=None, run_time=1.0):
 class S08HowVsWhich(Ep04Scene):
     def construct(self):
         self.add_badge()
-        self.add_docked_term("time sharing")
+        self.add_docked_term("space sharing")
         stu, prof = self.add_corner_chars()
         d = build_s06_parts(final=True)
         add_s06_world(self, d)
@@ -50,7 +50,7 @@ class S08HowVsWhich(Ep04Scene):
         # S08.1 -- collapse to the right-side world: A on the CPU, B and C queued
         q = Queue(label="Ready", center=(0, -2.0), slots=3, spacing=1.2, font_size=24)
         a, b, c = ps["A"], ps["B"], ps["C"]
-        left_side = VGroup(d["vcpus"], *d["vps"].values(), d["vlabel"], d["gauges"])
+        left_side = VGroup(d["vcpus"], *d["vps"].values(), d["gauges"])
         q_spots = [q.slot_point(0), q.slot_point(1)]
         cpu_target = cpu.copy().move_to(CPU_HOME)
         a.set_expression("running")
@@ -58,8 +58,8 @@ class S08HowVsWhich(Ep04Scene):
         q.items = [b, c]
         dq = Text("do?", font_size=34, color=CPU_COLOR, weight="BOLD")
         wq = Text("who?", font_size=34, color=VIRT, weight="BOLD")
-        with self.narrate("Wait, but somebody has to do the switching. And somebody has to decide who's next."):
-            self.play(FadeOut(left_side), FadeOut(split), FadeOut(d["plabel"]), FadeOut(tl),
+        with self.narrate("Wait, back to taking turns. Somebody has to do the switching. And somebody has to decide who's next."):
+            self.play(FadeOut(left_side), FadeOut(split), FadeOut(tl),
                       cpu.animate.move_to(CPU_HOME),
                       a.animate.shift(cpu_target.slot_point() + UP * 0.02 - a.get_bottom()),
                       b.animate.move_to(b.copy().shift(q_spots[0] - b.get_bottom())),
@@ -92,7 +92,7 @@ class S08HowVsWhich(Ep04Scene):
         how = Text("HOW · mechanism", font_size=30, color=TEXT, weight="BOLD").move_to(LEFT_C + UP * 1.95)
         which = Text("WHICH · policy", font_size=30, color=TEXT, weight="BOLD").move_to(RIGHT_C + UP * 1.95)
         with self.narrate("The first job is a mechanism."):
-            self.play(self.term("mechanism"), Succession(Wait(2.4), Write(how, run_time=0.8)))
+            self.play(self.term("mechanism"), late(2.4, Write(how, run_time=0.8)))
 
         # S08.4
         gears = GearPair(radius=0.5).move_to(P3(-1.6, 0.9))
@@ -119,11 +119,11 @@ class S08HowVsWhich(Ep04Scene):
         # S08.6
         tag = ep_tag("→ Ep. 06").scale(0.9).next_to(gears, RIGHT, buff=0.12).shift(DOWN * 0.35)
         self.say("That mechanism is called a context switch, and it gets its own episode later.",
-                 self.term("context switch"), Succession(Wait(1.6), FadeIn(tag, scale=1.3, run_time=0.5)))
+                 self.note("context switch"), late(1.6, FadeIn(tag, scale=1.3, run_time=0.5)))
 
         # S08.7
         self.say("The second job is a policy. That's an algorithm that answers a which question.",
-                 self.term("policy"), Succession(Wait(2.4), Write(which, run_time=0.8)))
+                 self.term("policy"), late(2.4, Write(which, run_time=0.8)))
 
         # S08.8
         spot = Spotlight(height=1.9, spread=0.5)
@@ -154,7 +154,7 @@ class S08HowVsWhich(Ep04Scene):
         self.say("at what kind of programs these are,", FadeIn(work, shift=DOWN * 0.2, run_time=0.6))
         self.say("or at what we're optimizing for: snappy interaction or total throughput.",
                  FadeIn(goal, shift=DOWN * 0.2, run_time=0.6),
-                 Succession(Wait(0.6), Rotate(goal[0].needle, -0.9, about_point=goal[0][3].get_center(),
+                 late(0.6, Rotate(goal[0].needle, -0.9, about_point=goal[0][3].get_center(),
                                               run_time=0.8, rate_func=there_and_back)))
 
         # S08.12
@@ -162,7 +162,7 @@ class S08HowVsWhich(Ep04Scene):
         tip = TipCard(VGroup(), title="TIP · Separate policy and mechanism", width=6.0, height=0.62)
         tip.move_to(P3(0, 2.95))
         with self.narrate("Keeping the two apart is a form of modularity."):
-            self.play(self.term("modularity"))
+            self.play(self.note("modularity"))
             self.play(Create(seam), FadeIn(tip, shift=DOWN * 0.2), run_time=0.8)
 
         # S08.13

@@ -109,13 +109,12 @@ class S16TraceOSWay(Ep04Scene):
                           "the OS's scheduler…"):
             self.play(prof.change("happy", look_at=stu), run_time=0.6)
             self.wait(1.4)
-            self.play(self.term("scheduler", hold=0.8))
+            self.play(self.note("scheduler"))
             self.play(FadeIn(whistle, scale=0.5), FadeIn(wlab), run_time=0.6)
 
         # S16.12
         ep = ep_tag("→ Ep. 07–10").scale(0.8).next_to(wlab, DOWN, buff=0.1)
         self.say("…and we'll spend several episodes on them.", FadeIn(ep, scale=1.3, run_time=0.5))
-        self.beat(0.8)
 
         # transition: everything fades except the state diagram, which moves to the S17 spot
         keep = (sd, self.badge, self.terms.docked, stu, prof, slot)

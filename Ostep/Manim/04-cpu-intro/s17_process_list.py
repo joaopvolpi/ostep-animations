@@ -39,14 +39,10 @@ class S17ProcessList(Ep04Scene):
             card.move_to(P3(PCB_X, y))
 
         # S17.2 + S17.3
-        alias = Text("(sometimes a process descriptor)", font_size=24, color=DIM).move_to(P3(-1.2, 2.35))
         with self.narrate("For each process, it keeps a record. That record is called a Process Control Block, "
                           "or PCB (sometimes a process descriptor)."):
             self.play(GrowFromPoint(cards["A"], a.get_center()), run_time=0.9)
-            self.play(self.terms.write("Process Control Block (PCB)", size=40, at=P3(-1.2, 2.95)))
-            self.play(FadeIn(alias, shift=UP * 0.1), run_time=0.5)
-            self.wait(1.0)
-            self.play(self.terms.dock_anim(), FadeOut(alias))
+            self.play(self.term("Process Control Block (PCB)", hold=1.4))
 
         # S17.4
         brace, blab = s17_brace(cards)
@@ -54,7 +50,7 @@ class S17ProcessList(Ep04Scene):
             self.play(LaggedStart(*[GrowFromPoint(cards[n], ps[n].get_center()) for n in ("B", "D", "C")],
                                   lag_ratio=0.35), run_time=1.5)
             self.play(GrowFromCenter(brace), FadeIn(blab), run_time=0.6)
-            self.play(self.term("process list", size=44))
+            self.play(self.note("process list"))
 
         # S17.5
         with self.narrate("It's the OS's roll call of every process: who's ready, who's running, who's blocked "
