@@ -27,6 +27,29 @@ def s20_world():
     return uk, a, VGroup(handler, h_lab), disk, gauge
 
 
+def s20_trap_lines(a, handler):
+    """The trap path and the return-from-trap line.  Anchored on a's fixed center (``get_bottom()``
+    / ``get_right()`` drift with the character's bounding box), so S20 and S21's start agree."""
+    path = Line(a.get_center() + DOWN * 0.45, handler[0].get_left() + LEFT * 0.05).set_stroke(CPU_COLOR, 4)
+    ret = Line(handler[0].get_top(), a.get_center() + np.array([0.31, -0.3, 0])).set_stroke(GOOD, 4)
+    return path, ret
+
+
+def s20_end_extras(a, handler):
+    """Everything S20 leaves on screen besides uk/a/handler/disk/gauge (S21's start state)."""
+    fbox = RoundedRectangle(width=0.9, height=0.55, corner_radius=0.08).set_fill(CARD_FILL, 1).set_stroke(USER_COLOR, 2.5)
+    fbox.move_to(F_POS)
+    flab = Text("f()", font=MONO_FONT, font_size=22, color=TEXT).move_to(fbox)
+    pc_lab = Text("procedure call", font_size=18, color=USER_COLOR).next_to(fbox, DOWN, buff=0.15)
+    path, ret = s20_trap_lines(a, handler)
+    trap = Text("trap", font=MONO_FONT, font_size=20, color=CPU_COLOR, weight=BOLD)
+    trap.next_to(path.get_center(), LEFT, buff=0.15)
+    ret_lab = Text("return-from-trap", font=MONO_FONT, font_size=18, color=GOOD)
+    ret_lab.next_to(ret.get_center(), RIGHT, buff=0.15)
+    tag = next_tag("→ Ep. 06", 18).move_to([-4.6, UK_Y - 0.75, 0])
+    return VGroup(fbox, flab, pc_lab, path, trap, ret, ret_lab, tag)
+
+
 class S20SystemCall(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="curious", prof_expr="happy")
@@ -94,8 +117,8 @@ class S20SystemCall(NarratedScene):
 
         # S20.7 trap
         trap = Text("trap", font=MONO_FONT, font_size=20, color=CPU_COLOR, weight=BOLD)
-        dot = Dot(a.get_bottom(), radius=0.09).set_fill(CPU_COLOR, 1)
-        path = Line(a.get_bottom(), handler[0].get_left() + LEFT * 0.05).set_stroke(CPU_COLOR, 4)
+        path, ret = s20_trap_lines(a, handler)
+        dot = Dot(path.get_start(), radius=0.09).set_fill(CPU_COLOR, 1)
         with self.narrate("A special trap instruction jumps to a trap handler set up by the OS,"):
             self.play(FadeIn(handler, shift=UP * 0.2), run_time=0.5)
             trap.next_to(path.get_center(), LEFT, buff=0.15)
@@ -119,7 +142,6 @@ class S20SystemCall(NarratedScene):
 
         # S20.9 return-from-trap
         ret_lab = Text("return-from-trap", font=MONO_FONT, font_size=18, color=GOOD)
-        ret = Line(handler[0].get_top(), a.get_right() + DOWN * 0.3).set_stroke(GOOD, 4)
         ret_lab.next_to(ret.get_center(), RIGHT, buff=0.15)
         with self.narrate("When the OS is done, a return-from-trap drops back to user mode, right where the "
                           "application left off."):

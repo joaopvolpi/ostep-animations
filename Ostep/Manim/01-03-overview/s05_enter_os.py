@@ -26,10 +26,10 @@ def virtual_copies(stack, procs):
 class S05EnterOS(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="bored", prof_expr="thinking")
-        cpu0, mem0, lists = s04_end_world()
+        cpu0, mem0, lists, leftovers = s04_end_world()
         th = terms(INTRO)
         bdg = badge(INTRO)
-        self.add(stu, prof, bdg, cpu0, mem0, lists, set_docked(th, "Von Neumann model"))
+        self.add(stu, prof, bdg, cpu0, mem0, lists, leftovers, set_docked(th, "Von Neumann model"))
 
         stack = make_stack()
         procs = stack_programs()
@@ -40,7 +40,7 @@ class S05EnterOS(NarratedScene):
             self.play(ReplacementTransform(cpu0, stack.cpu), ReplacementTransform(mem0, stack.memory),
                       FadeIn(stack.disk, shift=UP * 0.8),
                       *[ReplacementTransform(lists[k], procs[k + 1]) for k in range(2)],
-                      FadeIn(procs[0], shift=DOWN * 0.3), run_time=1.6)
+                      FadeIn(procs[0], shift=DOWN * 0.3), FadeOut(leftovers), run_time=1.6)
             self.play(th.show("easy to use", dock=False, hold=1.0))
 
         # S05.2

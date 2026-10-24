@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from manim import *  # noqa: E402,F403
 from ostep_lib import *  # noqa: E402,F403
 from common import *  # noqa: E402,F403
-from s20_system_call import s20_world  # noqa: E402
+from s20_system_call import s20_world, s20_end_extras  # noqa: E402
 
 MINI_POS = np.array([-5.4, 0.35, 0])
 L_CPU = np.array([-3.0, 0.55, 0])
@@ -46,21 +46,39 @@ def s21_right():
     return unix, sub, pipeline
 
 
+def s21_end_world():
+    """Exact S21 end state (S22's start): returns the left/right groups plus the late extras."""
+    mini, cpu, procs, disk, mems, walls = s21_left()
+    unix, sub, pipeline = s21_right()
+    procs[0].set_expression("blocked")
+    procs[1].shift(cpu.slot_point() - base_point(procs[1]))
+    procs[1].set_expression("running")
+    grep, pipe, wc = pipeline
+    out = Text("3", font=MONO_FONT, font_size=28, color=GOOD, weight=BOLD).next_to(wc, RIGHT, buff=0.3)
+    cb = VGroup(Circle(radius=0.28).set_fill(USER_COLOR, 1).set_stroke(outline_of(USER_COLOR), 3),
+                Text("C", font=FONT, font_size=30, color=INK, weight=BOLD))
+    cb[1].move_to(cb[0])
+    cb.next_to(unix, RIGHT, buff=0.15).shift(UP * 0.25)
+    return mini, cpu, procs, disk, mems, walls, unix, sub, pipeline, VGroup(out, cb)
+
+
 class S21MultiprogrammingUnix(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="curious", prof_expr="happy")
         th = hist_terms()
         bdg = badge(INTRO)
         era = era_ribbon(1)
+        s19_end()   # S20 builds this (a CPU seating a Process) before A; that changes every Process built later (library quirk)
         uk, a, handler, disk0, gauge = s20_world()
-        self.add(stu, prof, bdg, uk, a, handler, disk0, gauge, era, set_docked(th, "return-from-trap"))
+        s20_x = s20_end_extras(a, handler)
+        self.add(stu, prof, bdg, uk, a, handler, disk0, gauge, era, s20_x, set_docked(th, "return-from-trap"))
 
         mini, cpu, procs, disk, mems, walls = s21_left()
         homes = [base_point(p).copy() for p in procs]
 
         # S21.1
         with self.narrate("Next, cheaper minicomputers brought multiprogramming."):
-            self.play(FadeOut(VGroup(uk, a, handler, gauge)), ReplacementTransform(disk0, disk),
+            self.play(FadeOut(VGroup(uk, a, handler, gauge, s20_x)), ReplacementTransform(disk0, disk),
                       era.move_marker("minicomputers / UNIX"), run_time=0.9)
             self.play(FadeIn(mini, shift=RIGHT * 0.3), FadeIn(cpu), run_time=0.6)
             for p, h in zip(procs, homes):
@@ -85,7 +103,7 @@ class S21MultiprogrammingUnix(NarratedScene):
                       flash_radius=0.15, num_lines=8)
         self.say("That made memory protection and concurrency critical.",
                  FadeIn(mems), Succession(Wait(0.4), FadeIn(walls)), Succession(Wait(1.0), spark),
-                 Succession(Wait(0.8), th.show("memory protection", size=34, hold=0.7)))
+                 late(0.8, th.show("memory protection", size=34, hold=0.7)))
 
         # S21.4 UNIX
         unix, sub, pipeline = s21_right()

@@ -7,21 +7,23 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from manim import *  # noqa: E402,F403
 from ostep_lib import *  # noqa: E402,F403
 from common import *  # noqa: E402,F403
-from s10_four_at_once import s10_world  # noqa: E402
+from s10_four_at_once import s10_world, s10_end_world  # noqa: E402
 
 
 class S11MemoryBytes(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="surprised", prof_expr="happy")
-        cpu, procs, tl = s10_world()
-        term0 = Terminal(width=5.0, height=3.2, font_size=18, cpus=1).move_to([-3.6, 0.6, 0])
+        w = s10_end_world()
+        cpu, procs, tl, term0 = w["cpu"], w["procs"], w["tl"], w["term"]
+        stu.set_look(cpu)
         th = terms(VIRT)
         bdg = badge(VIRT)
-        self.add(stu, prof, bdg, cpu, procs, tl, term0, set_docked(th, "policy"))
+        self.add(stu, prof, bdg, cpu, procs, tl, w["slots"], w["times"], w["tag"], w["band"], term0,
+                 set_docked(th, "policy"))
 
         # S11.1
-        self.say("Now memory.", FadeOut(VGroup(cpu, procs, tl, term0)),
-                 Succession(Wait(0.3), th.show("physical memory", hold=0.8)))
+        self.say("Now memory.", FadeOut(VGroup(cpu, procs, tl, term0, w["slots"], w["times"], w["tag"], w["band"])),
+                 late(0.3, th.show("physical memory", hold=0.8)))
 
         # S11.2
         strip = s11_strip()

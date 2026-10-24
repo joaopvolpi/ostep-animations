@@ -149,6 +149,9 @@ and `ostep_lib/props/p04_preview.py` with `P04PropSheet` / `P04IconSheet` (04).
 - `FadeOut` of a block inside a `Timeline` doesn't detach it; call `Timeline.purge()` after clearing.
 - `PrivilegeGauge` can't be scaled after creation (`set_level` rebuilds from unscaled geometry). Build it at its final size.
 - To build an instant "starts with" state from an animation: `anim.begin(); anim.finish()`.
+- **Delaying an animation inside a `play`:** use `late(delay, anim)`, never `Succession(Wait(delay), anim)`: the
+  latter flashes the introduced mobjects at t=0 (this is how `th.show(...)` popped up early). `finish_now(anim)` runs an
+  animation to its end instantly, to build "starts with" states.
 - **`Succession` flashes later introducers.** It adds every sub-animation's mobject at t=0, but begins
   each one only when its turn comes. So a `Write`/`FadeIn`/`Create` that isn't first shows the finished
   mobject until it starts. Make introducers first in a `Succession`, or group the sequence as

@@ -42,6 +42,21 @@ STU_DIALOGUE = np.array([-2.6, -1.2, 0.0])
 PROF_DIALOGUE = np.array([2.6, -1.2, 0.0])
 
 
+def late(delay, anim):
+    """Start ``anim`` after ``delay`` seconds inside a larger play WITHOUT the t=0 flash that
+    ``Succession(Wait(delay), anim)`` causes (a Succession adds its non-first members' mobjects
+    to the scene at full opacity at t=0, so a veil or a big term would pop up early)."""
+    return AnimationGroup(Wait(delay), anim, lag_ratio=1)
+
+
+def finish_now(anim):
+    """Run an animation to its end state instantly: builds a scene's "starts with" state."""
+    anim.scene = None
+    anim.begin()
+    anim.finish()
+    return anim
+
+
 def host_pair(mode="corner", stu_expr="neutral", prof_expr="neutral"):
     """Student (facing right) and Professor (flipped, facing left) in ``"corner"`` or
     ``"dialogue"`` mode, looking at each other.  ``host_mode_anims`` moves them between modes."""
@@ -75,7 +90,7 @@ def host_mode_anims(stu, prof, mode, run_time=1.0):
 __all__ = [
     "INK", "CARD_FILL", "PEACH_COLOR", "CONTENT_TOP", "CHROME_ROW_Y", "CRUX_STRIP_Y", "scrim",
     "HOST_SCALE", "STU_CORNER", "PROF_CORNER", "STU_DIALOGUE", "PROF_DIALOGUE",
-    "host_pair", "host_mode_anims",
+    "host_pair", "host_mode_anims", "late", "finish_now",
     "outline_of", "label_text", "mono_text", "wrap_text", "centered_text", "make_translucent",
     "base_point", "place_on", "hop_to", "HopTo",
     "CPU", "Memory", "Disk", "DiskSpin",

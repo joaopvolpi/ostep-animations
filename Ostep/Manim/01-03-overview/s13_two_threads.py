@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from manim import *  # noqa: E402,F403
 from ostep_lib import *  # noqa: E402,F403
 from common import *  # noqa: E402,F403
-from s12_same_address import top_strip, phys_strip, DIV_Y  # noqa: E402
+from s12_same_address import top_strip, phys_strip, DIV_Y, s12_end_world  # noqa: E402
 
 THREADS_C = r'''volatile int counter = 0;
 void *worker(void *arg) {
@@ -52,28 +52,28 @@ def s13_end():
     code, title = threads_code()
     cell = counter_cell("137298", BAD)
     t1, t2 = placed_threads()
-    links = VGroup(*[DashedLine(t.get_top(), cell.box.get_bottom(), dash_length=0.1).set_stroke(DIM, 2) for t in (t1, t2)])
+    links = VGroup(*[DashedLine(p + UP * 0.95, cell.box.get_bottom(), dash_length=0.1).set_stroke(DIM, 2)
+                     for p in T_POS])
     term = threads_terminal()
-    term.type("./threads 100000")
-    term.print("Final value : 137298   // what the??")
+    # the terminal holds 2 lines, so earlier history has scrolled out: build the last two directly
+    for a in (term.type("./threads 100000"), term.print("Final value : 137298   // what the??")):
+        finish_now(a)
     return code, title, cell, t1, t2, links, term
 
 
 class S13TwoThreads(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="confused", prof_expr="worried")
-        th = terms(CONC)
+        th = terms(VIRT)
         bdg = badge(VIRT)
-        left, right = top_strip(-2.75), top_strip(2.75)
-        phys = phys_strip()
-        split = IllusionSplit("what each process sees", "what really happens", orientation="horizontal", at=DIV_Y,
-                              top_y=3.15, title_size=22)
-        self.add(stu, prof, bdg, left, right, phys, split, set_docked(th, "virtualizing memory"))
+        w12 = s12_end_world()
+        self.add(stu, prof, bdg, w12["all"], set_docked(th, "virtualizing memory"))
+        th.set_accent(CONC)
 
         # S13.1
         card = piece_card(1).move_to([0, 2.0, 0])
         with self.narrate("Second piece: concurrency."):
-            self.play(FadeOut(VGroup(left, right, phys, split)), bdg.recolor(CONC), run_time=0.7)
+            self.play(FadeOut(w12["all"]), bdg.recolor(CONC), run_time=0.7)
             self.play(FadeIn(card, scale=0.8), run_time=0.4)
             self.play(Indicate(card, color=CONC), run_time=0.6)
             self.play(FadeOut(card), run_time=0.3)
@@ -109,7 +109,7 @@ class S13TwoThreads(NarratedScene):
         self.say("A thread is like a function running in the same memory as other functions, with more than "
                  "one active at a time.",
                  Create(outline, run_time=0.8), FadeIn(o_lab), FadeIn(t1, scale=0.5), FadeIn(t2, scale=0.5),
-                 Succession(Wait(1.0), th.show("thread", hold=0.8)))
+                 late(1.0, th.show("thread", hold=0.8)))
 
         # S13.5 code, threads to positions, taps
         code, title = threads_code()

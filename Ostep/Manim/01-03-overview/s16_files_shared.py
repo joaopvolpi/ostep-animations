@@ -41,7 +41,8 @@ class S16FilesShared(NarratedScene):
         mem = s15_memory(values=False)
         disk0, files0 = s15_disk()
         hdd, ssd, fs = s15_extras(disk0)
-        self.add(stu, prof, bdg, mem, disk0, files0, hdd, ssd, fs, set_docked(th, "file system"))
+        sw = PowerSwitch(0.9).move_to(S15_SWITCH_POS)   # S15 leaves the switch on
+        self.add(stu, prof, bdg, mem, disk0, files0, hdd, ssd, fs, sw, set_docked(th, "file system"))
 
         disk, ps, links = s16_actors()
         # S16.1
@@ -53,7 +54,7 @@ class S16FilesShared(NarratedScene):
             ghosts.add(VGroup(g, lab))
         crosses = VGroup(*[x_mark(0.25).move_to(g[0]) for g in ghosts])
         with self.narrate("Unlike the CPU and memory, the OS does not give each program a private virtual disk."):
-            self.play(FadeOut(VGroup(mem, files0, hdd, ssd, fs)), ReplacementTransform(disk0, disk), run_time=0.9)
+            self.play(FadeOut(VGroup(mem, files0, hdd, ssd, fs, sw)), ReplacementTransform(disk0, disk), run_time=0.9)
             self.play(LaggedStart(*[FadeIn(p, shift=DOWN * 0.3) for p in ps], lag_ratio=0.2), run_time=0.9)
             self.play(FadeIn(ghosts), run_time=0.5)
             self.play(Create(crosses), run_time=0.6)
@@ -61,7 +62,7 @@ class S16FilesShared(NarratedScene):
 
         # S16.2
         self.say("Files are meant to be shared.", LaggedStart(*[Create(l) for l in links], lag_ratio=0.2, run_time=1.0),
-                 Succession(Wait(0.5), th.show("shared", size=44, hold=0.8)))
+                 late(0.5, th.show("shared", size=44, hold=0.8)))
 
         # S16.3 emacs writes main.c
         mainc = FileIcon("main.c", color=TEXT, width=0.45, font_size=14).move_to(ps[0].get_center())

@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from manim import *  # noqa: E402,F403
 from ostep_lib import *  # noqa: E402,F403
 from common import *  # noqa: E402,F403
-from s17_syscalls_crash import s17_world  # noqa: E402
+from s17_syscalls_crash import s17_world, s17_end_world  # noqa: E402
 
 BADGE_XS = (-4.8, -1.6, 1.6, 4.8)
 BADGE_Y = 0.4
@@ -58,15 +58,33 @@ def extras_row():
     return g
 
 
+def s18_end_extras(icons):
+    """What S18 leaves on screen beyond frames/icons/extras row (S19's start): the angry process
+    (replaces the middle protection process), the wall glow, the wish-list scroll and title."""
+    prot = icons[2]
+    ps, walls = prot.procs, prot.walls
+    angry = Process(color=BAD).scale(0.3).move_to(ps[1])
+    ps.remove(ps[1])
+    glow = VGroup(*[w_.copy().set_fill(opacity=0).set_stroke(CPU_COLOR, 6, opacity=0.6) for w_ in walls])
+    scroll = scroll_icon(13.6, 4.3)
+    scroll[0].set_fill(opacity=0.12)
+    scroll[1].set_fill(opacity=0.5)
+    scroll.move_to([0, -0.25, 0]).set_z_index(-2)
+    wl = Text("wish list", font_size=26, color=INTRO).move_to([0, 2.15, 0])
+    return VGroup(angry, glow, scroll, wl)
+
+
 class S18GoodOS(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="surprised", prof_expr="happy")
-        th = terms(INTRO)
+        th = terms(PERS)
         th.at = np.array([0, 2.3, 0])
         bdg = badge(PERS)
-        w = s17_world()
-        old = VGroup(*w.values())
+        w, extras, crux_strip, blk_pt = s17_end_world()
+        old = VGroup(*w.values(), extras, crux_strip)
+        stu.set_look(blk_pt)
         self.add(stu, prof, bdg, old, set_docked(th, "journaling · copy-on-write"))
+        th.set_accent(INTRO)
 
         # S18.1 pieces flash, dock as strip
         cards = piece_cards()

@@ -117,6 +117,9 @@ complete.
     with `set_expression` / `set_look` at the start of a scene to anything but the previous end
     state. If the story needs a different expression, animate it in the first `play`
     (`stu.change("curious")`).
+  - To start an animation partway through a `play`, use `late(delay, anim)`, not
+    `Succession(Wait(delay), anim)` (which flashes the new mobjects at t=0, visible as a pop at the
+    first frame of the scene). `finish_now(anim)` builds an end state instantly.
   - Docked term: `terms.docked_now(term)`. Crux strip: `card.strip()` with defaults. Badge:
     `SectionBadge`. Use the same builder at the end of one scene and the start of the next.
   - Any prop that persists across a cut is built by one `common.py` function that both scenes call

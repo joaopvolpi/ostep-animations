@@ -7,26 +7,31 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from manim import *  # noqa: E402,F403
 from ostep_lib import *  # noqa: E402,F403
 from common import *  # noqa: E402,F403
-from s18_good_os import goal_frame, goal_icons, extras_row  # noqa: E402
+from s17_syscalls_crash import s17_world  # noqa: E402
+from s18_good_os import goal_frame, goal_icons, extras_row, s18_end_extras  # noqa: E402
 
 
 class S19BatchEra(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="curious", prof_expr="happy")
+        stu.set_look(s17_world()["dblocks"][2].get_center())   # S18 leaves the Student's gaze on the crashed block
+        stu.set_z_index(1)    # S18's wish-list scroll passes behind the hosts
+        prof.set_z_index(1)
         th = hist_terms()
         bdg = badge(INTRO)
         strip = card_strip(piece_cards()).move_to([0, 3.3, 0])
         frames = VGroup(*[goal_frame(i) for i in range(4)])
         icons = VGroup(*goal_icons())
         ex = extras_row()
-        self.add(stu, prof, bdg, strip, frames, icons, ex, set_docked(th, "reliability"))
+        s18_extra = s18_end_extras(icons)
+        self.add(stu, prof, bdg, strip, frames, icons, ex, s18_extra, set_docked(th, "reliability"))
 
         era = era_ribbon(0)
         mf, shelf, cpu_job, operator = s19_end()
 
         # S19.1
         self.say("These ideas didn't arrive all at once. Engineers learned them the hard way.",
-                 FadeOut(VGroup(strip, frames, icons, ex)), Succession(Wait(0.5), era.draw()))
+                 FadeOut(VGroup(strip, frames, icons, ex, s18_extra)), stu.look_at(prof), Succession(Wait(0.5), era.draw()))
 
         # S19.2
         with self.narrate("In the beginning, the OS was just a library of handy routines, like I/O code, so "

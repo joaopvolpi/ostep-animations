@@ -26,6 +26,42 @@ def s10_world():
     return cpu, procs, tl
 
 
+def _fin(anim):
+    return finish_now(anim)
+
+
+def s10_end_world():
+    """Exact S10 end state, for S11's start: returns dict of objects (all positioned and styled)."""
+    cpu, procs, tl = s10_world()
+    term = s09_terminal()
+    term.scale(5 / 5.6).move_to(S10_TERM)
+    _fin(term.pop())
+    _fin(term.type("./cpu A & ./cpu B & ./cpu C & ./cpu D &", run_time=0.1))
+    for i in range(4):
+        _fin(term.print(f"[{i + 1}] {7353 + i}", color=DIM))
+    slots = VGroup()
+    for k, letter in enumerate(CPU_ORDER):
+        i = "ABCD".index(letter)
+        _fin(term.print(letter))
+        slots.add(timeline_slot(tl, k, ABCD_COLORS[i]))
+    for p in procs:
+        p.set_expression("ready")
+    procs[2].shift(cpu.slot_point() - base_point(procs[2]))
+    procs[2].set_expression("running")
+    times = Text("×1", font_size=26, color=CPU_COLOR, weight=BOLD).next_to(cpu, LEFT, buff=0.25)
+    tag = next_tag("→ Ep. 04–10", 18).next_to(cpu, RIGHT, buff=0.3)
+    band, band_lab = s10_band()
+    return dict(cpu=cpu, procs=procs, tl=tl, slots=slots, term=term, times=times, tag=tag,
+                band=VGroup(band, band_lab))
+
+
+def s10_band():
+    band = RoundedRectangle(width=4.1, height=0.42, corner_radius=0.08).set_fill(KERNEL_COLOR, 0.25)
+    band.set_stroke(KERNEL_COLOR, 2.5).move_to([2.85, -2.95, 0])
+    band_lab = Text("resource manager", font_size=20, color=TEXT).move_to(band)
+    return band, band_lab
+
+
 class S10FourAtOnce(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="bored", prof_expr="happy")
@@ -128,9 +164,7 @@ class S10FourAtOnce(NarratedScene):
             self.play(procs[2].change("running"), FadeOut(spot), run_time=0.4)
 
         # S10.10 tiny OS band
-        band = RoundedRectangle(width=4.1, height=0.42, corner_radius=0.08).set_fill(KERNEL_COLOR, 0.25)
-        band.set_stroke(KERNEL_COLOR, 2.5).move_to([2.85, -2.95, 0])
-        band_lab = Text("resource manager", font_size=20, color=TEXT).move_to(band)
+        band, band_lab = s10_band()
         self.say("Deciding them is the OS's job as resource manager.",
                  FadeIn(VGroup(band, band_lab), shift=UP * 0.3))
         self.beat(0.8)

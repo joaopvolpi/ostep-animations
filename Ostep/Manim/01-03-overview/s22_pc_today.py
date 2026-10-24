@@ -7,7 +7,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from manim import *  # noqa: E402,F403
 from ostep_lib import *  # noqa: E402,F403
 from common import *  # noqa: E402,F403
-from s21_multiprogramming_unix import s21_left, s21_right  # noqa: E402
+from s21_multiprogramming_unix import s21_left, s21_right, s21_end_world  # noqa: E402
 
 PC_POS = np.array([0, 0.25, 0])
 STRIP_Y = -1.75
@@ -28,17 +28,16 @@ class S22PcToday(NarratedScene):
         th = hist_terms()
         bdg = badge(INTRO)
         era = era_ribbon(2)
-        mini, cpu, procs, disk, mems, walls = s21_left()
-        unix, sub, pipeline = s21_right()
-        self.add(stu, prof, bdg, era, mini, cpu, procs, disk, mems, walls, unix, sub, pipeline,
+        mini, cpu, procs, disk, mems, walls, unix, sub, pipeline, late_x = s21_end_world()
+        self.add(stu, prof, bdg, era, mini, cpu, procs, disk, mems, walls, unix, sub, pipeline, late_x,
                  set_docked(th, "pipes"))
 
         pc = Computer("happy").scale(0.9).move_to(PC_POS)
         # S22.1
         self.say("Then the personal computer.",
-                 FadeOut(VGroup(mini, cpu, procs, disk, mems, walls, unix, sub, pipeline)), era.move_marker("PCs"),
+                 FadeOut(VGroup(mini, cpu, procs, disk, mems, walls, unix, sub, pipeline, late_x)), era.move_marker("PCs"),
                  Succession(Wait(0.5), FadeIn(pc, shift=UP * 0.3)),
-                 Succession(Wait(0.8), th.show("personal computer", size=36, hold=0.6)))
+                 late(0.8, th.show("personal computer", size=36, hold=0.6)))
 
         # S22.2 skid backwards
         with self.narrate("At first it was a great leap backwards."):

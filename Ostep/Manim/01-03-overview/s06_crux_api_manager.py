@@ -29,11 +29,13 @@ class S06CruxApiManager(NarratedScene):
         vc, vm = virtual_copies(stack, procs)
         th = terms(INTRO)
         bdg = badge(INTRO)
-        self.add(stu, prof, bdg, stack, procs, vc, vm, set_docked(th, "virtual machine"))
+        phys = Text("physical", font_size=20, color=TEXT).next_to(stack.cpu, LEFT, buff=0.2)
+        virt = Text("virtual", font_size=20, color=CPU_COLOR).next_to(vc[0], LEFT, buff=0.2)
+        self.add(stu, prof, bdg, stack, procs, vc, vm, phys, virt, set_docked(th, "virtual machine"))
 
         # S06.1 crux
         crux = CruxCard(CRUX_Q, CRUX_SUB, accent=INTRO).move_to([0, 0.8, 0])
-        self.play(FadeOut(vc), FadeOut(vm), run_time=0.6)
+        self.play(FadeOut(vc), FadeOut(vm), FadeOut(phys), FadeOut(virt), run_time=0.6)
         self.say_crux(crux, dock=True)
         th.at = np.array([0, 2.35, 0])
 

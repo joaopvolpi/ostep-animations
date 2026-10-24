@@ -201,15 +201,26 @@ def other_program(k):
 
 
 def s04_end_world():
+    """Exact S04 end state: cpu (label hidden), memory, the two other programs, plus
+    (ring, pc, aims) which S05 fades out."""
     cpu = s04_cpu()
+    cpu.label.set_opacity(0.0)
     mem = s04_memory()
     p2, p3 = other_program(0), other_program(1)
-    p2.move_to([5.0, 1.3, 0])
-    p3.move_to([5.0, -1.0, 0])
+    p2.move_to([5.2, 1.5, 0])
+    p3.move_to([5.2, -0.75, 0])
     for p in (p2, p3):
         for c in p.cells:
             c.set_stroke(DIM)
-    return cpu, mem, VGroup(p2, p3)
+    aims = VGroup(*[DashedLine(p.get_left(), cpu.get_right() + RIGHT * 0.1, dash_length=0.12)
+                    .add_tip(tip_length=0.18).set_color(DIM) for p in (p2, p3)])
+    aims.set_z_index(-1)
+    ring = fde_ring([-2.8, -1.8, 0])
+    for b_ in ring.boxes:
+        b_[0].set_stroke(DIM).set_fill(CARD_FILL, 1)
+        b_[1].set_color(DIM)
+    pc = pc_arrow(mem, 7)
+    return cpu, mem, VGroup(p2, p3), VGroup(ring, pc, aims)
 
 
 # --------------------------------------------------------------------------
@@ -311,10 +322,24 @@ def timeline_slot(tl, k, color):
 # --------------------------------------------------------------------------
 # misc helpers
 # --------------------------------------------------------------------------
+def late(delay, anim):
+    """Start ``anim`` after ``delay`` seconds inside a larger play, WITHOUT the t=0 flash that
+    ``Succession(Wait(delay), anim)`` causes (Scene.play adds the mobjects of a Succession's
+    non-introducer members, e.g. ``th.show``'s veil and big term, at full opacity at t=0)."""
+    return AnimationGroup(Wait(delay), anim, lag_ratio=1)
+
+
+def finish_now(anim):
+    """Run an animation to its end state instantly (builds a 'starts with' state)."""
+    anim.scene = None
+    anim.begin()
+    anim.finish()
+    return anim
+
+
 def set_docked(th, text):
     """Start a scene with ``text`` already docked top-right (continuity)."""
-    th.docked = th._make(text, th.dock_size, th.accent, th.dock_at, right_aligned=True)
-    return th.docked
+    return th.docked_now(text)
 
 
 def counter_text(tracker, fmt="{:,.0f} instructions/s", font_size=24, color=TEXT, pos=ORIGIN):

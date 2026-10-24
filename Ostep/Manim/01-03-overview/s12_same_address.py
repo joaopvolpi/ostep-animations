@@ -22,6 +22,58 @@ def phys_strip():
                        font_size=20, address_size=12).move_to([0, PHYS_Y, 0])
 
 
+def s12_end_world():
+    """Exact S12 end state (for S13's start): dict of mobjects."""
+    tag = next_tag("./mem & ./mem &", 22, TEXT)
+    tag[1].become(Text("./mem & ./mem &", font=MONO_FONT, font_size=22, color=TEXT).move_to(tag[1]))
+    tag.move_to([0, 3.25, 0])
+    left, right = top_strip(-2.75), top_strip(2.75)
+    p1 = pid_process(24113, PID1_COLOR)
+    p2 = pid_process(24114, PID2_COLOR)
+    place_on(p1, [-5.85, 1.85, 0])
+    place_on(p2, [5.85, 1.85, 0])
+    p2.flip()
+    cards = VGroup()
+    for p, s, col in ((p1, left, PID1_COLOR), (p2, right, PID2_COLOR)):
+        c = Text("p = 0x200000", font=MONO_FONT, font_size=16, color=col)
+        box = SurroundingRectangle(c, buff=0.08, corner_radius=0.05).set_fill(CARD_FILL, 1).set_stroke(col, 2)
+        card = VGroup(box, c).next_to(p, DOWN, buff=0.12)
+        if card.get_left()[0] < -6.6:
+            card.shift(RIGHT * (-6.6 - card.get_left()[0]))
+        if card.get_right()[0] > 6.6:
+            card.shift(LEFT * (card.get_right()[0] - 6.6))
+        cards.add(card)
+    left.color_cell(1, PID1_COLOR)
+    right.color_cell(1, PID2_COLOR)
+    left.cell(1).set_fill(PID1_COLOR, 0.55).set_stroke(PID1_COLOR)
+    right.cell(1).set_fill(PID2_COLOR, 0.55).set_stroke(PID2_COLOR)
+    left.set_value(1, "5")
+    right.set_value(1, "5")
+    log_box = RoundedRectangle(width=2.0, height=0.95, corner_radius=0.08).set_fill(TERM_FILL, 1).set_stroke(DIM, 1.5)
+    log_box.move_to([0, 1.15, 0])
+    la = Text("(24113) p: 3", font=MONO_FONT, font_size=15, color=PID1_COLOR).move_to(log_box.get_center() + UP * 0.2)
+    lb = Text("(24114) p: 3", font=MONO_FONT, font_size=15, color=PID2_COLOR).move_to(log_box.get_center() + DOWN * 0.2)
+    split = IllusionSplit("what each process sees", "what really happens", orientation="horizontal",
+                          at=DIV_Y, top_y=3.15, title_size=22)
+    split.left_title.move_to([-6.6, 3.22, 0], aligned_edge=LEFT)
+    split.right_title.move_to([-6.6, DIV_Y - 0.3, 0], aligned_edge=LEFT)
+    phys = phys_strip()
+    phys_lab = Text("physical memory", font_size=22, color=MEM_COLOR).move_to([4.6, DIV_Y - 0.3, 0])
+    outlines = VGroup(*[DashedVMobject(SurroundingRectangle(s.cells, buff=0.1, corner_radius=0.08), num_dashes=40)
+                        .set_stroke(col, 3) for s, col in ((left, PID1_COLOR), (right, PID2_COLOR))])
+    vas = VGroup(*[Text("virtual address space", font_size=18, color=col).next_to(o, UP, buff=0.05)
+                   for o, col in zip(outlines, (PID1_COLOR, PID2_COLOR))])
+    arrows = MappingArrows([(left.cell(1), phys.cell(PHYS_IDX[0]), PID1_COLOR),
+                            (right.cell(1), phys.cell(PHYS_IDX[1]), PID2_COLOR)], angle=0.3)
+    phys.cell(PHYS_IDX[0]).set_fill(PID1_COLOR, 0.55).set_stroke(PID1_COLOR)
+    phys.cell(PHYS_IDX[1]).set_fill(PID2_COLOR, 0.55).set_stroke(PID2_COLOR)
+    phys.set_value(PHYS_IDX[0], "5")
+    phys.set_value(PHYS_IDX[1], "5")
+    return dict(all=VGroup(tag, left, right, p1, p2, cards, log_box, la, lb, split, phys, phys_lab, outlines,
+                           vas, arrows),
+                left=left, right=right, phys=phys, split=split)
+
+
 class S12SameAddress(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="surprised", prof_expr="happy")
@@ -119,7 +171,7 @@ class S12SameAddress(NarratedScene):
                        for o, col in zip(outlines, (PID1_COLOR, PID2_COLOR))])
         self.say("Each process gets its own private virtual address space,",
                  Create(outlines, run_time=1.0), FadeIn(vas),
-                 Succession(Wait(0.6), th.show("virtual address space", size=44, hold=0.9)))
+                 late(0.6, th.show("virtual address space", size=44, hold=0.9)))
 
         # S12.8 mapping arrows
         arrows = MappingArrows([(left.cell(1), phys.cell(PHYS_IDX[0]), PID1_COLOR),
@@ -134,7 +186,7 @@ class S12SameAddress(NarratedScene):
 
         # S12.9
         self.say("Same address on the outside, different bytes underneath. That's virtualizing memory.",
-                 arrows.pulse(), Succession(Wait(0.8), th.show("virtualizing memory", size=44, hold=1.0)))
+                 arrows.pulse(), late(0.8, th.show("virtualizing memory", size=44, hold=1.0)))
 
         # S12.10 aside
         aside = AsideCard("needs ASLR off", width=3.2, font_size=22, icon=padlock_icon(0.35)).move_to([3.0, -2.85, 0])

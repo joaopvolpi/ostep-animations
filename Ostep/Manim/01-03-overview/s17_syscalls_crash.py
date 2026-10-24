@@ -46,6 +46,39 @@ def s17_world():
                 dblocks=dblocks)
 
 
+S17_CRUX_Q = "How to store data persistently?"
+S17_CRUX_SUB = "Correctly, fast, and reliably, even when hardware and software fail."
+
+
+def s17_end_world():
+    """Exact S17 end state (S18's start): returns (w, extras, strip, blk_point).
+    ``w`` is s17_world() with its end-of-scene fills; ``extras`` the later additions."""
+    w = s17_world()
+    w["blocks"][6].set_fill(DISK_COLOR, 0.9)
+    tick = tick_mark(0.2).move_to(w["ledger"].get_corner(UR))
+    for a in (w["disk"].spin(1.5, run_time=0.8), w["disk"].spin(0.7, run_time=0.6)):
+        finish_now(a)
+    hello = Text("hello world", font=MONO_FONT, font_size=11, color=INK)
+    hello.scale_to_fit_width(w["dblocks"][1].width * 0.85).move_to(w["dblocks"][1])
+    w["dblocks"][1].set_fill(DISK_COLOR, 0.95)
+    comp = Computer("idle").scale(0.6).move_to(COMP_POS)
+    blk = w["dblocks"][2]
+    half_g = Rectangle(width=0.25, height=0.35).set_fill(DISK_COLOR, 0.95).set_stroke(width=0)
+    half_r = Rectangle(width=0.25, height=0.35).set_fill(BAD, 0.9).set_stroke(width=0)
+    half_g.move_to(blk.get_center() + LEFT * 0.125)
+    half_r.move_to(blk.get_center() + RIGHT * 0.125)
+    j = journal_icon(0.5).move_to([3.75, -1.15, 0])
+    cw = cow_icon(0.5).move_to([5.0, -1.15, 0])
+    jl = VGroup(Text("journal", font_size=14, color=DIM), Text("→ Ep. 42", font_size=14, color=DIM)).arrange(DOWN, buff=0.04)
+    cl = VGroup(Text("copy-on-write", font_size=14, color=DIM), Text("→ Ep. 42", font_size=14, color=DIM)).arrange(DOWN, buff=0.04)
+    jl.next_to(j, DOWN, buff=0.08)
+    cl.next_to(cw, DOWN, buff=0.08)
+    note = sticky_note("later!", 0.6).next_to(blk, UP, buff=0.05)
+    strip = CruxCard(S17_CRUX_Q, S17_CRUX_SUB, accent=PERS).strip()
+    extras = VGroup(tick, hello, comp, half_g, half_r, j, jl, cw, cl, note)
+    return w, extras, strip, blk.get_center()
+
+
 class S17SyscallsCrash(NarratedScene):
     def construct(self):
         stu, prof = make_hosts("corner", stu_expr="curious", prof_expr="explaining")
@@ -54,6 +87,7 @@ class S17SyscallsCrash(NarratedScene):
         th.size = 44
         bdg = badge(PERS)
         disk0, ps, links = s16_actors()
+        ps[2][0].set_expression("running")   # S16 ends with ./main running
         f1 = FileIcon("main.c", color=TEXT, width=0.45, font_size=14).move_to(disk_slot(disk0, 0))
         f2 = FileIcon("main", color=CPU_COLOR, width=0.45, font_size=14).move_to(disk_slot(disk0, 1))
         self.add(stu, prof, bdg, disk0, ps, links, f1, f2, set_docked(th, "shared"))
@@ -133,12 +167,10 @@ class S17SyscallsCrash(NarratedScene):
         cl.next_to(cw, DOWN, buff=0.08)
         self.say("using tricks like journaling or copy-on-write.",
                  FadeIn(VGroup(j, jl), shift=UP * 0.2), FadeIn(VGroup(cw, cl), shift=UP * 0.2),
-                 Succession(Wait(0.4), th.show("journaling · copy-on-write", size=36, hold=0.8)))
+                 late(0.4, th.show("journaling · copy-on-write", size=36, hold=0.8)))
 
         # S17.6 crux
-        crux = CruxCard("How to store data persistently?",
-                        "Correctly, fast, and reliably, even when hardware and software fail.",
-                        accent=PERS).move_to([0, 0.5, 0])
+        crux = CruxCard(S17_CRUX_Q, S17_CRUX_SUB, accent=PERS).move_to([0, 0.5, 0])
         self.say_crux(crux, dock=True, run_time=0.9)
 
         # S17.7
