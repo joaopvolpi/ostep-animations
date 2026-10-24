@@ -76,7 +76,7 @@ def s12_end_world():
 
 class S12SameAddress(NarratedScene):
     def construct(self):
-        stu, prof = make_hosts("corner", stu_expr="surprised", prof_expr="happy")
+        stu, prof = make_hosts("corner", stu_expr="neutral", prof_expr="happy")
         th = terms(VIRT)
         bdg = badge(VIRT)
         strip = s11_strip()
@@ -171,7 +171,7 @@ class S12SameAddress(NarratedScene):
                        for o, col in zip(outlines, (PID1_COLOR, PID2_COLOR))])
         self.say("Each process gets its own private virtual address space,",
                  Create(outlines, run_time=1.0), FadeIn(vas),
-                 late(0.6, th.show("virtual address space", size=44, hold=0.9)))
+                 late(0.6, th.note("virtual address space")))
 
         # S12.8 mapping arrows
         arrows = MappingArrows([(left.cell(1), phys.cell(PHYS_IDX[0]), PID1_COLOR),
@@ -186,13 +186,12 @@ class S12SameAddress(NarratedScene):
 
         # S12.9
         self.say("Same address on the outside, different bytes underneath. That's virtualizing memory.",
-                 arrows.pulse(), late(0.8, th.show("virtualizing memory", size=44, hold=1.0)))
+                 arrows.pulse(), late(0.8, th.note("virtualizing memory")))
 
         # S12.10 aside
-        aside = AsideCard("needs ASLR off", width=3.2, font_size=22, icon=padlock_icon(0.35)).move_to([3.0, -2.85, 0])
         self.say("A small honesty note: on a real machine you'd have to turn off a security feature called "
                  "address-space randomization to see identical addresses.",
-                 prof.change("worried"), aside.slide_in())
+                 prof.change("worried"))
         # S12.11
-        self.say("We'll explain why later.", aside.slide_out(), min_time=1.4)
+        self.say("We'll explain why later.", min_time=1.4)
         self.beat(0.5)

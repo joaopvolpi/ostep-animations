@@ -63,8 +63,8 @@ systems. Which is fitting, since operating systems are about half as hard as phy
 
 **Professor** (proud): **Virtualization**. **Concurrency**. **Persistence**. Learn those three ideas,
 and you learn how an operating system works. How it decides what program runs next on a CPU. How
-it copes when memory overflows. How it stores information on disks. Even how to build systems that
-keep working when parts of them fail.
+it copes when memory overflows. How it keeps many things happening at once from tripping over each
+other. And how it stores information on disks.
 
 **Student** (confused): I have no idea what you're talking about, really.
 
@@ -181,8 +181,6 @@ A. Then another A. Not thrilling.
 **Narrator (V.O.):** Now let's run *four* of them at once: A, B, C and D. One processor. And yet:
 A, B, D, C, A, B, D, C… All four seem to be running at the same time.
 
-**Student** (surprised): Wait. One CPU, four programs, all running?
-
 **Narrator (V.O.):** That's the peach, for real. The OS, with some help from the hardware, creates
 an **illusion**: that the system has a very large number of virtual CPUs. This is
 **virtualizing the CPU**, and it's the subject of the next several episodes.
@@ -231,9 +229,11 @@ processes, after all. Today, any **multi-threaded** program meets them too.
 
 **Narrator (V.O.):** A **thread** is like a function running in the same memory as other
 functions, with more than one active at a time. This program creates two threads. Each one adds
-one to a shared counter, over and over, *loops* times.
+one to a shared counter, once per loop iteration, and the number of iterations is a command-line argument.
 
-**Narrator (V.O.):** Loops equals a thousand. Two threads, a thousand each. The final value?
+**Narrator (V.O.):** You might want to pause the video here to read the code.
+
+**Narrator (V.O.):** Say we ask for a thousand iterations. Two threads, a thousand each. The final value?
 
 **Student** (excited): Two thousand!
 
@@ -242,7 +242,8 @@ hundred thousand… and we get 143,012. Run it again: 137,298. Wrong, and wrong 
 
 **Student** (frustrated): Huh?? It's the same program!
 
-**Professor** (explaining): Here's why. Adding one to the counter isn't one step. It's three: load
+**Professor** (explaining): Here's why. That one line of C, counter plus plus, looks like a single step, but it isn't one instruction.
+The compiler breaks it into several, and the CPU runs them one at a time. Here, it's three: load
 the value from memory into a register, add one, store it back. Those three don't happen
 **atomically**, all at once. So if the two threads interleave in the middle, one update can
 overwrite the other.

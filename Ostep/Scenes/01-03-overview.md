@@ -62,7 +62,7 @@
 | 1 | "First question: why *three easy pieces*?" | Student (curious). The words "Three Easy Pieces" in the title `Indicate`. |
 | 2 | "Richard Feynman gave famous lectures on physics…" | Professor (explaining). A book silhouette appears at (−1.2, 1.2) labeled "Six Easy Pieces · Feynman" (font 24). |
 | 3 | "We're doing three easy pieces on operating systems." | The "Six" book slides left and fades to 40%; a second book "Three Easy Pieces · OS" appears beside it. |
-| 4 | "Which is fitting, since operating systems are about half as hard as physics." | A tiny equation writes between them: `MathTex` "\frac{6}{2} = 3", font 36. Hold 1 s for the joke. Both books fade. |
+| 4 | "Which is fitting, since operating systems are about half as hard as physics." | The "Three Easy Pieces" book is highlighted for the joke (no equation). Both books fade. |
 | 5 | "So what are the pieces?" | Student (curious). |
 | 6 | "**Virtualization**." | Card 1 (x = −4) `GrowFromCenter` in `VIRT`, label "Virtualization". |
 | 7 | "**Concurrency**." | Card 2 in `CONC`, "Concurrency". |
@@ -70,7 +70,7 @@
 | 9 | "How it decides what program runs next on a CPU." | A mini CPU icon with a hopping process pops into card 1. |
 | 10 | "How it copes when memory overflows." | A mini Memory column overflowing (cells spill over the top) also pops into card 1. |
 | 11 | "How it stores information on disks." | A mini Disk pops into card 3. |
-| 12 | "Even how to build systems that keep working when parts of them fail." | Below the cards (0, −0.4): three small networked boxes, one turns red with an ✕, and the others keep blinking green. Tag "+ distributed systems" in `DIM`. |
+| 12 | "Even how to build systems that keep working when parts of them fail." | (Replaced the distributed-systems gag.) The Concurrency card gets its icon: two small threads linked to one shared cell. Narration: "How it keeps many things happening at once from tripping over each other." Order: virtualization, concurrency, persistence. |
 | 13 | "I have no idea what you're talking about, really." | Student (confused). A "?" sits over the cards. |
 | 14 | "Good! That means you're in the right place." | Professor (happy). The "?" pops. |
 
@@ -267,7 +267,7 @@
 | 7 | "Each process gets its own private **virtual address space**…" | The top strips get dashed outlines in their process colors and the label "virtual address space". Term highlight "virtual address space". |
 | 8 | "…and the OS maps it onto the real, physical memory." | Arrows: lilac `0x200000` → physical cell 3; pink `0x200000` → physical cell 11. The physical cells take the processes' colors and *also* tick up in sync. |
 | 9 | "Same address on the outside, different bytes underneath. That's **virtualizing memory**." | Both arrows pulse together. Term highlight "virtualizing memory". |
-| 10 | "A small honesty note: on a real machine you'd have to turn off a security feature called address-space randomization…" | Professor (worried). A small Aside card at the bottom-right (3.8, −3.0), "ASIDE · needs ASLR off", with a padlock icon. |
+| 10 | "A small honesty note: on a real machine you'd have to turn off a security feature called address-space randomization…" | Professor (worried). No aside card (removed). |
 | 11 | "We'll explain why later." | The Aside card fades. |
 
 **Characters:** Student (confused), Professor (proud → worried).
@@ -286,7 +286,7 @@
 | 3 | "Today, any **multi-threaded** program meets them too." | Term highlight "multi-threaded". |
 | 4 | "A **thread** is like a function running in the same memory as other functions, with more than one active at a time." | One process outline (big, dashed) contains two small blobs T1 and T2 (mint, sky). The outline is labeled "one program · one memory". Term highlight "thread". |
 | 5 | "This program creates two threads. Each one adds one to a shared counter, over and over, *loops* times." | The code block writes. T1 and T2 leave the outline to their positions; a line from each to the shared "counter" cell. Each thread taps the cell: "+1". |
-| 6 | "Loops equals a thousand. Two threads, a thousand each. The final value?" | Terminal: `prompt> ./threads 1000`. The counter spins fast. |
+| 6 | "Loops equals a thousand. Two threads, a thousand each. The final value?" | Terminal: `prompt> ./threads 1000`. Before this, the code stays on screen while the narrator suggests pausing the video to read it. The counter spins fast. |
 | 7 | "Two thousand!" | Student (excited). |
 | 8 | "Two thousand. Correct." | The counter lands on **2000**; a green ✓. Terminal: `Final value : 2000`. |
 | 9 | "Now loops equals a hundred thousand. We expect two hundred thousand…" | Terminal: `./threads 100000`. A `DIM` "expected: 200000" tag beside the counter. |
@@ -304,7 +304,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Here's why. Adding one to the counter isn't one step. It's three:" | Professor (explaining). The code line `counter++;` flies out of the code block to the center and **splits** into three lines: `load r ← counter`, `r = r + 1`, `store counter ← r`. |
+| 1 | "Here's why. That one line of C looks like a single step, but the compiler breaks it into several instructions…" | Professor (explaining). The code line `counter++;` flies out of the code block to the center and **splits** into three lines: `load r ← counter`, `r = r + 1`, `store counter ← r`. |
 | 2 | "load the value from memory into a register, add one, store it back." | T1 does all three in slow motion: 5 flies from the cell into T1's `r` box; it becomes 6; 6 flies back to the cell → **6**. Reset the cell to 5. |
 | 3 | "Those three don't happen **atomically**, all at once." | Term highlight "atomically". The three steps are drawn as three separate blocks with gaps between them. |
 | 4 | "So if the two threads interleave in the middle…" | Interleaving, step by step (each step 0.8 s, with a "step" counter): T1 load (r₁ = 5) → T2 load (r₂ = 5) → T1 add (r₁ = 6) → T2 add (r₂ = 6) → T1 store (cell = 6) → T2 store (cell = 6). |

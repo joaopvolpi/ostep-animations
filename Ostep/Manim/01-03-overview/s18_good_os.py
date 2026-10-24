@@ -89,12 +89,10 @@ class S18GoodOS(NarratedScene):
         # S18.1 pieces flash, dock as strip
         cards = piece_cards()
         strip = card_strip(cards).move_to([0, 3.3, 0])
-        with self.narrate("So an OS virtualizes resources, handles concurrency, and stores files persistently. "
-                          "If we're going to build one, what should we aim for?"):
-            self.play(FadeOut(old), bdg.recolor(INTRO), stu.change("curious"), run_time=0.8)
-            self.play(LaggedStart(*[FadeIn(c, scale=0.8) for c in cards], lag_ratio=0.3), run_time=1.2)
-            self.wait(1.0)
-            self.play(Transform(cards, strip), run_time=1.0)
+        self.say("So an OS virtualizes resources, handles concurrency, and stores files persistently.",
+                 FadeOut(old), bdg.recolor(INTRO), stu.change("curious"),
+                 late(0.8, LaggedStart(*[FadeIn(c, scale=0.8) for c in cards], lag_ratio=0.3, run_time=1.6)))
+        self.say("If we're going to build one, what should we aim for?", Transform(cards, strip, run_time=1.0))
 
         # S18.2
         self.say("First, abstractions that make the system easy to use. Abstraction is how we build anything "
@@ -127,7 +125,7 @@ class S18GoodOS(NarratedScene):
 
         # S18.6-7 performance
         sw, bars = perf
-        self.say("Second, performance.", FadeIn(frames[1]), FadeIn(sw), th.show("performance", hold=0.8), min_time=2.0)
+        self.say("Second, performance.", FadeIn(frames[1]), FadeIn(sw), th.note("performance"), min_time=2.0)
         with self.narrate("Virtualization is worth it, but not at any cost. We want to minimize the overheads, in "
                           "extra time and in extra space."):
             for b in bars:
@@ -135,7 +133,7 @@ class S18GoodOS(NarratedScene):
             self.play(FadeIn(bars), Rotate(sw.hand, -TAU, about_point=sw[0].get_center()), run_time=1.0)
             self.wait(1.0)
             self.play(*[b[1].animate.stretch(1 / 3, 1, about_edge=DOWN) for b in bars], run_time=1.0)
-            self.play(th.show("minimize overheads", size=40, hold=0.8))
+            self.play(th.note("minimize overheads"))
 
         # S18.8 protection
         ps, walls = prot.procs, prot.walls
@@ -143,7 +141,7 @@ class S18GoodOS(NarratedScene):
         with self.narrate("Third, protection. One misbehaving program, malicious or just buggy, must not harm the "
                           "others, or the OS itself."):
             self.play(FadeIn(frames[2]), FadeIn(prot), run_time=0.6)
-            self.play(th.show("protection", hold=0.8))
+            self.play(th.note("protection"))
             self.play(ReplacementTransform(ps[1], angry), run_time=0.5)
             for d in (LEFT, RIGHT, LEFT):
                 self.play(angry.animate.shift(d * 0.08), Indicate(walls[0 if d[0] < 0 else 1], color=TEXT,
@@ -152,13 +150,13 @@ class S18GoodOS(NarratedScene):
 
         # S18.9 isolation
         glow = VGroup(*[w_.copy().set_fill(opacity=0).set_stroke(CPU_COLOR, 6, opacity=0.6) for w_ in walls])
-        self.say("The principle behind that is isolation.", FadeIn(glow), th.show("isolation", hold=0.8))
+        self.say("The principle behind that is isolation.", FadeIn(glow), th.note("isolation"))
 
         # S18.10 reliability
         line = ecg[0]
         with self.narrate("Fourth, reliability. If the OS fails, everything fails, so it has to keep running."):
             self.play(FadeIn(frames[3]), Create(ecg), run_time=0.8)
-            self.play(th.show("reliability", hold=0.8))
+            self.play(th.note("reliability"))
             for _ in range(2):
                 self.play(ShowPassingFlash(line.copy().set_stroke(GOOD, 7), time_width=0.4), run_time=0.8)
 

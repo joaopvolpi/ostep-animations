@@ -94,19 +94,24 @@ class S23TheMap(NarratedScene):
         cards = map_cards()
 
         # S23.1 rebuild the stack
-        with self.narrate("So, an operating system is the software that makes a computer easy to use, correctly "
-                          "and efficiently. Here's our map."):
-            self.play(FadeOut(old), th.clear(), run_time=0.7)
-            self.play(LaggedStart(*[FadeIn(h, shift=UP * 0.3) for h in st.hardware], lag_ratio=0.2), run_time=0.8)
-            self.play(FadeIn(st.band, shift=RIGHT), FadeIn(st.band_label), run_time=0.6)
-            self.play(LaggedStart(*[FadeIn(p, shift=DOWN * 0.3) for p in procs], lag_ratio=0.2), run_time=0.8)
+        self.say("So, an operating system is the software that makes a computer easy to use, correctly "
+                 "and efficiently.",
+                 FadeOut(old), th.clear(),
+                 late(1.0, LaggedStart(*[FadeIn(h, shift=UP * 0.3) for h in st.hardware], lag_ratio=0.2,
+                                       run_time=0.8)))
+        self.say("Here's our map.",
+                 FadeIn(st.band, shift=RIGHT), FadeIn(st.band_label), 
+                 late(0.5, LaggedStart(*[FadeIn(p, shift=DOWN * 0.3) for p in procs], lag_ratio=0.2, run_time=0.8)))
 
         # S23.2 virtualization
         vc = st.cpu.virtual_copy().shift(UP * 0.2 + RIGHT * 0.2)
         vm = make_translucent(st.memory.copy(), 0.3, 0.6).shift(UP * 0.2 + RIGHT * 0.2)
-        self.say("Virtualization: one physical CPU and one memory become many virtual ones.",
-                 FadeIn(cards[0], shift=DOWN * 0.8),
-                 Succession(Wait(1.0), FadeIn(vc), FadeIn(vm), FadeOut(vc), FadeOut(vm)))
+        with self.narrate("Virtualization: one physical CPU and one memory become many virtual ones."):
+            self.play(FadeIn(cards[0], shift=DOWN * 0.8), run_time=0.8)
+            self.wait(0.6)
+            self.play(FadeIn(vc), FadeIn(vm), run_time=0.6)
+            self.wait(0.8)
+            self.play(FadeOut(vc), FadeOut(vm), run_time=0.6)
 
         # S23.3 concurrency
         self.say("Concurrency: doing many things at once, correctly.", FadeIn(cards[1], shift=DOWN * 0.8))

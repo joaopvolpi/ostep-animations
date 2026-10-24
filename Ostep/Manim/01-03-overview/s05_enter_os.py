@@ -35,13 +35,18 @@ class S05EnterOS(NarratedScene):
         procs = stack_programs()
 
         # S05.1
-        with self.narrate("While a program runs, a lot of other things are going on, all with one goal: "
-                          "making the system easy to use. There's a body of software in charge of that."):
-            self.play(ReplacementTransform(cpu0, stack.cpu), ReplacementTransform(mem0, stack.memory),
-                      FadeIn(stack.disk, shift=UP * 0.8),
-                      *[ReplacementTransform(lists[k], procs[k + 1]) for k in range(2)],
-                      FadeIn(procs[0], shift=DOWN * 0.3), FadeOut(leftovers), run_time=1.6)
-            self.play(th.show("easy to use", dock=False, hold=1.0))
+        self.say("While a program runs, a lot of other things are going on,",
+                 ReplacementTransform(cpu0, stack.cpu), ReplacementTransform(mem0, stack.memory),
+                 FadeIn(stack.disk, shift=UP * 0.8),
+                 *[ReplacementTransform(lists[k], procs[k + 1]) for k in range(2)],
+                 FadeIn(procs[0], shift=DOWN * 0.3), FadeOut(leftovers), run_time=1.6)
+        self.say("all with one goal: making the system easy to use.",
+                 LaggedStart(*[Indicate(m, color=INTRO, scale_factor=1.1)
+                               for m in (stack.cpu, stack.memory, stack.disk)], lag_ratio=0.4, run_time=1.6))
+        q = question_mark(0.7, INTRO).move_to([0, 2.0, 0])
+        self.say("There's a body of software in charge of that.",
+                 FadeIn(q, scale=0.4, run_time=0.6))
+        self.play(FadeOut(q, scale=1.5), run_time=0.4)
 
         # S05.2
         with self.narrate("It lets you run programs, even many at once."):
@@ -92,6 +97,6 @@ class S05EnterOS(NarratedScene):
         # S05.8
         with self.narrate("That's why the OS is sometimes called a virtual machine."):
             self.play(stack.relabel("Operating System · a virtual machine"), run_time=0.6)
-            self.play(th.show("virtual machine", hold=1.0))
+            self.play(th.note("virtual machine"))
             self.play(stack.relabel("Operating System"), run_time=0.6)
         self.beat(0.6)

@@ -28,7 +28,8 @@ class S14LoadAddStore(NarratedScene):
         # S14.1 counter++ splits into three steps
         three = VGroup(*[Text(InterleavingDemo.OP_TEXT[op], font=MONO_FONT, font_size=24, color=TEXT)
                          for op in InterleavingDemo.OPS]).arrange(DOWN, buff=0.25).move_to([0, 0.3, 0])
-        with self.narrate("Here's why. Adding one to the counter isn't one step. It's three:"):
+        with self.narrate("Here's why. That one line of C, counter plus plus, looks like a single step, but it isn't one instruction. "
+                          "The compiler breaks it into several, and the CPU runs them one at a time. Here, it's three:"):
             self.play(prof.change("explaining"), FadeOut(VGroup(code, title, cell, t1, t2, links, term)),
                       line.animate.move_to([0, 0.3, 0]).scale(1.4), run_time=1.0)
             self.wait(0.4)
@@ -49,7 +50,7 @@ class S14LoadAddStore(NarratedScene):
 
         # S14.3 atomically
         with self.narrate("Those three don't happen atomically, all at once."):
-            self.play(th.show("atomically", hold=0.8))
+            self.play(th.note("atomically"))
             self.play(*[Indicate(b[0], color=CONC, scale_factor=1.06) for lane in demo.lanes for b in lane],
                       run_time=0.8)
 

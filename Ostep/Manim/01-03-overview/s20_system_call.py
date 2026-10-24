@@ -109,7 +109,7 @@ class S20SystemCall(NarratedScene):
         hit = np.array([a.get_bottom()[0] + 0.9, UK_Y + 0.02, 0])
         with self.narrate("Applications run in user mode, where the hardware restricts what they can do: no direct "
                           "disk I/O, no touching any memory they like."):
-            self.play(th.show("user mode", hold=0.8))
+            self.play(th.note("user mode"))
             self.play(arm2.animate.put_start_and_end_on(a.get_bottom(), hit), run_time=0.5)
             self.play(uk.flash_at(hit[0], BAD), Wiggle(a, scale_value=1.05, rotation_angle=0.06), run_time=0.6)
             self.play(arm2.animate.put_start_and_end_on(a.get_bottom(), a.get_bottom() + DOWN * 0.01), run_time=0.4)
@@ -125,7 +125,7 @@ class S20SystemCall(NarratedScene):
             self.add(dot)
             self.play(Create(path), FadeIn(trap), uk.cross(dot, handler[0].get_left()), run_time=1.0)
             self.play(Indicate(handler, color=KERNEL_COLOR), FadeOut(dot), run_time=0.5)
-            self.play(th.show("trap · trap handler", hold=0.8))
+            self.play(th.note("trap · trap handler"))
 
         # S20.8 kernel mode: reach disk
         harm = Line(handler[0].get_right(), handler[0].get_right()).set_stroke(KERNEL_COLOR, 6)
@@ -138,7 +138,7 @@ class S20SystemCall(NarratedScene):
                       harm.animate.put_start_and_end_on(handler[0].get_right(), handler[0].get_right() + RIGHT * 0.01),
                       run_time=0.6)
             self.remove(harm)
-            self.play(th.show("kernel mode", hold=0.8))
+            self.play(th.note("kernel mode"))
 
         # S20.9 return-from-trap
         ret_lab = Text("return-from-trap", font=MONO_FONT, font_size=18, color=GOOD)
@@ -148,7 +148,7 @@ class S20SystemCall(NarratedScene):
             self.play(Create(ret), FadeIn(ret_lab), uk.cross(data, a.get_right() + RIGHT * 0.35), run_time=1.1)
             self.play(gauge.set_level("user"), FadeOut(data), run_time=0.6)
             self.play(hop_to(a, base_point(a), height=0.3, run_time=0.4))
-            self.play(th.show("return-from-trap", hold=0.8))
+            self.play(th.note("return-from-trap"))
 
         # S20.10-11
         self.say("So programs ask permission, and the OS does the dangerous stuff?", stu.change("curious"))

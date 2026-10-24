@@ -29,7 +29,8 @@ class S01Welcome(NarratedScene):
                  Succession(Write(title, run_time=1.6), FadeIn(credit, shift=UP * 0.1, run_time=0.6)))
 
         # S01.3
-        tag = name_tag("Professor", 17).move_to(prof.get_center() + DOWN * 0.72)
+        tag = name_tag("Professor", 15)
+        tag.move_to([prof.get_center()[0], prof.get_bottom()[1] + tag.height / 2 + 0.06, 0])
         with self.narrate("I'm here to teach you what you need to know. I'm called \"Professor\". Who are you?"):
             self.wait(1.2)
             self.play(FadeIn(tag, scale=0.5), run_time=0.4)
@@ -37,14 +38,14 @@ class S01Welcome(NarratedScene):
             self.play(FadeOut(tag), prof.look_at(LEFT * 7 + DOWN * 0.8), run_time=0.5)
 
         # S01.4
-        stag = name_tag("Student", 17)
+        stag = name_tag("Student", 15)
         with self.narrate("Hi, Professor! I'm called \"Student\", as you might have guessed. And I'm ready to learn!"):
             p1 = center_base(stu, STU_DIALOG + LEFT * 2.2)
             p2 = center_base(stu, STU_DIALOG)
             self.play(hop_to(stu, p1, run_time=0.55))
             self.play(hop_to(stu, p2, run_time=0.55))
             self.play(stu.change("excited"), run_time=0.5)
-            stag.move_to(stu.get_center() + DOWN * 0.62)
+            stag.move_to([stu.get_center()[0], stu.get_bottom()[1] + stag.height / 2 + 0.06, 0])
             self.play(FadeIn(stag, scale=0.5), run_time=0.4)
             self.wait(1.3)
             self.play(FadeOut(stag), stu.look_at(prof), prof.look_at(stu), run_time=0.5)

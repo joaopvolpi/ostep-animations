@@ -50,13 +50,13 @@ class S06CruxApiManager(NarratedScene):
             self.wait(1.5)
             self.play(GrowArrow(req), run_time=0.6)
             self.play(Indicate(doors[0], color=CPU_COLOR), run_time=0.6)
-            self.play(th.show("system calls", hold=1.0))
+            self.play(th.note("system calls"))
         self.play(FadeOut(req), run_time=0.3)
 
         # S06.3
         with self.narrate("We sometimes say it provides a standard library to applications."):
             self.play(stack.relabel("a standard library"), run_time=0.6)
-            self.play(th.show("standard library", size=42, hold=0.8))
+            self.play(th.note("standard library"))
             self.play(stack.relabel("Operating System"), run_time=0.5)
 
         # S06.4 resource manager: hands pass a CPU token
@@ -76,7 +76,7 @@ class S06CruxApiManager(NarratedScene):
                     self.play(FadeIn(grp, shift=UP * 0.4), run_time=0.3)
                 self.play(grp.animate.shift(UP * 0.55), run_time=0.35)
                 self.play(FadeOut(grp, shift=DOWN * 0.3), run_time=0.3)
-            self.play(th.show("resource manager", hold=0.8))
+            self.play(th.note("resource manager"))
 
         # S06.5 the gag
         sup = Text("the supervisor", font_size=24, color=TEXT).rotate(0.06)

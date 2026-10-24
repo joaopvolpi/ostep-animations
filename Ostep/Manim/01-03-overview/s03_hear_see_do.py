@@ -50,10 +50,8 @@ class S03HearSeeDo(NarratedScene):
         self.say("How did you know what I was going to say?!", prof.change("surprised"))
 
         # S03.8
-        note = Text("attributed to Confucius; closer to Xunzi", font_size=20, color=DIM)
-        note.next_to(lines, DOWN, buff=0.3).shift(LEFT * 0.4)
         self.say("It seemed to follow. Also, the philosopher Xunzi is actually a better source for that quote.",
-                 stu.change("neutral"), FadeIn(note, shift=LEFT * 0.5, run_time=0.7))
+                 stu.change("neutral"))
 
         # S03.9
         self.say("Well. I think we're going to get along just fine.", prof.change("happy"))

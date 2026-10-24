@@ -36,8 +36,8 @@ class S22PcToday(NarratedScene):
         # S22.1
         self.say("Then the personal computer.",
                  FadeOut(VGroup(mini, cpu, procs, disk, mems, walls, unix, sub, pipeline, late_x)), era.move_marker("PCs"),
-                 Succession(Wait(0.5), FadeIn(pc, shift=UP * 0.3)),
-                 late(0.8, th.show("personal computer", size=36, hold=0.6)))
+                 late(0.5, FadeIn(pc, shift=UP * 0.3)),
+                 late(0.8, th.note("personal computer")))
 
         # S22.2 skid backwards
         with self.narrate("At first it was a great leap backwards."):
@@ -62,16 +62,14 @@ class S22PcToday(NarratedScene):
         mcpu.seat(stuck)
         loop = loop_arrow(0.28).next_to(stuck, RIGHT, buff=0.05)
         freeze = Rectangle(width=16, height=10).set_fill(BG, 0.6).set_stroke(width=0)
-        black = Rectangle(width=16, height=10).set_fill("#000000", 1).set_stroke(width=0)
         with self.narrate("and early Mac OS let one stuck program freeze the entire machine."):
             self.play(FadeOut(bad), FadeIn(VGroup(mcpu, stuck, loop)), pc.change("overwhelmed"), run_time=0.6)
             self.add(freeze)
             self.bring_to_front(mcpu, stuck, loop)
             self.play(FadeIn(freeze), Rotate(loop, -TAU, about_point=loop.get_center()), run_time=1.0)
             self.play(Rotate(loop, -TAU, about_point=loop.get_center()), run_time=0.8)
-            self.add(black)
             self.wait(0.3)
-            self.remove(black, freeze, mcpu, stuck, loop)
+            self.remove(freeze, mcpu, stuck, loop)
             pc.set_expression("idle")
             for c, k in zip(cells, range(8)):
                 c.set_fill(ABCD_COLORS[k // 2], 0.6)

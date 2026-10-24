@@ -70,29 +70,23 @@ class S02ThreePieces(NarratedScene):
                  Succession(FadeIn(mem_i[0], scale=0.4, run_time=0.4),
                             LaggedStart(*[FadeIn(s, shift=UP * 0.15) for s in mem_i[1]], lag_ratio=0.5,
                                         run_time=0.6)))
-        # S02.11
+        # S02.11 concurrency
+        conc_i = mini_conc_icon().move_to(icon_slot(cards[1]))
+        self.say("How it keeps many things happening at once from tripping over each other.",
+                 FadeIn(conc_i[0], scale=0.4, run_time=0.5), FadeIn(conc_i[2], scale=0.4, run_time=0.5),
+                 late(0.5, Create(conc_i[1], run_time=0.5)))
+        # S02.12
         disk_i = mini_disk_icon().move_to(icon_slot(cards[2]))
-        self.say("How it stores information on disks.", FadeIn(disk_i, scale=0.4, run_time=0.5),
+        self.say("And how it stores information on disks.", FadeIn(disk_i, scale=0.4, run_time=0.5),
                  disk_i.spin(1, run_time=1.0))
         cards[0].icons.add(cpu_i, mem_i)
+        cards[1].icons.add(conc_i)
         cards[2].icons.add(disk_i)
-
-        # S02.12
-        net = net_boxes(spacing=1.2, size=0.5).move_to([0, -0.4, 0])
-        dist = Text("+ distributed systems", font_size=22, color=DIM).next_to(net, DOWN, buff=0.18)
-        bad = x_mark(0.35).move_to(net[1][1])
-        with self.narrate("Even how to build systems that keep working when parts of them fail."):
-            self.play(FadeIn(net), FadeIn(dist), run_time=0.6)
-            self.play(net[2][1].animate.set_fill(BAD), net[1][1].animate.set_stroke(BAD),
-                      Create(bad), run_time=0.5)
-            for _ in range(2):
-                self.play(*[net[2][k].animate.set_fill(GOOD, 0.25) for k in (0, 2)], run_time=0.3)
-                self.play(*[net[2][k].animate.set_fill(GOOD, 1) for k in (0, 2)], run_time=0.3)
 
         # S02.13
         q = question_mark(0.8, CPU_COLOR).move_to([0, 2.45, 0])
         self.say("I have no idea what you're talking about, really.",
-                 stu.change("confused"), FadeIn(q, scale=0.4), FadeOut(net), FadeOut(dist), FadeOut(bad))
+                 stu.change("confused"), FadeIn(q, scale=0.4))
         # S02.14
         self.say("Good! That means you're in the right place.",
                  prof.change("happy"), FadeOut(q, scale=1.6))

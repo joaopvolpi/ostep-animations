@@ -42,7 +42,7 @@ class S07ThePeach(NarratedScene):
         phys = Text("physical", font_size=22, color=TEXT).next_to(table, DOWN, buff=0.12).set_x(0)
         with self.narrate("A peach. Call it the physical peach."):
             self.play(prof.change("explaining"), FadeIn(phys, shift=UP * 0.1), run_time=0.6)
-            self.play(th.show("physical", hold=1.0))
+            self.play(th.note("physical"))
 
         # S07.5 eaters hop in
         eaters = make_eaters()
@@ -66,7 +66,7 @@ class S07ThePeach(NarratedScene):
         vtags = VGroup(*[Text("virtual", font_size=18, color=VIRT).next_to(v, UP, buff=0.08) for v in vps])
         with self.narrate("These are virtual peaches. We create many virtual peaches out of the one physical peach."):
             self.play(LaggedStart(*[FadeIn(t, shift=DOWN * 0.1) for t in vtags], lag_ratio=0.2), run_time=0.8)
-            self.play(th.show("virtual", hold=1.0))
+            self.play(th.note("virtual"))
 
         # S07.8
         cones = VGroup(*[view_cone(e, v) for e, v in zip(eaters, vps)])

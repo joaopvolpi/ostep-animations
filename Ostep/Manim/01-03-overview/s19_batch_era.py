@@ -37,7 +37,7 @@ class S19BatchEra(NarratedScene):
         with self.narrate("In the beginning, the OS was just a library of handy routines, like I/O code, so "
                           "programmers didn't have to write it themselves."):
             self.play(FadeIn(mf, shift=UP * 0.3), FadeIn(shelf, shift=RIGHT * 0.3), run_time=0.9)
-            self.play(th.show("just a library", size=36, hold=0.8))
+            self.play(th.note("just a library"))
             self.play(LaggedStart(*[d.animate.set_opacity(0.3) for d in mf.lights[::3]], lag_ratio=0.05), run_time=0.6)
             self.play(LaggedStart(*[d.animate.set_opacity(1) for d in mf.lights[::3]], lag_ratio=0.05), run_time=0.6)
 
@@ -53,7 +53,7 @@ class S19BatchEra(NarratedScene):
         entry = mf.get_right() + DOWN * 1.35
         with self.narrate("Jobs were run in a batch."):
             self.play(FadeIn(jobs, lag_ratio=0.2), run_time=0.5)
-            self.play(th.show("batch processing", size=36, hold=0.6))
+            self.play(th.note("batch processing"))
             for k in range(3):
                 j = jobs[k]
                 self.play(j.animate.move_to(entry).scale(0.6).set_opacity(0), run_time=0.4)

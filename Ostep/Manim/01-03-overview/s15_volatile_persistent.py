@@ -27,7 +27,7 @@ class S15VolatilePersistent(NarratedScene):
 
         # S15.2
         self.say("Memory, the DRAM in your computer, is volatile.",
-                 FadeIn(dram, shift=DOWN * 0.1), late(0.6, th.show("volatile", hold=0.8)))
+                 FadeIn(dram, shift=DOWN * 0.1), late(0.6, th.note("volatile")))
 
         # S15.3 power off
         sw = PowerSwitch(0.9).move_to(S15_SWITCH_POS)
@@ -51,9 +51,9 @@ class S15VolatilePersistent(NarratedScene):
         hdd, ssd, fs = s15_extras(disk)
         self.say("The hardware is some kind of I/O device: a hard drive, or more and more often a solid-state drive.",
                  FadeIn(hdd), Succession(Wait(1.2), FadeIn(ssd, shift=LEFT * 0.6)),
-                 late(2.0, th.show("I/O device", hold=0.8)))
+                 late(2.0, th.note("I/O device")))
 
         # S15.6 file system layer
         self.say("The software is the file system. It stores the files you create, reliably and efficiently.",
-                 FadeIn(fs, shift=DOWN * 0.3), late(0.6, th.show("file system", hold=0.9)))
+                 FadeIn(fs, shift=DOWN * 0.3), late(0.6, th.note("file system")))
         self.beat(0.5)

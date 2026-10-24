@@ -115,12 +115,11 @@ class S10FourAtOnce(NarratedScene):
 
         # S10.4
         self.say("All four seem to be running at the same time.", stu.change("surprised", look_at=cpu))
-        self.say("Wait. One CPU, four programs, all running?", min_time=2.0)
 
         # S10.5 peach callback
         pch = Peach().scale(0.9).move_to(cpu)
         with self.narrate("That's the peach, for real."):
-            self.play(FadeIn(pch, scale=0.6), run_time=0.3)
+            self.play(FadeIn(pch, scale=0.6), stu.change("neutral"), run_time=0.3)
             self.wait(0.5)
             self.play(FadeOut(pch, scale=1.3), run_time=0.3)
 
@@ -135,12 +134,12 @@ class S10FourAtOnce(NarratedScene):
                           "a very large number of virtual CPUs."):
             self.play(LaggedStart(*[FadeIn(v, shift=DOWN * 0.2) for v in vcs], lag_ratio=0.2), run_time=1.0)
             self.play(FadeIn(field, lag_ratio=0.02), run_time=1.4)
-            self.play(th.show("illusion", hold=1.0))
+            self.play(th.note("illusion"))
 
         # S10.7
         tag = next_tag("→ Ep. 04–10", 18).next_to(cpu, RIGHT, buff=0.3)
         self.say("This is virtualizing the CPU, and it's the subject of the next several episodes.",
-                 th.show("virtualizing the CPU", hold=1.0), FadeIn(tag, shift=LEFT * 0.2))
+                 th.note("virtualizing the CPU"), FadeIn(tag, shift=LEFT * 0.2))
 
         # S10.8 B and C bump
         q = question_mark(0.5).next_to(cpu, UP, buff=0.1).shift(LEFT * 0.0)
@@ -156,7 +155,7 @@ class S10FourAtOnce(NarratedScene):
         # S10.9 policy: spotlight picks C
         spot = Spotlight(height=2.2, spread=0.45).move_beam_to(base_point(procs[2]))
         with self.narrate("Questions like that are answered by a policy."):
-            self.play(th.show("policy", hold=0.8))
+            self.play(th.note("policy"))
             self.play(FadeIn(spot), FadeOut(q), run_time=0.5)
             self.play(hop_to(procs[1], bpos, run_time=0.45))
             self.play(hop_to(procs[2], cpu.slot_point(), run_time=0.5),

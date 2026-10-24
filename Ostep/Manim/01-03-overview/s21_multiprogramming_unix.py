@@ -84,7 +84,7 @@ class S21MultiprogrammingUnix(NarratedScene):
             for p, h in zip(procs, homes):
                 place_on(p, mini.get_center() + DOWN * 0.3)
             self.play(*[hop_to(p, h, run_time=0.7) for p, h in zip(procs, homes)])
-            self.play(th.show("multiprogramming", hold=0.8))
+            self.play(th.note("multiprogramming"))
 
         # S21.2 A blocks on I/O, B runs
         req = letter_icon(0.3).move_to(procs[0].get_center())
@@ -103,7 +103,7 @@ class S21MultiprogrammingUnix(NarratedScene):
                       flash_radius=0.15, num_lines=8)
         self.say("That made memory protection and concurrency critical.",
                  FadeIn(mems), Succession(Wait(0.4), FadeIn(walls)), Succession(Wait(1.0), spark),
-                 late(0.8, th.show("memory protection", size=34, hold=0.7)))
+                 late(0.8, th.note("memory protection")))
 
         # S21.4 UNIX
         unix, sub, pipeline = s21_right()
@@ -121,7 +121,7 @@ class S21MultiprogrammingUnix(NarratedScene):
                 self.play(FadeIn(d, run_time=0.05), d.animate(run_time=0.35).move_to(wc.get_left() + RIGHT * 0.2))
                 self.remove(d)
             self.play(FadeIn(out, shift=RIGHT * 0.2), run_time=0.4)
-            self.play(th.show("pipes", hold=0.7))
+            self.play(th.note("pipes"))
 
         # S21.6 C badge
         cb = VGroup(Circle(radius=0.28).set_fill(USER_COLOR, 1).set_stroke(outline_of(USER_COLOR), 3),

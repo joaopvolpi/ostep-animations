@@ -97,7 +97,7 @@ class S13TwoThreads(NarratedScene):
             self.play(FadeOut(VGroup(cpu, ps, jl)), run_time=0.5)
 
         # S13.3
-        self.say("Today, any multi-threaded program meets them too.", th.show("multi-threaded", hold=0.8))
+        self.say("Today, any multi-threaded program meets them too.", th.note("multi-threaded"))
 
         # S13.4 thread: two blobs inside one program
         outline = DashedVMobject(RoundedRectangle(width=4.6, height=2.4, corner_radius=0.3), num_dashes=50)
@@ -109,15 +109,15 @@ class S13TwoThreads(NarratedScene):
         self.say("A thread is like a function running in the same memory as other functions, with more than "
                  "one active at a time.",
                  Create(outline, run_time=0.8), FadeIn(o_lab), FadeIn(t1, scale=0.5), FadeIn(t2, scale=0.5),
-                 late(1.0, th.show("thread", hold=0.8)))
+                 late(1.0, th.note("thread")))
 
         # S13.5 code, threads to positions, taps
         code, title = threads_code()
         cell = counter_cell("0")
         links = VGroup(*[DashedLine(base_point(t) * 0 + p + UP * 0.95, cell.box.get_bottom(), dash_length=0.1)
                          .set_stroke(DIM, 2) for t, p in ((t1, T_POS[0]), (t2, T_POS[1]))])
-        with self.narrate("This program creates two threads. Each one adds one to a shared counter, over and over, "
-                          "loops times."):
+        with self.narrate("This program creates two threads. Each one adds one to a shared counter, once per "
+                          "loop iteration, and the number of iterations is a command-line argument."):
             self.play(FadeIn(code.background), Write(code.code_lines), FadeIn(title), run_time=1.4)
             self.play(FadeOut(outline), FadeOut(o_lab), hop_to(t1, T_POS[0], run_time=0.6),
                       hop_to(t2, T_POS[1], run_time=0.6))
@@ -128,13 +128,14 @@ class S13TwoThreads(NarratedScene):
                 new = Text(str(k + 1), font=MONO_FONT, font_size=36, color=TEXT, weight=BOLD).move_to(cell.box)
                 self.play(FadeIn(plus, shift=UP * 0.3), Transform(cell.val, new), run_time=0.4)
                 self.play(FadeOut(plus, shift=UP * 0.3), run_time=0.2)
+        self.say("You might want to pause the video here to read the code.", min_time=3.5)
 
         # S13.6
         term = threads_terminal()
         tr = ValueTracker(4)
         spin_val = always_redraw(lambda: Text(f"{int(tr.get_value())}", font=MONO_FONT, font_size=36, color=TEXT,
                                               weight=BOLD).move_to(cell.box))
-        with self.narrate("Loops equals a thousand. Two threads, a thousand each. The final value?"):
+        with self.narrate("Say we ask for a thousand iterations. Two threads, a thousand each. The final value?"):
             self.play(FadeIn(term), run_time=0.4)
             self.play(term.type("./threads 1000"))
             self.remove(cell.val)

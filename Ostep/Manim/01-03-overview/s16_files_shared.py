@@ -62,7 +62,7 @@ class S16FilesShared(NarratedScene):
 
         # S16.2
         self.say("Files are meant to be shared.", LaggedStart(*[Create(l) for l in links], lag_ratio=0.2, run_time=1.0),
-                 late(0.5, th.show("shared", size=44, hold=0.8)))
+                 late(0.5, th.note("shared")))
 
         # S16.3 emacs writes main.c
         mainc = FileIcon("main.c", color=TEXT, width=0.45, font_size=14).move_to(ps[0].get_center())

@@ -12,7 +12,7 @@ from s10_four_at_once import s10_world, s10_end_world  # noqa: E402
 
 class S11MemoryBytes(NarratedScene):
     def construct(self):
-        stu, prof = make_hosts("corner", stu_expr="surprised", prof_expr="happy")
+        stu, prof = make_hosts("corner", stu_expr="neutral", prof_expr="happy")
         w = s10_end_world()
         cpu, procs, tl, term0 = w["cpu"], w["procs"], w["tl"], w["term"]
         stu.set_look(cpu)
@@ -23,7 +23,7 @@ class S11MemoryBytes(NarratedScene):
 
         # S11.1
         self.say("Now memory.", FadeOut(VGroup(cpu, procs, tl, term0, w["slots"], w["times"], w["tag"], w["band"])),
-                 late(0.3, th.show("physical memory", hold=0.8)))
+                 late(0.3, th.note("physical memory")))
 
         # S11.2
         strip = s11_strip()
@@ -98,7 +98,7 @@ class S11MemoryBytes(NarratedScene):
         place_on(pid, S11_PID_POS)
         self.say("Each line starts with the program's process identifier, or PID, a number unique to each "
                  "running program.",
-                 FadeIn(pid, shift=UP * 0.3), th.show("process identifier (PID)", hold=1.0, size=46))
+                 FadeIn(pid, shift=UP * 0.3), th.note("process identifier (PID)"))
 
         # S11.10 terminal run
         term = s11_terminal()

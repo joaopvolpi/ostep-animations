@@ -137,7 +137,7 @@ class S17SyscallsCrash(NarratedScene):
             self.play(req.animate.move_to(w["drv"].get_center()), run_time=0.6)
             self.play(req.animate.move_to(disk.top.get_center()), disk.spin(1.5, run_time=0.8))
             self.play(FadeOut(req), w["dblocks"][1].animate.set_fill(DISK_COLOR, 0.95), FadeIn(hello), run_time=0.5)
-            self.play(th.show("device driver", hold=0.8))
+            self.play(th.note("device driver"))
 
         # S17.4 crash mid-write
         comp = Computer("busy").scale(0.6).move_to(COMP_POS)
@@ -167,7 +167,9 @@ class S17SyscallsCrash(NarratedScene):
         cl.next_to(cw, DOWN, buff=0.08)
         self.say("using tricks like journaling or copy-on-write.",
                  FadeIn(VGroup(j, jl), shift=UP * 0.2), FadeIn(VGroup(cw, cl), shift=UP * 0.2),
-                 late(0.4, th.show("journaling · copy-on-write", size=36, hold=0.8)))
+                 late(0.4, th.note("journaling · copy-on-write")))
+
+        self.beat(1.5)
 
         # S17.6 crux
         crux = CruxCard(S17_CRUX_Q, S17_CRUX_SUB, accent=PERS).move_to([0, 0.5, 0])

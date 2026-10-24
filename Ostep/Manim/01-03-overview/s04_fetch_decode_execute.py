@@ -99,7 +99,7 @@ class S04FetchDecodeExecute(NarratedScene):
 
         # S04.8
         self.say("That's the Von Neumann model of computing.",
-                 FadeOut(ctr), th.show("Von Neumann model", hold=1.0), min_time=2.6)
+                 FadeOut(ctr), th.note("Von Neumann model"), min_time=2.6)
 
         # S04.9 chaos, then the curtain
         die = cpu.die

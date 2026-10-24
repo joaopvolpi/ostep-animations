@@ -118,6 +118,20 @@ def mini_mem_icon():
     return VGroup(m, spill)
 
 
+def mini_conc_icon():
+    """Two threads reaching for one shared cell (the concurrency card's icon)."""
+    t1 = make_thread("", T1_COLOR, 0.24)
+    t2 = make_thread("", T2_COLOR, 0.24)
+    row = VGroup(t1, t2).arrange(RIGHT, buff=0.22)
+    cell = Rectangle(width=0.34, height=0.22).set_fill(MEM_COLOR, 0.6).set_stroke(MEM_COLOR, 2)
+    cell.next_to(row, DOWN, buff=0.12)
+    links = VGroup(*[Line(t.get_bottom() + DOWN * 0.02, cell.get_top() + RIGHT * dx, buff=0).set_stroke(DIM, 2)
+                     for t, dx in ((t1, -0.07), (t2, 0.07))])
+    g = VGroup(row, links, cell)
+    g.threads, g.cell = row, cell
+    return g
+
+
 def mini_disk_icon():
     return Disk(width=0.62, height=0.55)
 
@@ -147,6 +161,7 @@ def piece_cards(with_icons=True):
     if with_icons:
         cards[0].icons.add(mini_cpu_icon().move_to(icon_slot(cards[0], 0, 2)),
                            mini_mem_icon().move_to(icon_slot(cards[0], 1, 2)))
+        cards[1].icons.add(mini_conc_icon().move_to(icon_slot(cards[1])))
         cards[2].icons.add(mini_disk_icon().move_to(icon_slot(cards[2])))
     return cards
 

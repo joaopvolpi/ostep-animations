@@ -91,7 +91,9 @@ class NarratedScene(Scene):
             self.wait(d - el)
             el = d
         if text:
-            self.add_subcaption(text, duration=el, offset=-el)
+            # start at t0 exactly: ``time - el`` can come out as -1e-16 for the first block of a scene,
+            # and srt.compose silently drops entries that start before zero (a missing caption)
+            self.add_subcaption(text, duration=el, offset=max(t0 - self.time, -self.time) + 1e-9)
 
     # ------------------------------------------------------------------
     def play(self, *args, **kwargs):
