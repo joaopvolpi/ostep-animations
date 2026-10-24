@@ -39,12 +39,10 @@ class S02ThreePieces(NarratedScene):
                  FadeIn(three_g, shift=LEFT * 0.3))
 
         # S02.4
-        eq = MathTex(r"\frac{6}{2} = 3", font_size=48, color=TEXT).move_to([0.0, 1.5, 0])
         with self.narrate("Which is fitting, since operating systems are about half as hard as physics."):
-            self.play(Write(eq), run_time=0.8)
-            self.wait(2.4)
-            self.beat(1.0)
-            self.play(FadeOut(six_g), FadeOut(three_g), FadeOut(eq), run_time=0.6)
+            self.play(Indicate(three_g, color=VIRT, scale_factor=1.08), run_time=1.0)
+            self.wait(2.0)
+            self.play(FadeOut(six_g), FadeOut(three_g), run_time=0.6)
 
         # S02.5
         self.say("So what are the pieces?", stu.change("curious"), prof.change("neutral"), min_time=1.4)

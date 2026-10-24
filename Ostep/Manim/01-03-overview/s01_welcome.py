@@ -30,7 +30,7 @@ class S01Welcome(NarratedScene):
 
         # S01.3
         tag = name_tag("Professor", 15)
-        tag.move_to([prof.get_center()[0], prof.get_bottom()[1] + tag.height / 2 + 0.06, 0])
+        tag.move_to([prof.get_center()[0], prof.get_bottom()[1] - tag.height / 2 - 0.1, 0])
         with self.narrate("I'm here to teach you what you need to know. I'm called \"Professor\". Who are you?"):
             self.wait(1.2)
             self.play(FadeIn(tag, scale=0.5), run_time=0.4)
@@ -45,7 +45,7 @@ class S01Welcome(NarratedScene):
             self.play(hop_to(stu, p1, run_time=0.55))
             self.play(hop_to(stu, p2, run_time=0.55))
             self.play(stu.change("excited"), run_time=0.5)
-            stag.move_to([stu.get_center()[0], stu.get_bottom()[1] + stag.height / 2 + 0.06, 0])
+            stag.move_to([stu.get_center()[0], stu.get_bottom()[1] - stag.height / 2 - 0.1, 0])
             self.play(FadeIn(stag, scale=0.5), run_time=0.4)
             self.wait(1.3)
             self.play(FadeOut(stag), stu.look_at(prof), prof.look_at(stu), run_time=0.5)
