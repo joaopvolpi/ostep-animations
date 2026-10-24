@@ -55,12 +55,22 @@ the sound off, and the narration should feel like it's describing what the viewe
    mechanical "The crux:") while the card writes, then reads the card's follow-up text as it fades
    in. Give those their own table rows (narration column = the spoken lead-in plus the exact question on the card), then dock.
    A crux that only changes in the docked strip (a second crux) is read too.
-7. **Make hand-offs exact.** "Ends with" must list every persistent element with its exact position
+7. **Scenes talk to each other, and start talking at once.** Row 1 of every scene is narration that
+   starts at t = 0 (no silent opening while props are being laid out; animate the setup *under*
+   that line). That line must bridge from the last line of the previous scene (recall what was
+   just said or left open, then say what this scene is about). Add a **Bridge:** line to each
+   scene ("S10 follows S09's 'where do the actions come from?': opens with 'So what can the OS do
+   with a process? A short menu…'"). If the script lacks the bridge, add it to the scene's
+   narration and report the script change. No scene may begin with a bare topic word.
+   **On-screen text discipline:** only the few key concepts get a big center unveil; every
+   other label is small and placed where it can't touch another label or arrow (say which side
+   each label goes on when elements are close).
+8. **Make hand-offs exact.** "Ends with" must list every persistent element with its exact position
    and state: hosts (mode: corner or dialogue, and expression), badge, docked term, crux strip,
    and each prop's place. The next scene's "Starts with" is a verbatim copy of it. A scene that
    deliberately starts from a different screen says so ("cut to empty"). Characters always sit at
    the library's standard host positions (`host_pair` modes) unless a row says they move.
-8. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
+9. **Self-check:** sound-off test (does the visual alone teach?), color/prop consistency with the
    bible, characters only in corners/edges and only reacting to beats, no text walls
    (≤ ~25 words on screen), every term's first appearance uses a Term unveil (3–4 key terms) or a
    Term note (the rest).
@@ -93,6 +103,7 @@ positions (e.g. "CPU at center-left (-3, 0)", "ready queue along the bottom, y =
 | 3 | (pause 1 s) | — |
 
 **Characters:** who is on screen, expression changes and when.
+**Bridge:** how the first line picks up the previous scene's last line.
 **Ends with:** exact screen state handed to the next scene.
 **Implementation notes:** Manim hints: mobjects, ordering, tricky animations, which book figure is adapted.
 

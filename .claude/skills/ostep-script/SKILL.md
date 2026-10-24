@@ -43,6 +43,12 @@ plus light notes on what the beat should *show*. Detailed visuals come later, fr
      episodes. The blockquote under the beat title is what the card shows; write the Narrator line
      around it, then carry on. Don't paraphrase the question, and don't skip it. This holds for
      every crux in the episode, including a second or third one.
+   - **Beats talk to each other.** The first line of every beat is a bridge from the previous one:
+     it names what we just learned, or the question it leaves open, and says what we do next ("So
+     the OS can create processes. But what else can it do with them?"). Never open a beat cold on
+     a new subject. When the topic really does change, say so out loud. Likewise, when an idea
+     needs a step the viewer doesn't have (e.g. "many programs run" → "one CPU"), write that
+     step down instead of jumping.
    - Give concrete numbers before general rules. Introduce one new term at a time, and write it in
      **bold** the first time.
    - Add a short `Visual idea:` line (one or two sentences, referencing props from the bible where
