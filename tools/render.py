@@ -20,6 +20,8 @@ chunks are split and timed proportionally), in the series font (CMU Serif).
 from __future__ import annotations
 
 import argparse
+import time
+import contextlib
 import os
 import re
 import shutil
@@ -244,14 +246,41 @@ def caption_video(src: Path, srt: Path, dst: Path, single_srt_out: Path | None =
 
 
 # --------------------------------------------------------------------------- render + assemble
+@contextlib.contextmanager
+def render_lock(stale=900):
+    """One Manim render at a time across every render.py run (parallel agents run out of memory).
+    The lock is a file holding the owner's pid; a lock older than ``stale`` seconds is taken over."""
+    lock = CACHE / "render.lock"
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    while True:
+        try:
+            fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+            os.write(fd, str(os.getpid()).encode())
+            os.close(fd)
+            break
+        except FileExistsError:
+            try:
+                if time.time() - lock.stat().st_mtime > stale:
+                    lock.unlink(missing_ok=True)
+                    continue
+            except FileNotFoundError:
+                continue
+            time.sleep(2)
+    try:
+        yield
+    finally:
+        lock.unlink(missing_ok=True)
+
+
 def render_scene(ep: str, f: Path, cls: str, q: str, out_scenes: Path):
     media = CACHE / "media" / ep
     # layout checks on: only their [bounds]/[overlap] lines are shown (Manim's log is noise).
     # No caching: cached animations skip their frames, and with them the mid-animation checks.
-    r = subprocess.run([sys.executable, "-m", "manim", f"-q{q}", "--disable_caching", "--media_dir", str(media),
-                        str(f), cls],
-                       cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                       env={**os.environ, "OSTEP_CHECK": "1", "PYTHONIOENCODING": "utf-8"})
+    with render_lock():
+        r = subprocess.run([sys.executable, "-m", "manim", f"-q{q}", "--disable_caching", "--media_dir", str(media),
+                            str(f), cls],
+                           cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
+                           env={**os.environ, "OSTEP_CHECK": "1", "PYTHONIOENCODING": "utf-8"})
     if r.returncode:
         print(r.stdout[-3000:], r.stderr[-6000:], sep="\n")
         sys.exit(f"manim failed on {f.name} ({r.returncode})")
