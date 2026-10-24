@@ -10,10 +10,12 @@ from common import *  # noqa: E402,F401,F403
 class S07Wait(Ep05Scene):
     def construct(self):
         self.add_badge()
-        self.add(crux_strip())
-        stu, prof = self.add_corner_chars("neutral", "worried")
-        par = proc(PAR, "ready", scale=0.55, label="parent").move_to(P3(-4.6, 1.75))
-        chi = proc(CHI, "ready", scale=0.55, label="child").move_to(P3(-3.3, 1.75))
+        strip = crux_strip()
+        self.add(strip)
+        self.add_docked_term("non-deterministic")
+        stu, prof = self.add_corner_chars("frustrated", "worried")
+        par = proc(PAR, "ready", scale=0.55, label=f"PID {PID_P}").move_to(P3(-4.6, 1.75))
+        chi = proc(CHI, "ready", scale=0.55, label=f"PID {PID_C}").move_to(P3(-3.3, 1.75))
         self.add(par, chi)
 
         tl = Timeline(["parent", "child"], ticks=6, colors=[PAR, CHI], x_range=(-4.5, 2.5), top=0.5,
@@ -35,7 +37,7 @@ class S07Wait(Ep05Scene):
         # S07.2
         code = CodeWalker("int rc_wait = wait(NULL);", font_size=18).move_to(P3(-4.0, 2.6))
         with self.narrate("For that, there's wait()."):
-            self.play(self.terms.show("wait()", hold=0.6), FadeIn(code, shift=RIGHT * 0.2))
+            self.play(self.terms.note("wait()"), FadeIn(code, shift=RIGHT * 0.2))
 
         # S07.3
         zomb = zombie_mini(0.55, label="child").move_to(chi)
@@ -125,3 +127,4 @@ class S07Wait(Ep05Scene):
             self.play(prof.change("happy"), Write(wp), run_time=0.8)
             self.wait(3.0)
             self.play(FadeOut(wp), run_time=0.4)
+        self.fade_stage(stu, prof, self.badge, strip)

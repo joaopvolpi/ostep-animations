@@ -16,6 +16,9 @@ class S05WhoIsWho(Ep05Scene):
         self.add_docked_term("child")
         stu, prof = self.add_corner_chars("surprised", "happy")
         self.add(*pw.parts(), *cw.parts(), w["pm"], w["cm"], w["mt"], w["b1"], w["b2"])
+        lab_p = Text("parent", font_size=26, color=PAR, weight="BOLD").next_to(pw.creature, LEFT, buff=0.35)
+        lab_c = Text("child", font_size=26, color=CHI, weight="BOLD").next_to(cw.creature, RIGHT, buff=0.35)
+        self.add(lab_p, lab_c)
 
         # S05.1
         walker = p1_walker(caption=False).move_to(S5_CODE_AT)
@@ -28,7 +31,7 @@ class S05WhoIsWho(Ep05Scene):
         qs = VGroup(question_mark(0.4).move_to(S5_CREATURE_L + UP * 1.2), question_mark(0.4).move_to(S5_CREATURE_R + UP * 1.2))
         with self.narrate("But if they're identical, how does each one know whether it's the parent or the child? "
                           "They run the same code."):
-            self.play(stu.change("confused"), FadeOut(w["pm"]), FadeOut(w["cm"]), FadeOut(w["b1"]), FadeOut(w["b2"]),
+            self.play(stu.change("confused"), FadeOut(w["pm"]), FadeOut(w["cm"]), FadeOut(lab_p), FadeOut(lab_c), FadeOut(w["b1"]), FadeOut(w["b2"]),
                       an_p, an_c, FadeOut(w["mt"]), run_time=1.2)
             self.play(FadeIn(walker), FadeIn(term), FadeIn(b_par), FadeIn(b_chi), FadeIn(qs), run_time=0.8)
             self.wait(2.0)
@@ -50,8 +53,9 @@ class S05WhoIsWho(Ep05Scene):
 
         # S05.4
         with self.narrate("And there's one more difference: the value that fork() returns."):
-            self.play(FadeOut(cell_p), FadeOut(cell_c), FadeOut(wall), FadeOut(lock), FadeOut(icon_p),
-                      FadeOut(icon_c), run_time=0.5)
+            self.play(FadeOut(cell_p), FadeOut(cell_c), FadeOut(wall), FadeOut(lock), FadeOut(icon_p), FadeOut(icon_c),
+                      FadeIn(proc(PAR, "ready", scale=0.7, label=f"PID {PID_P}").move_to(S5_CREATURE_L)),
+                      FadeIn(proc(CHI, "ready", scale=0.7, label=f"PID {PID_C}").move_to(S5_CREATURE_R)), run_time=0.5)
             self.play(walker.circumscribe(2), pw.creature.look_at(walker.line_mob(2)),
                       cw.creature.look_at(walker.line_mob(2)), run_time=1.2)
             self.wait(0.5)

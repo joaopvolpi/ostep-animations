@@ -213,10 +213,10 @@ lands in the file instead.
 
 **Student** (excited): And `wc` doesn't even know!
 
-**Professor** (happy): It doesn't. Run the program, and the screen stays empty. Then read the file, and all
+**Professor** (happy): And the proof is easy. Run the command, and the screen stays empty. Then read the file, and all
 the expected output is there.
 
-**Narrator (V.O.):** A close relative is the **pipe**. The `pipe()` call makes a queue inside the
+**Narrator (V.O.):** Redirection connects a program to a file. A close relative connects it to another program: the **pipe**. The `pipe()` call makes a queue inside the
 kernel. One process's output is connected to one end, another process's input to the other. So you can
 chain tools: look for a word in a file with `grep`, and pipe the result into `wc` to count how many.
 All without changing a single line in either program.
@@ -227,7 +227,7 @@ episode 04). Step 1: plug 1 pops out, goes to the screen icon. Step 2: `close(1)
 plugs remain. Output flows to the file. Then a pipe glyph connecting two processes.
 
 ### B10 — Tip: get it right  `build-up` (~0:30)
-**Narrator (V.O.):** One reason to see this design as a classic is a rule named after Butler Lampson:
+**Narrator (V.O.):** Pipes, redirection, a whole shell, from two small calls. One reason to see this design as a classic is a rule named after Butler Lampson:
 **get it right**. Neither abstraction nor simplicity is a substitute for getting it right. There are
 many ways to design process creation. But the UNIX designers' combination of `fork()` and `exec()` is simple, and immensely
 powerful.
@@ -239,8 +239,8 @@ The authors of the book have opinions. You're allowed to have your own.
 `spawn()` tag appears with a question mark, then slides off.
 
 ### B11 — Signals, users and the root  `build-up` (~1:15)
-**Narrator (V.O.):** Beyond those three, there are more interfaces. In UNIX, `kill()` sends a
-**signal** to a process. A signal can tell it to pause, to die, or other useful things. Your shell wires
+**Narrator (V.O.):** Back to the interface. Beyond those three calls, there are more. In UNIX, `kill()` sends a
+**signal** to a process. A signal can tell the process to pause, to die, or other useful things. Your shell wires
 some to keystrokes: control-c sends an interrupt, which normally terminates the process. Control-z sends a stop, which pauses it, and you
 can resume it later with `fg`. That's the "suspend and resume" from our menu.
 
@@ -262,8 +262,8 @@ first, apparently.
 under two user name tags; a signal bounces off a force field of the other user. A crown tag "root" lets it through.
 
 ### B12 — Useful tools  `build-up` (~0:35)
-**Narrator (V.O.):** Some tools help you see all this. `ps` lists the processes running on your
-system. `top` shows which ones are using the most CPU. Humorously, `top` often claims that `top` is the
+**Narrator (V.O.):** To see all this in practice, some tools help. `ps` lists the processes running on your
+system. `top` shows which of them are using the most CPU. Humorously, `top` often claims that `top` is the
 top resource hog. And `kill` and `killall` send signals. Use them carefully, or you could kill your window manager.
 
 **Student** (bored): Is there a manual for every flag?
@@ -275,7 +275,7 @@ you should go read them.
 "RTFM — read the man pages" slides in with a little book icon.
 
 ### B13 — Back to the menu  `big picture` (~0:45)
-**Narrator (V.O.):** Let's go back to the menu from last time. **Create**: that's `fork()`, and
+**Narrator (V.O.):** Let's wrap up by going back to the menu from last time. **Create**: that's `fork()`, and
 usually `exec()` right after. **Wait**: that's `wait()`. **Destroy** and **miscellaneous control**:
 signals, via `kill()`. **Status**: `ps` and `top`. A handful of simple calls, combined, are enough to
 build a shell, redirection, pipes, and more.

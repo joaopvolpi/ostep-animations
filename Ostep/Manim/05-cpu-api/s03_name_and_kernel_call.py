@@ -27,7 +27,7 @@ class S03NameAndKernelCall(Ep05Scene):
                       run_time=0.8)
 
         # S03.2
-        self.say("It's the process identifier, or PID.", self.terms.show("process identifier (PID)"))
+        self.say("It's the process identifier, or PID.", self.terms.note("process identifier (PID)"))
 
         # S03.3
         code = card_code(1).move_to(CODE_CARD_AT)

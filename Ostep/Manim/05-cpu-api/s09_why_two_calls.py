@@ -10,18 +10,17 @@ from common import *  # noqa: E402,F401,F403
 class S09WhyTwoCalls(Ep05Scene):
     def construct(self):
         self.add_badge()
+        self.add_docked_term("exec()")
         strip = crux_strip()
         self.add(strip)
         stu, prof = self.add_corner_chars("surprised", "explaining")
-        small = Text("p3.c", font=MONO_FONT, font_size=24, color=DIM).move_to(P3(0, 0.5))
-        self.add(small)
 
         # S09.1
         run = program_chip('run("wc")', DIM, 24).move_to(P3(0, 0.5))
         q = question_mark(0.5).next_to(run, UP, buff=0.1)
         with self.narrate("Hold on. All of this seems like a strange way to launch a program. First clone yourself, "
                           'then replace yourself? Why not one simple call, "run this program"?'):
-            self.play(FadeOut(strip), FadeOut(small), stu.change("frustrated"), run_time=0.6)
+            self.play(FadeOut(strip), stu.change("frustrated"), run_time=0.6)
             self.play(FadeIn(run, scale=0.6), FadeIn(q), run_time=0.6)
             self.wait(3.0)
 
@@ -38,7 +37,7 @@ class S09WhyTwoCalls(Ep05Scene):
                       run_time=0.8)
             self.play(FadeIn(term), run_time=0.5)
             self.play(FadeIn(sh, shift=LEFT * 0.5), run_time=0.6)
-            self.play(sh.animate.move_to(sh.get_center() + LEFT * 3.0), self.terms.show("shell", hold=0.6))
+            self.play(sh.animate.move_to(sh.get_center() + LEFT * 3.0), self.terms.note("shell"))
 
         # S09.3
         ut = tagged("user program", USER_COLOR, 18, USER_COLOR).move_to(P3(1.6, 1.75))

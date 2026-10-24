@@ -11,16 +11,15 @@ class S02Crux(Ep05Scene):
     def construct(self):
         w = build_s01_end()
         walker, term, stu, prof = w["walker"], w["term"], w["stu"], w["prof"]
-        stu.set_expression("curious")
-        prof.set_expression("neutral")
         self.add(walker, term, stu, prof)
 
         # S02.1 (transition)
         badge = make_badge()
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT)
         card.move_to(P3(0, 1.1))
-        self.play(FadeOut(walker), FadeOut(term), FadeIn(badge, shift=RIGHT * 0.2), run_time=0.8)
-        self.say_crux(card, stu.look_at(card), hold=0.6)
+        self.say_crux(card, stu.change("curious", look_at=card), prof.change("neutral"),
+                      AnimationGroup(FadeOut(walker), FadeOut(term), FadeIn(badge, shift=RIGHT * 0.2)),
+                      lead="Which brings us to the question behind all of it: {q}", hold=0.6)
 
         # S02.2
         aside = AsideCard("Practical things. Real code. Type it in.", title="INTERLUDES", width=3.6, font_size=22)

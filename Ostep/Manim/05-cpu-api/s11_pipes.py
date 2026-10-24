@@ -10,20 +10,20 @@ from common import *  # noqa: E402,F401,F403
 class S11Pipes(Ep05Scene):
     def construct(self):
         self.add_badge()
-        stu, prof = self.add_corner_chars("neutral", "happy")
+        self.add_docked_term("redirection")
+        stu, prof = self.add_corner_chars("excited", "happy")
         d = build_s11_end(dim=None)
         pipe, grep, wcp, p1, p0, c1, c0, term = (d[k] for k in ("pipe", "grep", "wc", "p1", "p0", "c1", "c0", "term"))
         term2 = mk_term(7.0, 2, 18).move_to(P3(0, -1.9))
-        self.add(term2)
 
         # S11.1
         glyph = pipe_glyph(1.6).move_to(S11_PIPE)
-        with self.narrate("A close relative is the pipe."):
-            self.play(self.terms.show("pipe", hold=0.6), Create(glyph))
+        with self.narrate("Redirection connects a program to a file. A close relative connects it to another program: the pipe."):
+            self.play(self.terms.note("pipe"), Create(glyph))
 
         # S11.2
         with self.narrate("The pipe() call makes a queue inside the kernel."):
-            self.play(FadeOut(glyph), FadeIn(pipe.tube), FadeIn(pipe.dividers), run_time=0.8)
+            self.play(FadeOut(glyph), FadeIn(pipe.tube), FadeIn(pipe.dividers), FadeIn(term2), run_time=0.8)
             self.play(FadeIn(pipe.band_group()), run_time=0.8)
             self.wait(1.0)
 
@@ -45,7 +45,7 @@ class S11Pipes(Ep05Scene):
             self.play(term2.type("grep -o foo file | wc -l"), FadeIn(ctab), run_time=1.6)
             for k in (1, 2, 3):
                 self.play(pipe.send("foo", color=CPU_COLOR, run_time=1.0),
-                          Succession(Wait(0.9), Transform(counter, mono(str(k), 28, CPU_COLOR).move_to(counter))))
+                          late(0.9, Transform(counter, mono(str(k), 28, CPU_COLOR).move_to(counter))))
             self.play(term2.print("3"))
 
         # S11.5

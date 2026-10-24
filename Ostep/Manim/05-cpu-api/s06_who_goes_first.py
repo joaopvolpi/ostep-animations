@@ -13,6 +13,7 @@ class S06WhoGoesFirst(Ep05Scene):
         walker, term, cp, cc = w["walker"], w["term"], w["cp"], w["cc"]
         self.add_badge()
         self.add(crux_strip())
+        self.add_docked_term("child")
         stu, prof = self.add_corner_chars("excited", "proud")
         self.add(walker, *walker.bars, term, cp, cc, w["t_par"], w["t_chi"])
 
@@ -95,4 +96,6 @@ class S06WhoGoesFirst(Ep05Scene):
         self.beat(1.0)
 
         # transition: everything fades except the two creatures
-        self.play(*[FadeOut(m) for m in (cpu, q, whistle, wlab, spot, tag, run1, run2, l1, l2)], run_time=0.8)
+        self.play(*[FadeOut(m) for m in (cpu, q, whistle, wlab, spot, tag, run1, run2, l1, l2)],
+                  cp.animate.scale(0.55 / 0.7).move_to(P3(-4.6, 1.75)),
+                  cc.animate.scale(0.55 / 0.7).move_to(P3(-3.3, 1.75)), run_time=0.8)

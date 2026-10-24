@@ -73,10 +73,10 @@ class S18Teaser(Ep05Scene):
 
         # S18.4
         nxt = Text("limited direct execution", font_size=34, color=TEXT).move_to(P3(3.5, 2.7))
+        card = VGroup(Dot(radius=0.1, color=VIRT), Text("Next: 06 · Direct Execution", font_size=40, color=TEXT)).arrange(RIGHT, buff=0.25)
         with self.narrate("Next time: limited direct execution."):
             self.play(prof2.change("happy"), Write(nxt), run_time=1.5)
             self.wait(0.8)
-        self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.5)
-        card = VGroup(Dot(radius=0.1, color=VIRT), Text("Next: 06 · Direct Execution", font_size=40, color=TEXT)).arrange(RIGHT, buff=0.25)
-        self.play(FadeIn(card, shift=UP * 0.2), run_time=0.6)
-        self.wait(2.0)
+            self.play(*[FadeOut(m) for m in self.mobjects], run_time=0.5)
+            self.play(FadeIn(card, shift=UP * 0.2), run_time=0.6)
+        self.wait(1.5)

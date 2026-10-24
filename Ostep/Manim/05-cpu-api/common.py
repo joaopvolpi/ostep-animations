@@ -199,6 +199,13 @@ class Ep05Scene(NarratedScene):
         self.add(self.stu, self.prof)
         return self.stu, self.prof
 
+    def fade_stage(self, *keep, run_time=0.8):
+        """Fade out everything except ``keep`` (+ the docked term): a clean hand-off to the next scene."""
+        keep = {id(k) for k in keep if k is not None} | {id(self.terms.docked)}
+        gone = [m for m in self.mobjects if id(m) not in keep and not getattr(m, "is_scrim", False)]
+        if gone:
+            self.play(*[FadeOut(m) for m in gone], run_time=run_time)
+
     def add_docked_term(self, text):
         m = dock_term_now(self.terms, text)
         self.add(m)
@@ -237,7 +244,7 @@ def build_s01_end():
 
 def build_s02_end():
     """Badge, crux strip and both characters (corner mode)."""
-    return dict(badge=make_badge(), strip=crux_strip(), stu=student_corner("neutral"), prof=prof_corner("neutral"))
+    return dict(badge=make_badge(), strip=crux_strip(), stu=student_corner("curious"), prof=prof_corner("neutral"))
 
 
 CPU_S3 = P3(-2.0, 0.6)
@@ -259,7 +266,9 @@ def build_s03_end():
     bd = UserKernelBoundary(y=BOUNDARY_Y)
     gauge = PrivilegeGauge(height=1.6, level="kernel").move_to(GAUGE_S3)
     packet = program_chip("fork()", CPU_COLOR, 18).move_to(P3(-0.8, -1.7))
-    code = card_code(2).move_to(CODE_CARD_AT)
+    c1 = card_code(1).move_to(CODE_CARD_AT)
+    code = card_code(2)
+    code.shift(c1.get_top() - code.get_top())      # same alignment as in S03
     code_bar = code.add_bar(TEXT, 2)
     mt = mk_term(4.6, 1, 18)
     fill_term(mt, ["hello (pid:29146)"]).move_to(MINI_TERM_AT)
@@ -294,8 +303,8 @@ def build_s05_end():
     fill_term(term, P1_OUT).move_to(S5_TERM_AT)
     cp = proc(PAR, "ready", scale=0.7, label=f"PID {PID_P}").move_to(S5_CREATURE_L)
     cc = proc(CHI, "ready", scale=0.7, label=f"PID {PID_C}").move_to(S5_CREATURE_R)
-    t_par = tagged("rc = 29147", PAR, 20, PAR).next_to(cp, UP, buff=0.12)
-    t_chi = tagged("rc = 0", CHI, 20, CHI).next_to(cc, UP, buff=0.12)
+    t_par = tagged("rc = 29147", PAR, 20, PAR).move_to(P3(-5.0, 1.95))
+    t_chi = tagged("rc = 0", CHI, 20, CHI).move_to(P3(5.0, 1.95))
     return dict(walker=walker, b_par=b_par, b_chi=b_chi, term=term, cp=cp, cc=cc, t_par=t_par, t_chi=t_chi)
 
 
@@ -319,13 +328,27 @@ def build_s09_end():
     loop.arrows["f_e"].set_stroke(CPU_COLOR, 6, family=False)
     loop.arrows["f_e"].tip.set_fill(CPU_COLOR).set_stroke(CPU_COLOR)
     sh = proc(SHC, "ready", scale=0.55, label="sh")
-    bottom_to(sh, loop.stand_point("wait"))
+    bottom_to(sh, loop.stand_point("prompt"))
     gap_mid = loop.arrows["f_e"].point_from_proportion(0.5)
     gap_sh = proc(CHI, "ready", scale=0.4, label="sh").move_to(gap_mid + LEFT * 0.75)
     return dict(term=term, loop=loop, sh=sh, gap_sh=gap_sh)
 
 
 S11_GREP, S11_WC, S11_PIPE = P3(-3.2, 1.0), P3(3.2, 1.0), P3(0, 1.0)
+
+
+def build_s11_extras(d, dim=0.25):
+    """The padlock tags and the count readout S11 leaves on screen (dimmed for the Tip)."""
+    lk1 = VGroup(padlock_icon(0.3), Text("code unchanged", font_size=18, color=TEXT)).arrange(RIGHT, buff=0.1)
+    lk2 = lk1.copy()
+    lk1.next_to(d["grep"], DOWN, buff=0.15)
+    lk2.next_to(d["wc"], DOWN, buff=0.15)
+    ctab = VGroup(Text("count:", font_size=20, color=DIM), mono("3", 28, CPU_COLOR)).arrange(RIGHT, buff=0.12)
+    ctab.next_to(d["wc"], UP, buff=0.15)
+    g = VGroup(lk1, lk2, ctab)
+    if dim is not None:
+        g.set_opacity(dim)
+    return g
 
 
 def build_s11_end(dim=0.25):

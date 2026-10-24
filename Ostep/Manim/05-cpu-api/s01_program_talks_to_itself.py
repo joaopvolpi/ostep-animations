@@ -11,7 +11,6 @@ class S01ProgramTalksToItself(Ep05Scene):
     def construct(self):
         # S01.1
         p = proc(PAR).move_to(P3(0, 1.0))
-        self.wait(0.1)
         with self.narrate("Last time, we ended with a promise: a process that clones itself."):
             self.play(GrowFromCenter(p), run_time=0.6)
             self.play(p.blink())

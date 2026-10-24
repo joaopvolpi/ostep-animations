@@ -14,8 +14,10 @@ EXEC_SRC = ('char *myargs[3] = {"wc", "p3.c", NULL};\n'
 class S08Exec(Ep05Scene):
     def construct(self):
         self.add_badge()
-        self.add(crux_strip())
-        stu, prof = self.add_corner_chars("neutral", "happy")
+        strip = crux_strip()
+        self.add(strip)
+        self.add_docked_term("wait()")
+        stu, prof = self.add_corner_chars("excited", "happy")
 
         # S08.1
         chi = proc(CHI, "ready", scale=0.8, label=f"PID {PID_C}").move_to(P3(-4.7, 1.0))
@@ -118,7 +120,7 @@ class S08Exec(Ep05Scene):
         # S08.8
         argv = tagged("argv: wc p3.c", TEXT, 14, DIM)
         argv.scale_to_fit_width(min(argv.width, 1.15))
-        argv.move_to(mem.region("stack").get_center() + UP * 0.05)
+        argv.move_to(mem.region("stack").get_right() + RIGHT * 0.05, aligned_edge=LEFT)
         with self.narrate("The heap and the stack are re-initialized."):
             self.play(Indicate(mem.region("heap"), color=CPU_COLOR, scale_factor=1.05),
                       Indicate(mem.region("stack"), color=CPU_COLOR, scale_factor=1.05), run_time=0.8)
@@ -182,3 +184,4 @@ class S08Exec(Ep05Scene):
             self.wait(1.8)
             self.play(Transform(chips, one), run_time=0.8)
         self.beat(0.5)
+        self.fade_stage(stu, prof, self.badge, strip)

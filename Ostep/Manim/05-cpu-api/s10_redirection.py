@@ -12,8 +12,17 @@ class S10Redirection(Ep05Scene):
         d = build_s09_end()
         old_term, loop, sh, gap_sh = d["term"], d["loop"], d["sh"], d["gap_sh"]
         self.add_badge()
+        self.add_docked_term("shell")
         stu, prof = self.add_corner_chars("frustrated", "proud")
         self.add(old_term, loop, sh, gap_sh)
+        shop, shop_anim = loop.workshop()
+        finish_now(shop_anim)
+        gap_anim, gap_lab = loop.highlight_gap()
+        finish_now(gap_anim)
+        self.add(gap_lab)
+        ut = tagged("user program", USER_COLOR, 18, USER_COLOR).move_to(P3(1.6, 1.75))
+        run0 = program_chip('run("wc")', DIM, 24).scale(0.6).move_to(P3(-5.6, 2.75)).set_opacity(0.4)
+        self.add(shop, ut, run0)
 
         fd = FdTable(center=(0, -0.2))
         clone = proc(CHI, "ready", scale=0.55, label="sh")
@@ -30,7 +39,7 @@ class S10Redirection(Ep05Scene):
         # S10.1
         cmd = "wc p3.c > newfile.txt"
         with self.narrate("Let's use the gap. You type: wc p3.c > newfile.txt."):
-            self.play(FadeOut(loop), FadeOut(sh), FadeOut(old_term), stu.change("curious"), run_time=0.8)
+            self.play(FadeOut(loop), FadeOut(sh), FadeOut(old_term), FadeOut(shop), FadeOut(gap_lab), FadeOut(ut), FadeOut(run0), stu.change("curious"), run_time=0.8)
             self.play(gap_sh.animate.scale(0.55 / 0.4).move_to(clone.get_center()), FadeIn(fd), FadeIn(chips), run_time=1.0)
             self.remove(gap_sh)
             self.add(clone)
@@ -110,15 +119,15 @@ class S10Redirection(Ep05Scene):
             self.play(stu.remove_bubble())
 
         # S10.10
-        with self.narrate("It doesn't. Run the program, and the screen stays empty. Then read the file, "
+        with self.narrate("And the proof is easy. Run the command, and the screen stays empty. Then read the file, "
                           "and all the expected output is there."):
             self.play(prof.change("happy"), run_time=0.5)
             self.play(term.type("wc p3.c > newfile.txt"))
             self.play(term.prompt_line())
             self.wait(1.0)
-            self.play(term.type("cat p4.output"))
-            self.play(term.print("32  109  846 p4.c"))
+            self.play(term.type("cat newfile.txt"))
+            self.play(term.print("29  107  1030 p3.c"))
             self.wait(1.0)
 
         # transition: everything fades except the Terminal
-        self.play(*[FadeOut(m) for m in (fd, wc_new, f_icon, out, plug, cable, chips)], run_time=0.8)
+        self.play(*[FadeOut(m) for m in (fd, wc_new, f_icon, out, plug, cable, chips, term)], run_time=0.8)

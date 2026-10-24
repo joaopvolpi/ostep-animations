@@ -10,9 +10,11 @@ from common import *  # noqa: E402,F401,F403
 class S12TipGetItRight(Ep05Scene):
     def construct(self):
         self.add_badge()
-        stu, prof = self.add_corner_chars("neutral", "neutral")
+        self.add_docked_term("pipe")
+        stu, prof = self.add_corner_chars("excited", "happy")
         d = build_s11_end(dim=0.25)
-        self.add(d["group"])
+        ex12 = build_s11_extras(d)
+        self.add(d["group"], ex12)
 
         card = TipCard("", title="TIP: GET IT RIGHT (LAMPSON'S LAW)", width=6.2, height=4.2)
         card.move_to(P3(3.3, 0.4))
@@ -26,7 +28,7 @@ class S12TipGetItRight(Ep05Scene):
         x2 = x_mark(0.25).next_to(sim_ic, UP, buff=0.05)
 
         # S12.1
-        with self.narrate("One reason to see this design as a classic is a rule named after Butler Lampson: get it right."):
+        with self.narrate("Pipes, redirection, a whole shell, from two small calls. One reason to see this design as a classic is a rule named after Butler Lampson: get it right."):
             self.play(card.slide_in(RIGHT), run_time=0.8)
             self.play(Write(big), run_time=1.0)
             self.wait(1.5)
@@ -64,4 +66,4 @@ class S12TipGetItRight(Ep05Scene):
 
         # end: card slides out; scene fades; only the badge remains
         self.play(card.slide_out(RIGHT), FadeOut(big), FadeOut(sent), FadeOut(icons), FadeOut(x1), FadeOut(x2),
-                  FadeOut(pair), FadeOut(d["group"]), FadeOut(stu), FadeOut(prof), run_time=1.0)
+                  FadeOut(pair), FadeOut(sp), FadeOut(d["group"]), FadeOut(ex12), FadeOut(stu), FadeOut(prof), run_time=1.0)

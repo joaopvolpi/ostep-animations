@@ -12,7 +12,8 @@ CHIP_X = 2.6
 class S16BackToTheMenu(Ep05Scene):
     def construct(self):
         self.add_badge()
-        stu, prof = self.add_corner_chars("neutral", "happy")
+        dock = self.add_docked_term("man pages")
+        stu, prof = self.add_corner_chars("bored", "happy")
         menu = MenuCardRows("Process API", ["Create", "Destroy", "Wait", "Misc. control", "Status"],
                             width=4.6, height=4.4, font_size=28).move_to(P3(-3.2, 0.3))
         hl = [None]
@@ -30,7 +31,7 @@ class S16BackToTheMenu(Ep05Scene):
                         chip.get_left() + LEFT * 0.05).set_stroke(DIM, 2)
 
         # S16.1
-        self.say("Let's go back to the menu from last time.", FadeIn(menu, shift=RIGHT * 0.4), min_time=2.0)
+        self.say("Let's wrap up by going back to the menu from last time.", FadeIn(menu, shift=RIGHT * 0.4), stu.change("neutral"), min_time=2.0)
 
         # S16.2
         c_fork = program_chip("fork()", PAR, 24)
@@ -53,14 +54,14 @@ class S16BackToTheMenu(Ep05Scene):
             self.play(Create(l2), FadeIn(wrow, shift=LEFT * 0.3), run_time=0.8)
 
         # S16.4
-        br = menu.bracket(1, 3, VIRT)
         c_kill = program_chip("kill()", KERNEL_COLOR, 24)
         krow = VGroup(c_kill, bolt_glyph(0.5, CPU_COLOR)).arrange(RIGHT, buff=0.25)
-        krow.move_to(P3(CHIP_X, (menu.row_y(1) + menu.row_y(3)) / 2))
-        lk = Line(br.get_center() + RIGHT * 0.0, krow.get_left() + LEFT * 0.05).set_stroke(DIM, 2)
+        krow.move_to(P3(CHIP_X, menu.row_y(1)))
+        krow3 = krow.copy().move_to(P3(CHIP_X, menu.row_y(3)))
+        lk = VGroup(link(1, krow), link(3, krow3))
         with self.narrate("Destroy and miscellaneous control: signals, via kill()."):
-            self.play(pick(1, 3), Create(br), run_time=0.5)
-            self.play(Create(lk), FadeIn(krow, shift=LEFT * 0.3), run_time=0.8)
+            self.play(pick(1, 3), run_time=0.5)
+            self.play(Create(lk), FadeIn(krow, shift=LEFT * 0.3), FadeIn(krow3, shift=LEFT * 0.3), run_time=0.8)
 
         # S16.5
         srow = VGroup(program_chip("ps", DIM, 24), program_chip("top", DIM, 24), info_tag("status", DIM, 18)).arrange(RIGHT, buff=0.25)
@@ -82,7 +83,7 @@ class S16BackToTheMenu(Ep05Scene):
         grp = VGroup(chain, outs).arrange(DOWN, buff=0.5).move_to(P3(CHIP_X, 0.3))
         links = VGroup(*[Line(chain[i].get_right(), chain[i + 1].get_left()).set_stroke(CPU_COLOR, 3) for i in range(2)])
         with self.narrate("A handful of simple calls, combined, are enough to build a shell, redirection, pipes, and more."):
-            self.play(FadeOut(VGroup(row, wrow, krow, srow, l0, l2, lk, ls, br)), FadeOut(hl[0]), FadeOut(menu), run_time=0.7)
+            self.play(FadeOut(VGroup(row, wrow, krow, krow3, srow, l0, l2, lk, ls)), FadeOut(hl[0]), FadeOut(menu), run_time=0.7)
             self.play(FadeIn(chain), run_time=0.5)
             self.play(Create(links), run_time=0.5)
             self.play(LaggedStart(*[FadeIn(o, shift=DOWN * 0.3, scale=0.5) for o in outs], lag_ratio=0.3), run_time=1.2)
@@ -96,9 +97,9 @@ class S16BackToTheMenu(Ep05Scene):
             self.play(FadeOut(bk), run_time=0.5)
 
         # S16.8
-        tg1 = ep_tag("→ Ep. 39").next_to(gt, UP, buff=0.15)
-        tg2 = ep_tag("→ Ep. 39").next_to(pp, UP, buff=0.15)
+        tg1 = ep_tag("→ Ep. 39").next_to(gt, UP, buff=0.15).shift(LEFT * 0.5)
+        tg2 = ep_tag("→ Ep. 39").next_to(pp, DOWN, buff=0.15)
         with self.narrate("We'll return to file descriptors when we get to file systems."):
             self.play(FadeIn(tg1, scale=0.6), FadeIn(tg2, scale=0.6), run_time=0.6)
             self.wait(1.5)
-            self.play(FadeOut(VGroup(chain, links, outs, tg1, tg2)), run_time=0.8)
+            self.play(FadeOut(VGroup(chain, links, outs, tg1, tg2, dock)), run_time=0.8)

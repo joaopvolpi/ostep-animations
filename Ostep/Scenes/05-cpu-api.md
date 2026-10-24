@@ -18,7 +18,7 @@
 | **grep / wc in the pipe** | `PROCESS_COLORS[3]` (sky) / `[4]` | S11 only. |
 | **Programs** | A program is a small file icon with a label chip: `p1`/`p3` in `DIM`, `wc` in sky | The code region of a Memory column shows its program chip. |
 | Section badge | Top-left (−6.6, 3.6): `VIRT` dot + "05 · Process API", font 22, `DIM` | Appears in S02, stays on until S17. |
-| Term highlight | Same as 04: written at (0, 2.9), font 54, `VIRT` underline, then shrinks to top-right (6.6, 3.6) | Used for every bolded term's first appearance. |
+| Term highlight | Two strengths. **Unveil** (`terms.show`: scrim, big term at center, then docks top-right) only for the key terms: `fork()`, non-deterministic, `exec()`, redirection, signal. **Note** (`terms.note`: slides straight into the top-right dock, no veil) for every other term: PID, parent, child, `wait()`, shell, pipe, user, superuser (root), man pages. | The dock is carried over between scenes (each scene starts with the previous docked term). |
 | Characters (corner mode) | Student at (−5.8, −2.8), scale 0.75, facing right. Professor at (5.8, −2.8), scale 0.75, `flip()`. | Default. "Dialogue mode" (S18): Student (−2.6, −1.2), Professor (2.6, −1.2), scale 1. |
 | Terminal | `Terminal` prop, `MONO_FONT`, prompt `prompt>` in `DIM` | The "what the user sees" window, reused in nearly every scene. |
 | Code block `p1.c` (trimmed) | `Code`, monokai, font 20, 8 lines, at (−3.9, 0.5) when used | Error check omitted; caption "p1.c (error check omitted)" in `DIM`. |
@@ -64,7 +64,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | (transition) | Code block and Terminal `FadeOut`. Section badge "05 · Process API" `FadeIn` top-left. Crux card (`VIRT` frame, "THE CRUX" header) writes the question in bold: **"How to create and control processes?"** |
+| 1 | (transition; spoken as the crux: "Which brings us to the question behind all of it: ...") | Code block and Terminal `FadeOut` while the crux writes. Section badge "05 · Process API" `FadeIn` top-left. Crux card (`VIRT` frame, "THE CRUX" header) writes the question in bold: **"How to create and control processes?"** |
 | 2 | "This is an *interlude*. A short, practical episode about a real interface, with real code you can type in yourself." | Subtitle writes in smaller, `DIM`: "What interfaces should the OS present for process creation and control? How should they be designed for power, ease of use and high performance?" An **Aside card** "INTERLUDES" (≤8 words: "Practical things. Real code. Type it in.") slides in from the right and out again. |
 | 3 | "In episode four, we listed what any OS must offer: create, destroy, wait, miscellaneous control, status." | The 04 **MenuCard** ("Process API", 5 rows) slides in at the left (−3.6, −0.8), scale 0.6; the five rows highlight in turn, 0.4 s each. |
 | 4 | "Now we order from that menu, the UNIX way." | MenuCard fades. The Crux card shrinks to a one-line strip at the top-center (0, 3.2), "How to create and control processes?", font 24. |
@@ -80,7 +80,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | "First, a name. Every process has an ID, a number the OS uses to refer to it." | The CPU `GrowFromCenter`; the coral parent (label "PID 29146") hops onto it, running. A `name_tag` icon pulses beside the label. |
-| 2 | "It's the **process identifier**, or **PID**." | Term highlight "process identifier (PID)". |
+| 2 | "It's the **process identifier**, or **PID**." | Term note "process identifier (PID)". |
 | 3 | "Our program starts with PID 29146." | Code card writes `printf("hello (pid:%d)\n", getpid());`; the mini Terminal prints `hello (pid:29146)`. |
 | 4 | "In UNIX, if you want to do something to a process, like stop it, the PID is how you name it." | A tag `stop 29146` with a pause glyph appears above the parent, an arrow pointing at its label; then fades (no action taken). |
 | 5 | "Now the interesting part." | Code card adds line 2, `int rc = fork();`, with the highlight bar. Pause 0.5 s. |
@@ -100,7 +100,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | 2 | "Not an empty one. An *almost exact copy of the caller*." | The text "almost exact copy" writes under the world (font 30). The parent world slides left to x = −3.4; a translucent ghost of it peels off and drifts to x = 3.4. |
 | 3 | "Same code. Its own copy of the address space, its own registers, its own program counter." | The ghost fills in mint, in a cascade: Memory cells copy one by one; register values copy; the PC marker copies. Each copied panel gets a tiny tag: "address space", "registers", "PC". The child PCB card is created with `pid: 29147` (the pid field flips from 29146). A mint creature (label "PID 29147") appears above it and blinks. |
 | 4 | "Remember our freeze-frame from last time, memory, registers, open files? The OS just copied all of it." | A brace across each world's panels labeled **machine state** (callback to 04); the small save-slot icon pulses between the two worlds. |
-| 5 | "The creator is the **parent**. The new process is the **child**." | Labels "parent" (coral) and "child" (mint) write under the creatures. Term highlights "parent", then "child" (smaller). |
+| 5 | "The creator is the **parent**. The new process is the **child**." | Labels "parent" (coral) and "child" (mint) write under the creatures. Term notes "parent", then "child". |
 | 6 | "So the child starts again from the top, at `main()`?" | Student → curious. A small `main()` flag marker appears over the child's code region top, with a "?". |
 | 7 | "No, and that's the odd part. Notice "hello" printed only once." | Professor → explaining. The flag gets an `x_mark` and fades. A one-line mini Terminal appears at the bottom: `hello (pid:29146)` (single line). |
 | 8 | "The child never ran that line. It simply comes to life *inside* the call to `fork()`, as if it had called it itself." | In both code regions a PC arrow (coral, mint) points at the same line, `int rc = fork();`, with a small bubble "returning from fork()" on each. The child → ready (eyes open) and the pause glyph on the parent lifts. |
@@ -160,7 +160,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | "Sometimes order matters. Suppose the parent wants to know that its child has finished before it continues." | The legend and Timeline draw. The coral parent and mint child stand above the timeline's left edge, ready. |
-| 2 | "For that, there's **`wait()`**." | Term highlight "wait()". The Code card writes in. |
+| 2 | "For that, there's **`wait()`**." | Term note "wait()". The Code card writes in. |
 | 3 | "The parent calls it, and the OS *blocks* the parent, our old blocked state, until a child exits." | Parent → blocked (clock icon); its legend dot moves Running → Blocked. The mint child runs and then turns done/zombie (grey, stitched). |
 | 4 | "Then `wait()` returns, with the PID of the child that finished." | The zombie child fades; a tag "returns 29147" flies to the parent; the parent's dot goes Blocked → Ready → Running. Timeline is cleared. |
 | 5 | "Add one `wait()` to the parent's branch, and the output becomes deterministic. Can you see why? Pause the video and think about it." | Professor → thinking. A `progress_ring` appears at the center and fills over 3 s ("your turn"); no other motion. |
@@ -209,7 +209,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | "Hold on. All of this seems like a strange way to launch a program. First clone yourself, then replace yourself? Why not one simple call, "run this program"?" | Crux strip fades. Student → frustrated. A DIM chip `run("wc")` appears at the center with a "?". |
-| 2 | "That's the question the whole design hangs on. Let's look at who launches programs for a living: the **shell**." | Professor → proud. The chip slides off to a corner and dims. The Terminal fades in at left with `prompt>` and a cursor; the gold `sh` creature enters at right. Term highlight "shell". |
+| 2 | "That's the question the whole design hangs on. Let's look at who launches programs for a living: the **shell**." | Professor → proud. The chip slides off to a corner and dims. The Terminal fades in at left with `prompt>` and a cursor; the gold `sh` creature enters at right. Term note "shell". |
 | 3 | "The shell is just an ordinary user program." | `sh` gets a small tag "user program" in `USER_COLOR`. |
 | 4 | "It shows you a prompt, and waits." | The "prompt" node of the loop draws and lights; `sh` waits (ready), the cursor blinks. |
 | 5 | "You type a command: a program name and its arguments." | The Terminal types `wc p3.c` and Enter. |
@@ -240,7 +240,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | 7 | "And open files stay open across `exec()`." | Chip `exec(wc)` lights: the clone's label changes "sh" → "wc" (crossfade, sky); the plugs and cables `Indicate` — unchanged. |
 | 8 | "So when `wc` later prints, it prints "to the screen", exactly as always, and the text lands in the file instead." | `wc` runs; text lines flow down the cable from slot 1 into the file icon, which fills with `29  107  1030 p3.c`; the screen icon stays empty. |
 | 9 | "And `wc` doesn't even know!" | Student → excited, with a thought bubble "I just print to stdout…" |
-| 10 | "It doesn't. Run the program, and the screen stays empty. Then read the file, and all the expected output is there." | Professor → happy. The Terminal prints a fresh prompt with no output; then `prompt> cat p4.output` prints `32  109  846 p4.c`. |
+| 10 | "And the proof is easy. Run the command, and the screen stays empty. Then read the file, and all the expected output is there." | Professor → happy. The Terminal prints a fresh prompt with no output; then `prompt> cat newfile.txt` prints `29  107  1030 p3.c`. |
 
 **Characters:** Student (excited), Professor (happy).
 **Ends with:** the `wc` process on the FdTable with plug 1 into the file, filled file icon, Terminal with `cat` output. Transition: everything fades except the Terminal.
@@ -253,7 +253,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "A close relative is the **pipe**." | Term highlight "pipe". The `pipe_glyph` draws at the center. |
+| 1 | "Redirection connects a program to a file. A close relative connects it to another program: the **pipe**." | Term note "pipe". The `pipe_glyph` draws at the center. |
 | 2 | "The `pipe()` call makes a queue inside the kernel." | The pipe becomes a tube with queue slots; a red band "kernel" fades in around it. |
 | 3 | "One process's output is connected to one end, another process's input to the other." | `grep` and `wc` creatures hop in. A cable from `grep`'s plug 1 → the left end of the pipe; a cable from the right end → `wc`'s plug 0. |
 | 4 | "So you can chain tools: look for a word in a file with `grep`, and pipe the result into `wc` to count how many." | The Terminal types `grep -o foo file \| wc -l`; small "foo" tokens flow through the pipe; a counter on `wc` ticks 1, 2, 3; the Terminal prints `3`. |
@@ -269,7 +269,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "One reason to see this design as a classic is a rule named after Butler Lampson: **get it right**." | Tip card slides in ("TIP: GET IT RIGHT (LAMPSON'S LAW)", `DIM` frame). Big text "Get it right." writes. |
+| 1 | "Pipes, redirection, a whole shell, from two small calls. One reason to see this design as a classic is a rule named after Butler Lampson: **get it right**." | Tip card slides in ("TIP: GET IT RIGHT (LAMPSON'S LAW)", `DIM` frame). Big text "Get it right." writes. |
 | 2 | "Neither abstraction nor simplicity is a substitute for getting it right." | The card body writes the sentence (11 words). A `layers` icon (abstraction) and a plain circle (simplicity) each get an `x_mark` beside "…a substitute". |
 | 3 | "There are many ways to design process creation. But the UNIX designers' combination of `fork()` and `exec()` is simple, and immensely powerful." | Two chips, `fork()` and `exec()`, appear left of the card and snap together like puzzle pieces with a small glow. |
 | 4 | "Not everybody agrees. A recent paper argues for a simpler call, `spawn()`. The authors of the book have opinions. You're allowed to have your own." | Professor → neutral. A chip `spawn()` slides in with a "?", hovers, slides out. Hold 0.8 s. |
@@ -284,8 +284,8 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Beyond those three, there are more interfaces. In UNIX, `kill()` sends a **signal** to a process." | The coral process enters at center. Term highlight "signal". A lightning-bolt glyph labeled `kill(pid, sig)` flies in from the top-left and hits it: the creature squashes and recovers. |
-| 2 | "A signal can tell it to pause, to die, or other useful things." | Three small signal chips drift out of the bolt: a pause glyph, an `x_mark`, a "…" (other). |
+| 1 | "Back to the interface. Beyond those three calls, there are more. In UNIX, `kill()` sends a **signal** to a process." | The coral process enters at center. Term highlight "signal". A lightning-bolt glyph labeled `kill(pid, sig)` flies in from the top-left and hits it: the creature squashes and recovers. |
+| 2 | "A signal can tell the process to pause, to die, or other useful things." | Three small signal chips drift out of the bolt: a pause glyph, an `x_mark`, a "…" (other). |
 | 3 | "Your shell wires some to keystrokes: control-c sends an interrupt, which normally terminates the process." | The keyboard icon appears; keycaps "ctrl" and "c" press; a bolt labeled `SIGINT` hits; the process → done and pops into a puff. |
 | 4 | "Control-z sends a stop, which pauses it, and you can resume it later with `fg`." | A fresh coral process appears. Keycaps "ctrl" + "z" press, bolt `SIGTSTP`; the process freezes (greyed, pause glyph). The Terminal types `fg`; a play glyph; the process resumes. |
 | 5 | "That's the "suspend and resume" from our menu." | The 04 menu row "Misc. control" pops at the top-left, small, with a `tick_mark`, then fades. |
@@ -303,9 +303,9 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | "Wait. Then can I kill anyone's process? Say, the one my roommate started on the same machine?" | Student → curious. A bolt arcs from the left group toward the sky process and bounces off the shield. |
-| 2 | "That's why systems have **users**. You log in, and you can control your own processes. Not anybody else's." | Professor → explaining. Term highlight "user". The two groups and name tags appear; a bolt from "you" hits the coral process (squash) but is blocked at the shield. |
+| 2 | "That's why systems have **users**. You log in, and you can control your own processes. Not anybody else's." | Professor → explaining. Term note "user". The two groups and name tags appear; a bolt from "you" hits the coral process (squash) but is blocked at the shield. |
 | 3 | "Sharing the machine safely needs that rule." | A `padlock` icon on the shield. Hold 1 s. |
-| 4 | "There's one exception: the **superuser**, or **root**." | Term highlight "superuser (root)". A crown-tagged "root" figure (a small process with a crown) enters at the top-center; its bolt passes through the shield and hits the sky process. |
+| 4 | "There's one exception: the **superuser**, or **root**." | Term note "superuser (root)". A crown-tagged "root" figure (a small process with a crown) enters at the top-center; its bolt passes through the shield and hits the sky process. |
 | 5 | "They can administer the system and control any process. Powerful, and dangerous. Use it rarely." | The crown pulses; a `shutdown` chip with a warning triangle appears and fades. |
 | 6 | "With great power comes great responsibility. The French Revolution said it first, apparently." | Professor → worried. An **Aside card** "THE SUPERUSER" slides in with the quote "With great power comes great responsibility." (≤8 words) and slides out. |
 
@@ -319,12 +319,12 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Some tools help you see all this. `ps` lists the processes running on your system." | The Terminal types `ps`; prints a table `PID  CMD` with 4 rows (`29146 p1`, `29147 p1`, `29150 sh`, `29151 ps`); a coloured dot (coral, mint, gold) in front of the first three. |
+| 1 | "To see all this in practice, some tools help. `ps` lists the processes running on your system." | The Terminal types `ps`; prints a table `PID  CMD` with 4 rows (`29146 p1`, `29147 p1`, `29150 sh`, `29151 ps`); a coloured dot (coral, mint, gold) in front of the first three. |
 | 2 | "`top` shows which ones are using the most CPU." | The Terminal clears; `top` shows bars, sorted descending; the bars animate. |
 | 3 | "Humorously, `top` often claims that `top` is the top resource hog." | `Indicate` the first row, which reads `top`. Hold 0.6 s for the joke. |
 | 4 | "And `kill` and `killall` send signals. Use them carefully, or you could kill your window manager." | The Terminal types `killall …`; a small `desktop` icon (window) pops and vanishes with an `x_mark`. |
 | 5 | "Is there a manual for every flag?" | Student → bored. |
-| 6 | "There is. They're the **man pages**. When someone replies, "RTFM", they mean you should go read them." | Professor → happy. Term highlight "man pages". The Terminal types `man ps` and a page header `PS(1)` appears. An **Aside card** "RTFM: read the man pages" (with a `book` icon) slides in and out. |
+| 6 | "There is. They're the **man pages**. When someone replies, "RTFM", they mean you should go read them." | Professor → happy. Term note "man pages". The Terminal types `man ps` and a page header `PS(1)` appears. An **Aside card** "RTFM: read the man pages" (with a `book` icon) slides in and out. |
 
 **Characters:** Student (bored), Professor (happy).
 **Ends with:** Terminal with a man page header. Transition: everything fades.
@@ -336,7 +336,7 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Let's go back to the menu from last time." | The MenuCard slides in with the five rows. |
+| 1 | "Let's wrap up by going back to the menu from last time." | The MenuCard slides in with the five rows. |
 | 2 | "**Create**: that's `fork()`, and usually `exec()` right after." | Row 1 highlights; chips `fork()` and `exec()` fly in next to it with the clone icon. |
 | 3 | "**Wait**: that's `wait()`." | Row 3 highlights; chip `wait()` with a clock. |
 | 4 | "**Destroy** and **miscellaneous control**: signals, via `kill()`." | Rows 2 and 4 get a joint bracket; the chip `kill()` with the bolt glyph arrives. |

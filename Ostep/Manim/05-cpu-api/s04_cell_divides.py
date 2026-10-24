@@ -69,8 +69,8 @@ class S04CellDivides(Ep05Scene):
         lab_c = Text("child", font_size=26, color=CHI, weight="BOLD").next_to(cw.creature, RIGHT, buff=0.35)
         with self.narrate("The creator is the parent. The new process is the child."):
             self.play(*[FadeOut(b) for b in braces + blabs], FadeOut(slot), run_time=0.4)
-            self.play(Write(lab_p), self.terms.show("parent", size=44, hold=0.5))
-            self.play(Write(lab_c), self.terms.show("child", size=40, hold=0.5))
+            self.play(Write(lab_p), self.terms.note("parent", run_time=0.6))
+            self.play(Write(lab_c), self.terms.note("child", run_time=0.6))
 
         # S04.6
         flag = program_chip("main()", CPU_COLOR, 18)

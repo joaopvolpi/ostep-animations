@@ -10,13 +10,14 @@ from common import *  # noqa: E402,F401,F403
 class S15UsefulTools(Ep05Scene):
     def construct(self):
         self.add_badge()
-        stu, prof = self.add_corner_chars("neutral", "neutral")
+        self.add_docked_term("superuser (root)")
+        stu, prof = self.add_corner_chars("curious", "worried")
         term = Terminal(width=7.0, height=3.4, font_size=18).move_to(P3(-1.2, 0.6))
-        self.add(term)
 
         # S15.1
         dots = VGroup()
-        with self.narrate("Some tools help you see all this. ps lists the processes running on your system."):
+        with self.narrate("To see all this in practice, some tools help. ps lists the processes running on your system."):
+            self.play(FadeIn(term), run_time=0.5)
             self.play(term.type("ps"))
             rows = ["    PID    CMD", "    29146  p1", "    29147  p1", "    29150  sh", "    29151  ps"]
             for r in rows:
@@ -29,7 +30,7 @@ class S15UsefulTools(Ep05Scene):
         # S15.2
         top_rows = ["top", "p1", "sh", "ps"]
         widths = [2.2, 1.5, 0.8, 0.4]
-        with self.narrate("top shows which ones are using the most CPU."):
+        with self.narrate("top shows which of them are using the most CPU."):
             self.play(FadeOut(dots), term.clear())
             self.play(term.type("top"))
             bars = VGroup()
@@ -68,7 +69,7 @@ class S15UsefulTools(Ep05Scene):
         aside.move_to(P3(4.6, -0.2))
         with self.narrate("There is. They're the man pages. When someone replies, \"RTFM\", they mean you should "
                           "go read them."):
-            self.play(prof.change("happy"), self.terms.show("man pages", hold=0.6))
+            self.play(prof.change("happy"), self.terms.note("man pages"))
             self.play(term.clear())
             self.play(term.type("man ps"))
             self.play(term.print("PS(1)            User Commands            PS(1)"))

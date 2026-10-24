@@ -10,6 +10,7 @@ from common import *  # noqa: E402,F401,F403
 class S14UsersAndRoot(Ep05Scene):
     def construct(self):
         self.add_badge()
+        self.add_docked_term("signal")
         stu, prof = self.add_corner_chars("neutral", "neutral")
 
         coral = proc(PAR, "ready", scale=0.8, label="A")
@@ -35,7 +36,7 @@ class S14UsersAndRoot(Ep05Scene):
         bolt = bolt_glyph(0.6, CPU_COLOR).move_to(P3(-2.2, 0.0))
         with self.narrate("That's why systems have users. You log in, and you can control your own processes. "
                           "Not anybody else's."):
-            self.play(prof.change("explaining"), self.terms.show("user", hold=0.5))
+            self.play(prof.change("explaining"), self.terms.note("user"))
             self.play(FadeIn(tag_l), FadeIn(tag_r), run_time=0.6)
             self.play(FadeIn(bolt), run_time=0.2)
             self.play(bolt.animate(run_time=0.7).move_to(coral.get_center() + RIGHT * 0.5))
@@ -57,7 +58,7 @@ class S14UsersAndRoot(Ep05Scene):
         crown = crown_tag("root").move_to(P3(0, 2.8))
         bolt = bolt_glyph(0.6, CPU_COLOR).move_to(P3(0.7, 1.7))
         with self.narrate("There's one exception: the superuser, or root."):
-            self.play(self.terms.show("superuser (root)", hold=0.6), FadeIn(root, shift=DOWN * 0.5), FadeIn(crown, shift=DOWN * 0.3))
+            self.play(self.terms.note("superuser (root)"), FadeIn(root, shift=DOWN * 0.5), FadeIn(crown, shift=DOWN * 0.3))
             self.play(FadeIn(bolt), run_time=0.2)
             self.play(bolt.animate(run_time=1.0).move_to(sky.get_center() + LEFT * 0.6))
             self.play(Indicate(sky, scale_factor=1.1, color=KERNEL_COLOR), FadeOut(bolt, scale=0.3), run_time=0.6)

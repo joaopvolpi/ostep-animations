@@ -10,7 +10,8 @@ from common import *  # noqa: E402,F401,F403
 class S13Signals(Ep05Scene):
     def construct(self):
         self.add_badge()
-        stu, prof = self.add_corner_chars("neutral", "neutral")
+        self.add_docked_term("pipe")
+        stu, prof = student_corner("neutral"), prof_corner("neutral")   # S12 ended without hosts
         p = proc(PAR, "running").move_to(P3(0, 0.8))
 
         def hit(proc_, bolt, target_dx=-0.9):
@@ -21,8 +22,9 @@ class S13Signals(Ep05Scene):
 
         # S13.1
         bolt = bolt_glyph(0.8, CPU_COLOR, "kill(pid, sig)").move_to(P3(-4.2, 2.8))
-        with self.narrate("Beyond those three, there are more interfaces. In UNIX, kill() sends a signal to a process."):
-            self.play(FadeIn(p, scale=0.6), self.terms.show("signal", hold=0.5))
+        with self.narrate("Back to the interface. Beyond those three calls, there are more. "
+                          "In UNIX, kill() sends a signal to a process."):
+            self.play(FadeIn(p, scale=0.6), FadeIn(stu), FadeIn(prof), self.terms.show("signal", hold=0.5))
             self.play(FadeIn(bolt, scale=0.5), run_time=0.4)
             self.play(hit(p, bolt))
             self.play(squash(p), FadeOut(bolt, scale=0.3), run_time=0.5)
@@ -31,7 +33,7 @@ class S13Signals(Ep05Scene):
         bolt2 = bolt_glyph(0.5, CPU_COLOR).move_to(P3(-2.6, 2.4))
         chips = VGroup(PauseGlyph(0.4), x_mark(0.4), Text("...", font=MONO_FONT, font_size=40, color=TEXT))
         chips.arrange(RIGHT, buff=0.7).move_to(P3(0.2, 2.5))
-        with self.narrate("A signal can tell it to pause, to die, or other useful things."):
+        with self.narrate("A signal can tell the process to pause, to die, or other useful things."):
             self.play(FadeIn(bolt2), run_time=0.3)
             self.play(LaggedStart(*[FadeIn(c, shift=RIGHT * 0.8) for c in chips], lag_ratio=0.4), run_time=1.5)
             self.wait(1.0)
