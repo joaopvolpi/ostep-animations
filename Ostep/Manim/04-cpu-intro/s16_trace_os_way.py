@@ -18,7 +18,7 @@ class S16TraceOSWay(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("descheduled")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("neutral", "worried")
         slot = docked_save_slot()
         t = build_s15_end()
         cpu, p0, p1, tl, sd, d0, d1 = (t[k] for k in ("cpu", "p0", "p1", "tl", "sd", "d0", "d1"))
@@ -29,8 +29,8 @@ class S16TraceOSWay(Ep04Scene):
         # S16.1
         with self.narrate("Instead, the OS notices that process zero is blocked and isn't using the CPU, "
                           "so it runs process one."):
-            p0.set_expression("blocked")
             self.play(hop_bottom(p0, TRACE_BLOCK_SPOT, run_time=0.7), sd.move_dot(d0, "blocked"))
+            self.play(p0.change("blocked"), run_time=0.3)
             p1.set_expression("running")
             self.play(hop_seat(p1, cpu, run_time=0.7), sd.move_dot(d1, "running"))
 
@@ -120,6 +120,10 @@ class S16TraceOSWay(Ep04Scene):
         keep = (sd, self.badge, self.terms.docked, stu, prof, slot)
         others = [m for m in self.mobjects if m not in keep]
         target = make_state_diagram()
+        target.arrow_label_group.set_opacity(1)
         target.scale(S17_SD_SCALE).move_to(S17_SD_POS)
         self.play(*[FadeOut(m) for m in others], run_time=0.8)
         self.play(Transform(sd, target), stu.change("neutral"), prof.change("neutral"), run_time=1.0)
+        self.remove(sd)
+        self.add(target)
+        self.wait(0.3)

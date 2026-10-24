@@ -11,7 +11,7 @@ class S14TraceCPUOnly(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("descheduled")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("curious", "worried")
         slot = docked_save_slot()
         w = build_s13_end()
         sd = w["sd"]
@@ -75,6 +75,6 @@ class S14TraceCPUOnly(Ep04Scene):
         d0b = sd.make_dot(COL["P0"], label="0", radius=0.13)
         d1b = sd.make_dot(COL["P1"], label="1", radius=0.13)
         sd.place_dot(d0b, "ready").place_dot(d1b, "ready")
-        self.play(tl.clear_blocks(), FadeOut(busy), FadeIn(d0b), FadeIn(d1b), run_time=0.8)
+        self.play(tl.clear_blocks(), FadeOut(busy), FadeIn(d0b), FadeIn(d1b), sd.unglow_zone("running"), run_time=0.8)
         tl.purge()
         self.wait(0.3)

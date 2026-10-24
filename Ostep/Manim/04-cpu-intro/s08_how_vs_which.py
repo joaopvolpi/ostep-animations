@@ -42,7 +42,7 @@ class S08HowVsWhich(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("space sharing")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("neutral", "explaining")
         d = build_s06_parts(final=True)
         add_s06_world(self, d)
         split, cpu, ps, tl = d["split"], d["cpu"], d["ps"], d["tl"]
@@ -53,8 +53,6 @@ class S08HowVsWhich(Ep04Scene):
         left_side = VGroup(d["vcpus"], *d["vps"].values(), d["gauges"])
         q_spots = [q.slot_point(0), q.slot_point(1)]
         cpu_target = cpu.copy().move_to(CPU_HOME)
-        a.set_expression("running")
-        c.set_expression("ready")
         q.items = [b, c]
         dq = Text("do?", font_size=34, color=CPU_COLOR, weight="BOLD")
         wq = Text("who?", font_size=34, color=VIRT, weight="BOLD")
@@ -65,6 +63,7 @@ class S08HowVsWhich(Ep04Scene):
                       b.animate.move_to(b.copy().shift(q_spots[0] - b.get_bottom())),
                       c.animate.move_to(c.copy().shift(q_spots[1] - c.get_bottom())),
                       FadeIn(q), run_time=1.4)
+            self.play(a.change("running"), c.change("ready"), run_time=0.3)
             dq.next_to(a, RIGHT, buff=0.3)
             wq.next_to(q.tray, RIGHT, buff=0.4).shift(UP * 0.7)
             self.play(stu.change("confused", look_at=cpu), FadeIn(dq, scale=1.5), FadeIn(wq, scale=1.5))

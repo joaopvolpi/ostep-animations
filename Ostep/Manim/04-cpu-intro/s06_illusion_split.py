@@ -36,7 +36,7 @@ class S06IllusionSplit(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("process")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("sad", "neutral")
         cpu0, ps0 = build_world_s05_end()
         self.add(cpu0, *ps0.values())
 

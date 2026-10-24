@@ -17,7 +17,7 @@ class S05MoreCPUs(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("process")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("curious", "happy")
         w = build_s04_end()
         a0, b0 = w["a"], w["b"]
         self.add(w["disk"], w["file"], a0, b0, w["brace"], w["blab"])

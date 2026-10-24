@@ -230,7 +230,8 @@ def counter_group(programs=137, cpus=None, at=P3(4.8, 3.0)):
         cnum.next_to(clab, RIGHT, buff=0.15)
         cnum.shift(UP * (clab[0].get_bottom()[1] - cnum.get_bottom()[1]))
         g.add(clab, cnum)
-    g.shift(at - VGroup(lab, num).get_center())
+    ref_w = Integer(137, font_size=34).width      # anchor on the 3-digit layout, whatever the start value
+    g.shift(np.array([at[0] - (lab.width + 0.15 + ref_w) / 2 - lab.get_left()[0], at[1] - lab.get_center()[1], 0.0]))
     return g, num, cnum
 
 
@@ -362,10 +363,12 @@ def build_s02_end():
     vcpus = virtual_cpu_row()
     counter, num, cnum = counter_group(137, 1)
     stu = student_dialogue("confused", STUDENT_SIDE)
+    stu.set_look(cpu)
     prof = prof_dialogue("proud", PROF_SIDE)
     comp = Computer("surprised").scale(0.7).move_to(P3(0, -2.6))
+    stream = Line(P3(-4.0, 0.6), cpu.body.get_left()).set_stroke(TEXT, 2.5)
     return dict(board=board, cpu=cpu, vcpus=vcpus, counter=counter, num=num, cnum=cnum,
-                stu=stu, prof=prof, comp=comp)
+                stu=stu, prof=prof, comp=comp, stream=stream)
 
 
 S04_A, S04_B = P3(1, 0.3), P3(3, 0.3)
@@ -420,7 +423,7 @@ def build_s06_parts(final=True):
     """Illusion split world. ``final`` adds the end-state extras (filled
     timeline, labels, gauges at ~33%)."""
     d = {}
-    d["split"] = IllusionSplit()
+    d["split"] = IllusionSplit(title_y=3.0)
     d["cpu"] = CPU(CPU_SIZE).move_to(S06_CPU)
     d["spots"] = {n: center_bottom(n, S06_SPOTS[n]) for n in "ABC"}   # bottoms
     d["ps"] = {n: bottom_to(proc(n), d["spots"][n]) for n in "ABC"}
@@ -431,7 +434,7 @@ def build_s06_parts(final=True):
         make_translucent(c, 0.35, 0.7)
         vcpus.add(c)
         vp = proc(n, "running", scale=0.8)
-        seat(vp, c)
+        seat(vp, c).shift(UP * 0.22)      # label clears the chip pins
         make_translucent(vp, 0.55, 0.7)
         vps[n] = vp
     d["vcpus"], d["vps"] = vcpus, vps
@@ -624,6 +627,7 @@ def sd_proc(name, expr="ready", label=None):
 def build_s13_end():
     """Complete diagram; A running, B and D ready. Returns dict."""
     sd = make_state_diagram()
+    sd.zones["running"].set_stroke(CPU_COLOR, 5).set_fill(CPU_COLOR, 0.08)     # S13 ends with Running glowing
     disk = Disk(width=0.9, height=0.75).move_to(P3(2.4, -2.6))
     a = sd_proc("A", "running")
     b = sd_proc("B")

@@ -11,7 +11,7 @@ class S07SpaceSharing(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("time sharing")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("neutral", "explaining")
         d = build_s06_parts(final=True)
         add_s06_world(self, d)
 

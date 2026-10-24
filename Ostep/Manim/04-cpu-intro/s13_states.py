@@ -11,7 +11,7 @@ class S13States(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("file descriptors")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("curious", "happy")
         slot = docked_save_slot()
         d = proc("D", "ready").move_to(P3(0, 0.2))
         self.add(slot, d)

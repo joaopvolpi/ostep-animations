@@ -28,6 +28,7 @@ class S18Xv6PCB(Ep04Scene):
         # S18.1
         with self.narrate("Here's a real process control block, from a small teaching operating system called xv6."):
             veil = Rectangle(width=16, height=9).set_fill(BG, 0.8).set_stroke(width=0)
+            veil.is_scrim = True
             self.add(veil, cards["A"], stu, prof, self.badge, self.terms.docked, slot)
             self.play(FadeIn(veil), run_time=0.6)
             self.play(ReplacementTransform(cards["A"], code), run_time=1.2)

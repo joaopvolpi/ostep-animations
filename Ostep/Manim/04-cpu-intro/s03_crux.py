@@ -10,15 +10,15 @@ from common import *  # noqa: E402,F401,F403
 class S03Crux(Ep04Scene):
     def construct(self):
         w = build_s02_end()
-        board, cpu, vcpus, counter, stu, prof, comp = (w[k] for k in
-                                                       ("board", "cpu", "vcpus", "counter", "stu", "prof", "comp"))
-        self.add(board, vcpus, counter, cpu, stu, prof, comp)
+        board, cpu, vcpus, counter, stu, prof, comp, stream = (w[k] for k in
+                                                       ("board", "cpu", "vcpus", "counter", "stu", "prof", "comp", "stream"))
+        self.add(board, stream, vcpus, counter, cpu, stu, prof, comp)
 
         # S03.1 (transition)
         badge = make_badge()
         with self.narrate("Let's put that as a question."):
             self.play(
-                FadeOut(board), FadeOut(vcpus), FadeOut(counter),
+                FadeOut(board), FadeOut(stream), FadeOut(vcpus), FadeOut(counter),
                 Transform(cpu, badge.dot),
                 FadeIn(badge.text, shift=RIGHT * 0.2),
                 FadeOut(comp, shift=DOWN * 1.5),

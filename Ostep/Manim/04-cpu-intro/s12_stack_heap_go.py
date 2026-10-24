@@ -17,7 +17,7 @@ class S12StackHeapGo(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("lazily")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("curious", "happy")
         slot = docked_save_slot()
         w = build_s11_end()
         cpu, mem, disk, bus, outline, olab, tag, file = (w[k] for k in
@@ -140,3 +140,6 @@ class S12StackHeapGo(Ep04Scene):
         target = proc("D", "ready").move_to(P3(0, 0.2))
         d_proc.set_expression("ready")
         self.play(Transform(d_proc, target), run_time=0.8)
+        self.remove(d_proc)
+        self.add(target)
+        self.wait(0.3)

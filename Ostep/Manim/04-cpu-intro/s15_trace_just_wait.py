@@ -11,7 +11,7 @@ class S15TraceJustWait(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("descheduled")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("curious", "worried")
         slot = docked_save_slot()
         t = build_trace_world(8)
         cpu, p0, p1, tl, sd, d0, d1 = (t[k] for k in ("cpu", "p0", "p1", "tl", "sd", "d0", "d1"))

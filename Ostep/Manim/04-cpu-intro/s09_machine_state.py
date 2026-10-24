@@ -19,7 +19,7 @@ class S09MachineState(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("modularity")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("confused", "proud")
         cpu = CPU(CPU_SIZE).move_to(CPU_HOME)
         a = proc("A", "running")
         seat(a, cpu)
@@ -29,8 +29,8 @@ class S09MachineState(Ep04Scene):
         world = VGroup(cpu, a)
         self.say("Let's get back to the process itself. “A running program” is a nice slogan. But if the OS is going to stop a process and resume "
                  "it later, it needs to know exactly what a process is.",
-                 world.animate(run_time=1.2).shift(S09_CPU_POS - CPU_HOME),
-                 late(1.4, Wiggle(a, scale_value=1.05, rotation_angle=0.02, run_time=1.2)))
+                 AnimationGroup(world.animate(run_time=1.2).shift(S09_CPU_POS - CPU_HOME)))
+        self.play(Wiggle(a, scale_value=1.05, rotation_angle=0.02, run_time=1.0))
 
         # S09.2 freeze
         overlay = Rectangle(width=16, height=9).set_fill(BG, 0.45).set_stroke(width=0)
@@ -50,10 +50,9 @@ class S09MachineState(Ep04Scene):
                  FadeIn(pad, shift=UP * 0.3, run_time=0.8))
 
         # S09.4
-        self.say("In other words: what parts of the machine can this program read or change? "
-                 "That's its machine state.",
-                 prof.change("explaining", look_at=a),
-                 late(2.4, self.term("machine state")))
+        self.say("In other words: what parts of the machine can this program read or change?",
+                 prof.change("explaining", look_at=a))
+        self.say("That's its machine state.", self.term("machine state"))
 
         # S09.5
         mem = s09_memory(colored=False)
@@ -78,6 +77,9 @@ class S09MachineState(Ep04Scene):
         regs = s09_registers()
         self.say("Second, registers. Lots of instructions read and update them directly.",
                  Succession(FadeIn(regs, shift=LEFT * 0.3, run_time=0.8), regs.flicker(rounds=4, step=0.3)))
+
+        for n, v in S09_REGS[3:]:        # clean values (the flicker leaves ghost glyphs)
+            regs.value_texts[n].become(regs.make_value(n, v))
 
         # S09.8
         code = mem.region("code")
@@ -148,5 +150,8 @@ class S09MachineState(Ep04Scene):
             self.play(prof.change("happy", look_at=stu), run_time=0.6)
             self.play(Transform(slot, docked), FadeOut(outlines), FadeOut(ms_label), run_time=1.0)
             a.set_expression("running")
-            self.play(FadeOut(overlay), FadeOut(pause), run_time=0.8)
+            self.play(FadeOut(overlay), FadeOut(pause),
+                      *[mem.region(n).animate.set_fill(COL["A"], 0.35).set_stroke(COL["A"], 3)
+                        for n in ("code", "static data", "heap", "stack")],
+                      mem.region("free").animate.set_fill(BG, 0).set_stroke(MEM_COLOR, 2), run_time=0.8)
         self.wait(0.3)

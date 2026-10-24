@@ -17,10 +17,10 @@ class S11Loading(Ep04Scene):
     def construct(self):
         self.add_badge()
         self.add_docked_term("stack pointer & frame pointer")
-        stu, prof = self.add_corner_chars()
+        stu, prof = self.add_corner_chars("neutral", "happy")
         slot = docked_save_slot()
         cpu = CPU(CPU_SIZE).move_to(S10_CPU)
-        a = proc("A", "ready")
+        a = proc("A", "running")
         seat(a, cpu)
         self.add(slot, cpu, a)
 
@@ -32,7 +32,7 @@ class S11Loading(Ep04Scene):
 
         # S11.1
         with self.narrate("But before we order from that menu, “create” hides a lot. How does a file on disk actually become a running process?"):
-            self.play(stu.change("curious", look_at=cpu), run_time=0.6)
+            self.play(stu.change("curious", look_at=cpu), a.change("ready"), run_time=0.6)
             self.play(hop_to(a, base_point(a) + RIGHT * 2.2, run_time=0.6))
             self.play(a.animate.shift(RIGHT * 6), run_time=0.8)
             self.remove(a)
