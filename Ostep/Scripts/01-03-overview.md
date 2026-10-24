@@ -200,7 +200,7 @@ memory constantly, even just to fetch its own instructions.
 
 **Narrator (V.O.):** Here's another tiny program, `mem`. It asks for a little memory with
 `malloc()`, prints the address it got, stores a zero there, and then once a second adds one and
-prints it. Each line starts with the program's **process identifier**, or **PID**, a number unique
+prints it. You might want to pause the video here to read the code. Each line starts with the program's **process identifier**, or **PID**, a number unique
 to each running program.
 
 **Narrator (V.O.):** Run it once: the memory is at address `0x200000`, and the value counts 1, 2, 3, 4.

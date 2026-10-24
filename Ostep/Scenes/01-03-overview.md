@@ -245,6 +245,7 @@
 | 6 | "Here's another tiny program, `mem`." | Code block (**Figure 2.3**, trimmed): `int *p = malloc(sizeof(int));` / `printf("(%d) addr of p: %p\n", getpid(), p);` / `*p = 0;` / `while (1) {` / `    Spin(1);` / `    *p = *p + 1;` / `    printf("(%d) p: %d\n", getpid(), *p);` / `}`. Title `mem.c`. |
 | 7 | "It asks for a little memory with `malloc()`, prints the address it got, stores a zero there…" | Highlights step through lines 1–3. On `malloc`, one cell in the strip turns lilac and is labeled "p". |
 | 8 | "…and then once a second adds one and prints it." | The loop lines highlight; the lilac cell's value increments 0 → 1 → 2. |
+| 8b | "You might want to pause the video here to read the code." | Code stays on screen, no animation (~3.5 s). |
 | 9 | "Each line starts with the program's **process identifier**, or **PID**, a number unique to each running program." | Term highlight "process identifier (PID)". A lilac Process "PID 2134" appears next to the terminal (the book's single-run PID). |
 | 10 | "Run it once: the memory is at address `0x200000`, and the value counts 1, 2, 3, 4." | Terminal: `prompt> ./mem` / `(2134) address pointed to by p: 0x200000` / `(2134) p: 1` … `p: 4`, in sync with the lilac cell's value. |
 

@@ -93,6 +93,8 @@ class S11MemoryBytes(NarratedScene):
                 self.play(bar_to(6))
             self.play(FadeOut(bar), run_time=0.3)
 
+        self.say("You might want to pause the video here to read the code.", min_time=3.5)
+
         # S11.9 PID
         pid = pid_process(2134, PID1_COLOR)
         place_on(pid, S11_PID_POS)
