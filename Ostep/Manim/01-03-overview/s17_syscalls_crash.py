@@ -152,7 +152,17 @@ class S17SyscallsCrash(NarratedScene):
             self.play(req2.animate.move_to(disk.top.get_center()), disk.spin(0.7, run_time=0.6))
             self.play(FadeIn(half_g), comp.change("error"), FadeOut(req2), run_time=0.4)
             self.play(FadeIn(half_r, run_time=0.3))
-            self.wait(0.3)
+            # a blue-screen-of-death style crash screen, then back to the scene
+            bsod = Rectangle(width=16, height=10).set_fill("#1F5FBF", 1).set_stroke(width=0)
+            sad = Text(":(", font=MONO_FONT, font_size=120, color="#FFFFFF", weight=BOLD)
+            msg = VGroup(*[Text(t, font=MONO_FONT, font_size=26, color="#FFFFFF") for t in (
+                "Your computer ran into a problem", "while writing to the disk.",
+                "Some of your data may be lost.")]).arrange(DOWN, aligned_edge=LEFT, buff=0.2)
+            screen = VGroup(sad, msg).arrange(DOWN, aligned_edge=LEFT, buff=0.5).move_to([-0.8, 0.2, 0])
+            blue = VGroup(bsod, screen).set_z_index(60)
+            self.add(blue)
+            self.wait(1.6)
+            self.play(FadeOut(blue, run_time=0.3))
 
         # S17.5 journaling / copy-on-write
         j = journal_icon(0.5).move_to([3.75, -1.15, 0])
