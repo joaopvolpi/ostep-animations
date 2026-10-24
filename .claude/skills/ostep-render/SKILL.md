@@ -161,10 +161,11 @@ Images are expensive, so frame inspection is the exception, not the rule.
    overlaps, text legible at 480p, "Ends with" state as specified. At most 2 fix rounds.
 4. Prop preview sheets: one look at the final version.
 5. Run `python tools/continuity.py <NN>` (see "Continuity" above) and fix the jumps it flags.
-6. Run `python tools/silence.py <NN>` (text only, no frames). **Every scene must open with narration
-   within 1 s** and no gap between captions may exceed 2.5 s; fix flagged scenes by putting the
-   scene's first `say(...)` at t = 0 and running the setup animations under it (never a silent
-   build-up). The tool also prints each hand-off (last caption of scene N → first caption of N+1):
+6. Run `python tools/silence.py <NN>` (text only, no frames). It flags scenes that open silent and long
+   gaps or tails. **Long dead air is the problem** (several seconds of silent build-up at a scene's
+   start): start the first `say(...)` early and run the setup under it. Not every flag needs a fix:
+   a short deliberate pause after a reveal or punchline is fine, so use judgement and don't pad
+   scenes with words. The tool also prints each hand-off (last caption of scene N → first caption of N+1):
    read them; if scene N+1 starts on a new subject without a bridge, fix the line (and the script).
    Also make sure labels, arrows and numbers never sit on top of each other or on another label
    (the layout check catches text/text only: for text vs. arrow, place labels with `next_to` on

@@ -55,9 +55,10 @@ the sound off, and the narration should feel like it's describing what the viewe
    mechanical "The crux:") while the card writes, then reads the card's follow-up text as it fades
    in. Give those their own table rows (narration column = the spoken lead-in plus the exact question on the card), then dock.
    A crux that only changes in the docked strip (a second crux) is read too.
-7. **Scenes talk to each other, and start talking at once.** Row 1 of every scene is narration that
-   starts at t = 0 (no silent opening while props are being laid out; animate the setup *under*
-   that line). That line must bridge from the last line of the previous scene (recall what was
+7. **Scenes talk to each other, with no dead air.** A scene must not sit silent for seconds while
+   props are being laid out: usually the first line starts within a second or so and the setup
+   animates *under* it. A short deliberate visual beat (a reveal, a pause after a punchline) is
+   fine; use judgement, and don't fill every second with words. That line must bridge from the last line of the previous scene (recall what was
    just said or left open, then say what this scene is about). Add a **Bridge:** line to each
    scene ("S10 follows S09's 'where do the actions come from?': opens with 'So what can the OS do
    with a process? A short menu…'"). If the script lacks the bridge, add it to the scene's

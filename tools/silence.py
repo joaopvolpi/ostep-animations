@@ -4,7 +4,7 @@
     python tools/silence.py 04 --max-start 1.0 --max-gap 2.5 -q h
 
 Reads the per-scene .srt files in Ostep/Renders/<ep>/<quality>/scenes/ and reports, for every scene,
-(a) the first caption's start time (a scene must open with narration, <= --max-start s), and
+(a) the first caption's start time (long dead air at the start is the problem; a short beat is fine),
 (b) any gap between captions longer than --max-gap s, and (c) a silent tail after the last caption.
 It also prints the last and first caption of consecutive scenes so you can read the hand-off
 between them (does scene N+1 pick up where N left off?).
@@ -51,7 +51,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("episode")
     ap.add_argument("-q", default="l")
-    ap.add_argument("--max-start", type=float, default=1.0)
+    ap.add_argument("--max-start", type=float, default=2.0)
     ap.add_argument("--max-gap", type=float, default=2.5)
     a = ap.parse_args()
     eps = [p for p in RENDERS.iterdir() if p.is_dir() and p.name.startswith(a.episode)]
