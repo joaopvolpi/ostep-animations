@@ -35,10 +35,13 @@ plus light notes on what the beat should *show*. Detailed visuals come later, fr
 3. **Write beats.** A beat is one idea, ~15–60 s of narration. For each beat:
    - Narration in the Professor's voice (V.O.), or dialogue lines when characters are on screen.
    - The Student interrupts where a viewer would be confused or skeptical.
-   - **The crux is narration.** Every crux that appears on screen is read aloud (and so captioned),
-     word for word as it is written on the card: "The crux:" + the question + the follow-up text. The
-     blockquote under the beat title is what the card shows; write the same words as a Narrator
-     line, then carry on from them. Don't paraphrase the crux, and don't skip it. This holds for
+   - **The crux is narration.** Every crux that appears on screen is read aloud (and so captioned).
+     The question and the follow-up text are read word for word as written on the card, but the
+     words around them must sound spoken: weave the question into a natural sentence ("So, the crux
+     is: …", "Which brings us to the real problem: …", "Here's what we need to figure out: …")
+     instead of the mechanical label "The crux:" every time. Vary the lead-in across cruxes and
+     episodes. The blockquote under the beat title is what the card shows; write the Narrator line
+     around it, then carry on. Don't paraphrase the question, and don't skip it. This holds for
      every crux in the episode, including a second or third one.
    - Give concrete numbers before general rules. Introduce one new term at a time, and write it in
      **bold** the first time.
@@ -83,7 +86,7 @@ One or two sentences: the problem and the payoff of this episode.
 ### B02 — The Crux  `crux`
 > **THE CRUX:** <the question, from the book>
 > <the book's follow-up text, abridged to what fits on a card (≤ ~25 words)>
-**Narrator (V.O.):** The crux: <the question, read verbatim>. <the follow-up text, read verbatim> …
+**Narrator (V.O.):** <a natural lead-in, e.g. "So, the crux is:"> <the question, read verbatim>. <the follow-up text, read verbatim> …
 
 (… more beats, each tagged with its arc stage: cold open | crux | build-up | big picture | recap | teaser)
 

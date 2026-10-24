@@ -49,8 +49,9 @@ File names keep the chapter number and slug from `Ostep/Chapters/INDEX.md`
 - **Problem first.** Every concept appears as the answer to a problem the viewer already feels.
   The book's **THE CRUX** boxes are the backbone. Each crux is posed as an explicit question
   on screen, and the episode is the journey to its answer. **A crux on screen is always read
-  aloud** (and so captioned), word for word as written on the card: "The crux: …" + the question +
-  the follow-up text. The crux is part of the narration, not a silent graphic.
+  aloud** (and so captioned), the question and follow-up text word for word as written on the card, inside a natural spoken
+  lead-in ("So, the crux is: …", "Which brings us to…"), not a mechanical "The crux:" label every
+  time. The crux is part of the narration, not a silent graphic.
 - **The Student asks the viewer's questions** at the moment the viewer would ask them:
   confusion, objections, "wait, why not just…?". Naive ideas are welcome. We try them,
   watch them fail, and learn why.

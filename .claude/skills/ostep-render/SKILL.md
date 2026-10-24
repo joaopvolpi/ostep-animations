@@ -104,9 +104,12 @@ complete.
   `play`, and no `change` together with `.animate` on the same character.
 - **The crux is read aloud.** Never `card.write()`/`FadeIn(card)` silently. Use
   `self.say_crux(card, *extra_anims, sub_anims=(...), dock=True|False, hold=0.8, **dock_kwargs)`:
-  it narrates "The crux: <question>" while the card writes, reads the subtitle as it fades in, then
-  docks. What's spoken is exactly the card's text, so captions match the screen. A crux shown only
-  as a strip swap gets `self.say("The crux: <question>", ReplacementTransform(old, new))`. Do this
+  it narrates the question while the card writes, reads the subtitle as it fades in, then
+  docks. Pass `lead="..."` with `{q}` for the question, taking the script's wording, e.g.
+  `lead="So, the crux is: {q}"`. Don't leave the mechanical default "The crux:"; the lead-in
+  must match the script and vary between cruxes. The question itself is the card's text, so
+  captions match the screen. A crux shown only as a strip swap gets
+  `self.say("<lead-in> <question>", ReplacementTransform(old, new))`. Do this
   even if the scene file's rows don't mention it. Don't hide the subtitle with `set_opacity(0)`.
 - **Continuity (no jumps at cuts).** Each scene must begin exactly where the previous one ended:
   - Hosts: `host_pair(mode, stu_expr, prof_expr)` and `host_mode_anims(stu, prof, mode)` with the

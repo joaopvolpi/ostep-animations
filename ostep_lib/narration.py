@@ -62,7 +62,7 @@ class NarratedScene(Scene):
             self.wait(d - t)
 
     def say_crux(self, card, *head_anims, sub_anims=(), dock=False, hold=0.8, prefix="The crux:",
-                 **dock_kw):
+                 lead=None, **dock_kw):
         """Show a ``CruxCard`` AND read it aloud: the crux is part of the narration, so it is
         captioned too.  The narrator says "The crux: <question>" while the frame, header and
         question write, then reads the subtitle (when the card has one) as it fades in.
@@ -71,8 +71,16 @@ class NarratedScene(Scene):
             self.say_crux(card, dock=True)                                  # ... and dock it afterwards
             self.say_crux(card, dock=True, font_size=22)                    # dock kwargs pass through
 
-        What is spoken is exactly what is written on the card, so the two never drift apart."""
-        self.say(f"{prefix} {card.question_str}".strip(), card.write_head(), *head_anims)
+        The words around the question should sound spoken, not mechanical: pass ``lead`` as the
+        sentence that carries it, with ``{q}`` where the card's question goes, e.g.
+        ``lead="So here's the crux: {q}"`` or ``lead="Which brings us to the real problem: {q}"``
+        (vary it from episode to episode and crux to crux).  The question itself is always read
+        verbatim, so it matches the card.  ``prefix`` is the old mechanical form, kept as the fallback."""
+        if lead:
+            text = lead.format(q=card.question_str)
+        else:
+            text = f"{prefix} {card.question_str}".strip()
+        self.say(text, card.write_head(), *head_anims)
         if getattr(card, "subtitle_str", ""):
             self.say(card.subtitle_str, card.write_sub(), *sub_anims)
         self.beat(hold)

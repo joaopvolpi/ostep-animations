@@ -51,8 +51,9 @@ the sound off, and the narration should feel like it's describing what the viewe
    A term is unveiled **once in the whole series**, in the episode that teaches it. Dialogue and
    recap episodes, and callbacks in later episodes, use notes.
 6. **The crux is read aloud.** A crux card or strip on screen always has narration: the Narrator says
-   "The crux: <question>" while the card writes, then reads the card's follow-up text as it fades
-   in. Give those their own table rows (narration column = the exact words on the card), then dock.
+   the question inside a natural lead-in ("So, the crux is: <question>"; vary it, don't repeat a
+   mechanical "The crux:") while the card writes, then reads the card's follow-up text as it fades
+   in. Give those their own table rows (narration column = the spoken lead-in plus the exact question on the card), then dock.
    A crux that only changes in the docked strip (a second crux) is read too.
 7. **Make hand-offs exact.** "Ends with" must list every persistent element with its exact position
    and state: hosts (mode: corner or dialogue, and expression), badge, docked term, crux strip,
