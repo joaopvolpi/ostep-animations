@@ -17,9 +17,7 @@ class S04FetchDecodeExecute(NarratedScene):
         lines = motto_lines()
         lines[1].set_color(INTRO)
         glow = glow_for(lines[1])
-        note = Text("attributed to Confucius; closer to Xunzi", font_size=20, color=DIM)
-        note.next_to(lines, DOWN, buff=0.3).shift(LEFT * 0.4)
-        self.add(stu, prof, strip, lines, glow, note)
+        self.add(stu, prof, strip, lines, glow)
 
         th = terms(INTRO)
         th.at = np.array([-0.9, 3.0, 0])
@@ -30,7 +28,7 @@ class S04FetchDecodeExecute(NarratedScene):
 
         # S04.1
         self.say("Let's start at the bottom. What happens when a program runs?",
-                 FadeOut(VGroup(strip, lines, glow, note)), *mode_anims(stu, prof, "corner"),
+                 FadeOut(VGroup(strip, lines, glow)), *mode_anims(stu, prof, "corner"),
                  Succession(Wait(0.6), AnimationGroup(FadeIn(bdg), Create(cpu), Create(mem), run_time=1.4)))
         self.play(FadeIn(ring), cpu.label.animate.set_opacity(0.0), run_time=0.6)
 
