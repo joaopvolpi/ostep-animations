@@ -37,8 +37,7 @@ three strange calls: `fork()` clones a process, `exec()` turns it into a differe
 
 ### B01 — A program that talks to itself  `cold open` (~0:45)
 **Narrator (V.O.):** Last time, we ended with a promise: a process that clones itself. So let's see
-it. Here is a tiny C program. It prints "hello". Then it hits an `if` and an `else`. If it's the
-child, print "child". Otherwise, print "parent".
+it. Here is a tiny C program. It prints "hello". Then it hits an `if` and an `else`. If this is the child process, the new one that fork creates, it prints "child". If it's the parent process, the original one, it prints "parent". How does the code know which is which? Fork is weird: you call it once, but it returns twice, with a different value in each process. The child gets 0, the parent gets the child's PID. We'll get into that in a second.
 
 **Narrator (V.O.):** Let's run it.
 
@@ -134,9 +133,9 @@ orders, side by side. Term highlight "non-deterministic".
 
 ### B06 — wait(): let the child finish  `build-up` (~1:00)
 **Narrator (V.O.):** Sometimes order matters. Suppose the parent wants to know that its child has
-finished before it continues. For that, there's **`wait()`**. The parent calls it, and the OS *blocks* the
-parent, our old blocked state, until a child exits. Then `wait()` returns, with the PID of the child
-that finished.
+finished before it continues. For that, there's **`wait()`**. The parent calls it, and from then on it can't move forward until one of its children finishes. So the OS doesn't let it hold the CPU. It blocks the parent, our old blocked state, and the CPU is free for the child.
+
+**Narrator (V.O.):** Let's watch it, one step at a time. First, the parent runs, and calls `wait()`. Right away, the parent is blocked. The child moves from ready to running, and gets the CPU. The child keeps running, while the parent just waits. Then the child exits. Now `wait()` returns in the parent, and `rc_wait` holds the PID of the child that finished. The parent goes from blocked, to ready, to running again.
 
 **Narrator (V.O.):** Add one `wait()` to the parent's branch, and the output becomes deterministic.
 Can you see why? Pause the video and think about it.

@@ -40,24 +40,55 @@ class S07Wait(Ep05Scene):
         with self.narrate("For that, there's wait()."):
             self.play(self.terms.note("wait()"), FadeIn(code, shift=RIGHT * 0.2))
 
-        # S07.3
+        # S07.3a
+        with self.narrate("The parent calls it, and from then on it can't move forward until one of its "
+                          "children finishes. So the OS doesn't let it hold the CPU. It blocks the parent, "
+                          "our old blocked state, and the CPU is free for the child."):
+            self.play(Indicate(code, scale_factor=1.1, color=CPU_COLOR), run_time=1.0)
+            self.wait(1.2)
+            self.play(Indicate(par, scale_factor=1.15), run_time=1.0)
+            self.wait(1.0)
+            self.play(sd.glow_zone("blocked"))
+            self.wait(1.2)
+            self.play(sd.unglow_zone("blocked"), Indicate(chi, scale_factor=1.15), run_time=0.8)
+            self.wait(0.5)
+
+        # S07.3b
         zomb = zombie_mini(0.55, label="child").move_to(chi)
-        with self.narrate("The parent calls it, and the OS blocks the parent, our old blocked state, until a child exits."):
-            self.play(par.change("running"), sd.move_dot(dp, "running"), tl.fill("parent", 1, "running"),
-                      tl.fill("child", 1, "ready"), tl.fill_cpu(1))
-            self.play(par.change("blocked"), sd.move_dot(dp, "blocked"), tl.fill("parent", 2, "blocked"),
-                      chi.change("running"), sd.move_dot(dc, "running"), tl.fill("child", 2, "running"),
-                      tl.fill_cpu(2))
-            self.play(tl.fill("parent", 3, "blocked"), tl.fill("child", 3, "running"), tl.fill_cpu(3))
-            self.play(Transform(chi, zomb), sd.move_dot(dc, "ready"), run_time=0.8)
+        self.say("Let's watch it, one step at a time. First, the parent runs, and calls wait().",
+                 par.change("running"), sd.move_dot(dp, "running"), tl.fill("parent", 1, "running"),
+                 tl.fill("child", 1, "ready"), tl.fill_cpu(1), min_time=4.5)
+        self.beat(0.8)
+
+        # S07.3c
+        self.say("Right away, the parent is blocked. The child moves from ready to running, and gets the CPU.",
+                 par.change("blocked"), sd.move_dot(dp, "blocked"), tl.fill("parent", 2, "blocked"),
+                 chi.change("running"), sd.move_dot(dc, "running"), tl.fill("child", 2, "running"),
+                 tl.fill_cpu(2), min_time=5.5)
+        self.beat(0.8)
+
+        # S07.3d
+        self.say("The child keeps running, while the parent just waits.",
+                 tl.fill("parent", 3, "blocked"), tl.fill("child", 3, "running"), tl.fill_cpu(3),
+                 min_time=4.0)
+        self.beat(0.8)
+
+        # S07.3e
+        self.say("Then the child exits.", Transform(chi, zomb), sd.move_dot(dc, "ready"), min_time=2.0)
+        self.beat(0.6)
 
         # S07.4
         ret = tagged("returns 29147", CHI, 20, CHI).move_to(chi.get_center() + DOWN * 0.1)
-        with self.narrate("Then wait() returns, with the PID of the child that finished."):
-            self.play(FadeOut(chi), FadeIn(ret), run_time=0.5)
-            self.play(ret.animate.move_to(par.get_center() + RIGHT * 1.9), run_time=0.8)
-            self.play(par.change("ready"), sd.move_dot(dp, "ready"), run_time=0.5)
-            self.play(par.change("running"), sd.move_dot(dp, "running"), run_time=0.5)
+        with self.narrate("Now wait() returns in the parent, and rc_wait holds the PID of the child that "
+                          "finished. The parent goes from blocked, to ready, to running again."):
+            self.play(FadeOut(chi), FadeIn(ret), run_time=0.6)
+            self.wait(0.6)
+            self.play(ret.animate.move_to(par.get_center() + RIGHT * 1.9), run_time=1.0)
+            self.wait(0.8)
+            self.play(par.change("ready"), sd.move_dot(dp, "ready"), run_time=0.8)
+            self.wait(0.6)
+            self.play(par.change("running"), sd.move_dot(dp, "running"), run_time=0.8)
+            self.wait(0.6)
             self.play(FadeOut(ret), tl.clear_blocks(), run_time=0.7)
             self.wait(0.5)
         tl.purge()

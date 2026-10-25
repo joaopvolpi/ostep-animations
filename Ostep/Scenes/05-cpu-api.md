@@ -47,7 +47,9 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | 1 | "Last time, we ended with a promise: a process that clones itself." | A single coral Process (ready, no label) at (0, 1.0) blinks, then splits into two identical copies (the 04 S22 "mitosis" squash). Both slide out of frame and fade. |
 | 2 | "So let's see it. Here is a tiny C program." | Code block `Write`s in, line by line, at left. Caption "p1.c (error check omitted)". Student (curious) and Professor (neutral) `FadeIn` in the corners. |
 | 3 | "It prints "hello"." | A highlight bar (neutral `TEXT` at 0.2 opacity) lands on line 1. |
-| 4 | "Then it hits an `if` and an `else`. If it's the child, print "child". Otherwise, print "parent"." | The bar moves to line 3 (`if`). Then `Indicate` line 4 (child), then line 6 (parent). |
+| 4 | "Then it hits an `if` and an `else`." | The bar moves to line 3 (`if`). |
+| 4b | "If this is the child process, the new one that fork creates, it prints child. If it's the parent process, the original one, it prints parent." | `Indicate` line 4 in mint (child), then line 6 in coral (parent). |
+| 4c | "How does the code know which is which? Fork is weird: you call it once, but it returns twice, with a different value in each process. The child gets 0, the parent gets the child's PID. We'll get into that in a second." | `Indicate` line 2 (`fork()`); small tags "rc = 0" (mint, beside line 4) and "rc = PID" (coral, beside line 6) fade in one after the other, then fade out. Teaser only: the full explanation is S05. |
 | 5 | "Let's run it." | Terminal `FadeIn`; `prompt> ./p1` types. Output prints one line every 0.5 s: `hello (pid:29146)`, `parent of 29147 (pid:29146)`, `child (pid:29147)`. |
 | 6 | "Wait. "Hello" appeared once. But then *both* "child" and "parent" showed up. That's an `if` and an `else`. How can both of them run?" | Student → confused, a "?" above. Terminal lines 2 and 3 `Indicate` together; code lines 4 and 6 flash together with a "?" between them. |
 | 7 | "Because after one particular line, there are two of the program." | Professor → happy. A ring `Circumscribe`s line 2 (`int rc = fork();`) in the code. |
@@ -161,8 +163,12 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 |---|---|---|
 | 1 | "Sometimes order matters. Suppose the parent wants to know that its child has finished before it continues." | The legend and Timeline draw. The coral parent and mint child stand above the timeline's left edge, ready. |
 | 2 | "For that, there's **`wait()`**." | Term note "wait()". The Code card writes in. |
-| 3 | "The parent calls it, and the OS *blocks* the parent, our old blocked state, until a child exits." | Parent → blocked (clock icon); its legend dot moves Running → Blocked. The mint child runs and then turns done/zombie (grey, stitched). |
-| 4 | "Then `wait()` returns, with the PID of the child that finished." | The zombie child fades; a tag "returns 29147" flies to the parent; the parent's dot goes Blocked → Ready → Running. Timeline is cleared. |
+| 3a | "The parent calls it, and from then on it can't move forward until one of its children finishes. So the OS doesn't let it hold the CPU. It blocks the parent, our old blocked state, and the CPU is free for the child." | `Indicate` the Code card, then the parent; the Blocked zone of the legend glows, then the child is indicated. |
+| 3b | "Let's watch it, one step at a time. First, the parent runs, and calls `wait()`." | Timeline cell 1: parent running, child ready, CPU busy; parent's dot → Running. |
+| 3c | "Right away, the parent is blocked. The child moves from ready to running, and gets the CPU." | Cell 2: parent blocked (clock), child running; dots: parent → Blocked, child → Running. |
+| 3d | "The child keeps running, while the parent just waits." | Cell 3: same states. |
+| 3e | "Then the child exits." | The child turns zombie (grey, stitched); its dot moves back. |
+| 4 | "Now `wait()` returns in the parent, and `rc_wait` holds the PID of the child that finished. The parent goes from blocked, to ready, to running again." | The zombie fades; a tag "returns 29147" flies to the parent; the parent's dot goes Blocked → Ready → Running, with pauses between. Timeline is cleared. |
 | 5 | "Add one `wait()` to the parent's branch, and the output becomes deterministic. Can you see why? Pause the video and think about it." | Professor → thinking. A `progress_ring` appears at the center and fills over 3 s ("your turn"); no other motion. |
 | 6 | "Two cases. If the child happens to run first, it prints and exits, and when the parent finally runs, `wait()` returns immediately." | Label "case 1". Ticks 1–2: child solid mint, parent ready outline; child exits → zombie tag at tick 2. Tick 3: parent runs, tag "returns at once". Terminal: `child (pid:29147)`, then `parent of 29147 (rc_wait:29147) …`. |
 | 7 | "If the parent runs first, it calls `wait()` right away, blocks, and the CPU goes to the child." | Rewind; label "case 2". Tick 1: parent solid coral, the `wait()` tag. Ticks 2–3: parent blocked (grey + clock), child solid. Terminal is cleared and reprints in the same order. |
