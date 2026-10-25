@@ -292,7 +292,7 @@ def render_scene(ep: str, f: Path, cls: str, q: str, out_scenes: Path, check_onl
     if r.returncode:
         print(r.stdout[-3000:], r.stderr[-6000:], sep="\n")
         sys.exit(f"manim failed on {f.name} ({r.returncode})")
-    warnings = [l for l in r.stdout.splitlines() if l.startswith(("[bounds]", "[overlap"))]
+    warnings = [l for l in r.stdout.splitlines() if l.startswith(("[bounds]", "[overlap", "[ghost]"))]
     for l in warnings:
         print(f"  {l}")
     LAYOUT_WARNINGS.extend(f"{f.stem}: {l}" for l in warnings)

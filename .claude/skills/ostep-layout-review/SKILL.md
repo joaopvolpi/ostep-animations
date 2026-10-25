@@ -47,6 +47,11 @@ This runs every scene as a Manim dry run with the layout check on and writes the
 | `panel` | two panels partly overlap, or a creature/CPU partly overlaps a panel | real |
 | `zone:chrome`, `zone:host` | content inside the thin reserved margin around them | real (crowding) |
 
+Also printed: `[ghost] t=<s> FadeOut(X) re-shows something that is not on screen`. A FadeOut,
+`.animate` or other remover targets a mobject that already left, so Manim adds it back and it
+flashes on screen for the length of that animation. Always real: drop that animation (or, to reuse
+the mobject, place it and `FadeIn` it on purpose).
+
 Labels name the objects: texts by their content (spaces removed), others by class, role and
 center, e.g. `CPU[prop]@(-2.0,0.6)`.
 

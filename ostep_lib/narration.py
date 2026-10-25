@@ -118,9 +118,56 @@ class NarratedScene(Scene):
             tr = self._layout_tracker = OverlapTracker(type(self).__name__)
         tr.sample(self, mid_play)
 
+    def _check_ghosts(self, args):
+        """Debug (env OSTEP_CHECK=1): warn when a FadeOut / ``.animate`` (or any remover or
+        method animation) targets a mobject that is not on screen.  Manim adds it back for the
+        animation, so something that already left flashes in again (a stale bar, a zombie)."""
+        from manim import ValueTracker
+        from manim.animation.animation import Wait, prepare_animation
+        from manim.animation.transform import _MethodAnimation
+
+        def label(x):
+            s = getattr(x, "text", None)
+            c = x.get_center()
+            return repr(" ".join(s.split())[:24]) if isinstance(s, str) and s else f"{type(x).__name__}@({c[0]:.1f},{c[1]:.1f})"
+        # on screen now, or at the end of the previous play (a prop may detach a part while building
+        # the animation that fades it, e.g. Terminal.clear(): that part was visible until now)
+        on = {id(m) for top in self.mobjects for m in top.get_family()} | getattr(self, "_shown_ids", set())
+
+        def visible_leaves(m):          # what actually draws (a fresh VGroup of on-screen parts is fine)
+            return [x for x in m.get_family() if x.has_points() and not x.submobjects
+                    and (x.get_fill_opacity() > 0 or x.get_stroke_opacity() > 0 and x.get_stroke_width() > 0)]
+
+        def walk(a):
+            subs = getattr(a, "animations", None)
+            if subs is not None:
+                for s in subs:
+                    yield from walk(s)
+            else:
+                yield a
+        for arg in args:
+            try:
+                anim = prepare_animation(arg)
+            except TypeError:
+                continue
+            for a in walk(anim):
+                m = getattr(a, "mobject", None)
+                if m is None or isinstance(a, Wait) or isinstance(m, ValueTracker):
+                    continue
+                if a.is_introducer():
+                    on |= {id(x) for x in m.get_family()}
+                elif a.is_remover() or isinstance(a, _MethodAnimation):
+                    off = [x for x in visible_leaves(m) if id(x) not in on]
+                    if off:
+                        print(f"[ghost] t={self.renderer.time:.1f}s {type(a).__name__}({label(m)}) re-shows "
+                              f"{len(off)} part(s) not on screen, e.g. {label(off[0])}")
+
     def play(self, *args, **kwargs):
+        if os.environ.get("OSTEP_CHECK"):
+            self._check_ghosts(args)
         super().play(*args, **kwargs)        # Scene.wait plays a Wait, so this covers holds too
         if os.environ.get("OSTEP_CHECK"):
+            self._shown_ids = {id(m) for top in self.mobjects for m in top.get_family()}
             self._check_bounds()
             self._layout_sample()
 
