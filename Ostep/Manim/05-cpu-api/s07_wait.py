@@ -114,7 +114,7 @@ class S07Wait(Ep05Scene):
         z2 = zombie_mini(0.35).move_to(tl.cell_center("child", 3) + UP * 0.0)
         with self.narrate("Two cases. If the child happens to run first, it prints and exits, and when the parent "
                           "finally runs, wait() returns immediately."):
-            self.play(FadeIn(case1), chi.animate.set_opacity(0), run_time=0.4)
+            self.play(FadeIn(case1), run_time=0.4)
             self.play(tl.fill("parent", 1, "ready"), tl.fill("child", 1, "running"), tl.fill_cpu(1))
             self.play(tl.fill("parent", 2, "ready"), tl.fill("child", 2, "running"), tl.fill_cpu(2),
                       FadeIn(mt), mt.type("./p1"))
