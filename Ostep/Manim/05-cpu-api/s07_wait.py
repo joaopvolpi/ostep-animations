@@ -30,7 +30,8 @@ class S07Wait(Ep05Scene):
         # S07.1
         with self.narrate("Sometimes order matters. Suppose the parent wants to know that its child has "
                           "finished before it continues."):
-            self.play(Create(tl), FadeIn(sd), run_time=1.5)
+            # the diagram and code live in the top band, so the crux strip steps out until the end
+            self.play(Create(tl), FadeIn(sd), FadeOut(strip), run_time=1.5)
             self.play(stu.change("curious", look_at=tl), run_time=0.6)
             self.wait(2.0)
 
@@ -54,7 +55,7 @@ class S07Wait(Ep05Scene):
         ret = tagged("returns 29147", CHI, 20, CHI).move_to(chi.get_center() + DOWN * 0.1)
         with self.narrate("Then wait() returns, with the PID of the child that finished."):
             self.play(FadeOut(chi), FadeIn(ret), run_time=0.5)
-            self.play(ret.animate.move_to(par.get_center() + UP * 0.9), run_time=0.8)
+            self.play(ret.animate.move_to(par.get_center() + RIGHT * 1.9), run_time=0.8)
             self.play(par.change("ready"), sd.move_dot(dp, "ready"), run_time=0.5)
             self.play(par.change("running"), sd.move_dot(dp, "running"), run_time=0.5)
             self.play(FadeOut(ret), tl.clear_blocks(), run_time=0.7)
@@ -105,7 +106,7 @@ class S07Wait(Ep05Scene):
             self.play(mt.print("child (pid:29147)"))
 
         # S07.8
-        cap = Text("child always first", font_size=24, color=CPU_COLOR).move_to(P3(0.6, -0.95))
+        cap = Text("child always first", font_size=24, color=CPU_COLOR).move_to(P3(0.6, -1.42))
         with self.narrate("Only once the child has exited does the parent wake up. Either way, the child prints first."):
             self.play(tl.fill("parent", 4, "ready"), tl.fill("child", 4, "ready"), tl.fill_cpu(4, "busy"))
             self.play(tl.fill("parent", 5, "running"), tl.fill_cpu(5))
@@ -121,10 +122,11 @@ class S07Wait(Ep05Scene):
             self.play(Indicate(z3, scale_factor=1.5), run_time=0.8)
 
         # S07.10
-        wp = mono("waitpid()", 20, DIM).next_to(code, DOWN, buff=0.2)
+        wp = mono("waitpid()", 20, DIM).next_to(code, RIGHT, buff=0.3)
         with self.narrate("The zombie finally has a job. There's a sibling call, waitpid(), with more control, "
                           "and rare cases where wait() returns early. But for us, this is the rule."):
             self.play(prof.change("happy"), Write(wp), run_time=0.8)
             self.wait(3.0)
             self.play(FadeOut(wp), run_time=0.4)
-        self.fade_stage(stu, prof, self.badge, strip)
+        self.fade_stage(stu, prof, self.badge)
+        self.play(FadeIn(strip), run_time=0.6)

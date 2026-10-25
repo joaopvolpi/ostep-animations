@@ -14,7 +14,7 @@ class S04CellDivides(Ep05Scene):
         self.add(crux_strip())
         self.add_docked_term("fork()")
         stu, prof = self.add_corner_chars("curious", "explaining")
-        old = VGroup(w["cpu"], w["par"], w["bd"], w["gauge"], w["packet"], w["code"], w["code_bar"], w["mt"])
+        old = VGroup(w["cpu"], w["par"], w["par_lbl"], w["bd"], w["gauge"], w["packet"], w["code"], w["code_bar"], w["mt"])
         self.add(old)
 
         # S04.1

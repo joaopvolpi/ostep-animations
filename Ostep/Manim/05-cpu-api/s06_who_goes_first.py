@@ -49,6 +49,7 @@ class S06WhoGoesFirst(Ep05Scene):
         # S06.4
         cpu = CPU(1.1).move_to(P3(0, 1.0))
         q = Queue(label="Ready queue", center=(0, -0.8), slots=2, spacing=2.0)
+        q.set_z_index(-1)        # the creatures' labels sit inside the queue tube: keep it below them
         qm = P3(0, 1.0)
         mark = question_mark(0.45).next_to(cpu, RIGHT, buff=0.2)
         cc.set_expression("ready")
@@ -62,7 +63,9 @@ class S06WhoGoesFirst(Ep05Scene):
         # S06.5
         whistle = whistle_icon(0.7).move_to(P3(2.1, 1.0))
         wlab = Text("scheduler", font_size=20, color=DIM).next_to(whistle, DOWN, buff=0.1)
-        spot = Spotlight(height=1.5, spread=0.55).move_beam_to(q.slot_point(0))
+        def aim(i):     # pool of light above the creature's label
+            return q.slot_point(i) + UP * 0.32
+        spot = Spotlight(height=1.5, spread=0.55).move_beam_to(aim(0))
         with self.narrate("That's the job of the CPU scheduler, and from our point of view it's unpredictable."):
             self.play(FadeOut(mark), FadeIn(whistle, scale=0.5), FadeIn(wlab), run_time=0.6)
             self.play(FadeIn(spot), run_time=0.6)
@@ -71,20 +74,24 @@ class S06WhoGoesFirst(Ep05Scene):
         # S06.6
         with self.narrate("Both processes sit in the ready queue, and either could be picked."):
             self.play(cp.change("running"), run_time=0.3)
+            set_label(cp, None)      # the label would sit on the CPU pins
             self.play(hop_seat(cp, cpu), run_time=0.6)
             self.play(Indicate(run1.lines[2], color=PAR), run_time=0.7)
             self.play(hop_bottom(cp, q.slot_point(0)), run_time=0.6)
-            self.play(cp.change("ready"), spot.animate.move_beam_to(q.slot_point(1)), run_time=0.6)
+            relabel_on_floor(cp, f"PID {PID_P}")
+            self.play(cp.change("ready"), spot.animate.move_beam_to(aim(1)), run_time=0.6)
             self.play(cc.change("running"), run_time=0.3)
+            set_label(cc, None)
             self.play(hop_seat(cc, cpu), run_time=0.6)
             self.play(Indicate(run2.lines[2], color=CHI), run_time=0.7)
             self.play(hop_bottom(cc, q.slot_point(1)), run_time=0.6)
+            relabel_on_floor(cc, f"PID {PID_C}")
             self.play(cc.change("ready"), run_time=0.3)
 
         # S06.7
         with self.narrate("We can't make strong assumptions about what it will choose."):
             for i in (0, 1, 0):
-                self.play(spot.animate.move_beam_to(q.slot_point(i)), run_time=0.4)
+                self.play(spot.animate.move_beam_to(aim(i)), run_time=0.4)
             self.play(Wiggle(cp, scale_value=1.05), Wiggle(cc, scale_value=1.05), run_time=1.0)
 
         # S06.8

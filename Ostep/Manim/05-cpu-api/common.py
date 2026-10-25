@@ -83,6 +83,27 @@ def proc(color, expr="ready", scale=1.0, label=None):
     return p
 
 
+def set_label(p, text):
+    """Instantly change (or drop, with None) the label under a Process creature."""
+    p.label_text = text
+    p._label_mob = None
+    return p.set_expression(p.expression)
+
+
+def relabel_on_floor(p, text):
+    """Give a creature its label back after it landed unlabeled: the label goes under the feet, so the
+    creature rises by the label's height and the label's bottom is where its feet were."""
+    b0 = p.get_bottom()[1]
+    set_label(p, text)
+    return p.shift(UP * (b0 - p.get_bottom()[1]))
+
+
+def cpu_side_label(cpu, text, font_size=22):
+    """A creature's label placed left of a CPU, level with the creature standing on it."""
+    t = Text(text, font_size=font_size, color=TEXT, weight="BOLD")
+    return t.move_to(P3(cpu.get_x() - 1.5, cpu.body.get_top()[1] + 0.25))
+
+
 def bottom_to(mob, point):
     mob.shift(np.array(point, dtype=float) - mob.get_bottom())
     return mob
@@ -247,9 +268,9 @@ def build_s02_end():
     return dict(badge=make_badge(), strip=crux_strip(), stu=student_corner("curious"), prof=prof_corner("neutral"))
 
 
-CPU_S3 = P3(-2.0, 0.6)
+CPU_S3 = P3(-2.0, 0.15)
 BOUNDARY_Y = -0.8
-GAUGE_S3 = P3(6.0, -0.8)
+GAUGE_S3 = P3(6.35, -0.8)
 CODE_CARD_AT = P3(3.4, 2.0)
 MINI_TERM_AT = P3(3.4, 0.6)
 
@@ -261,8 +282,9 @@ def card_code(lines=1, font_size=16):
 
 def build_s03_end():
     cpu = CPU(1.4).move_to(CPU_S3)
-    par = proc(PAR, "running", label=f"PID {PID_P}")
+    par = proc(PAR, "running", label=None)
     seat(par, cpu)
+    par_lbl = cpu_side_label(cpu, f"PID {PID_P}")
     bd = UserKernelBoundary(y=BOUNDARY_Y)
     gauge = PrivilegeGauge(height=1.6, level="kernel").move_to(GAUGE_S3)
     packet = program_chip("fork()", CPU_COLOR, 18).move_to(P3(-0.8, -1.7))
@@ -272,7 +294,7 @@ def build_s03_end():
     code_bar = code.add_bar(TEXT, 2)
     mt = mk_term(4.6, 1, 18)
     fill_term(mt, ["hello (pid:29146)"]).move_to(MINI_TERM_AT)
-    return dict(cpu=cpu, par=par, bd=bd, gauge=gauge, packet=packet, code=code, code_bar=code_bar, mt=mt)
+    return dict(cpu=cpu, par=par, par_lbl=par_lbl, bd=bd, gauge=gauge, packet=packet, code=code, code_bar=code_bar, mt=mt)
 
 
 WORLD_L, WORLD_R = P3(-3.4, -0.1), P3(3.4, -0.1)
@@ -330,7 +352,7 @@ def build_s09_end():
     sh = proc(SHC, "ready", scale=0.55, label="sh")
     bottom_to(sh, loop.stand_point("prompt"))
     gap_mid = loop.arrows["f_e"].point_from_proportion(0.5)
-    gap_sh = proc(CHI, "ready", scale=0.4, label="sh").move_to(gap_mid + LEFT * 0.75)
+    gap_sh = proc(CHI, "ready", scale=0.4, label="sh").move_to(gap_mid + RIGHT * 0.2)
     return dict(term=term, loop=loop, sh=sh, gap_sh=gap_sh)
 
 

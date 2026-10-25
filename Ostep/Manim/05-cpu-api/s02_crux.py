@@ -33,12 +33,13 @@ class S02Crux(Ep05Scene):
         # S02.3
         menu = MenuCard("Process API", ["Create", "Destroy", "Wait", "Misc. control", "Status"],
                         width=4.0, height=4.4, font_size=28)
-        menu.scale(0.6).move_to(P3(-3.6, -1.5))
+        menu.scale(0.55).move_to(P3(-3.6, -2.25))
         hl = [None]
 
         def pick(i):
             new = menu.row_highlight(i)
-            new.scale(0.6).move_to(P3(menu.card.get_x(), menu.rows[i].get_y()))
+            new.stretch_to_fit_width(menu.card.width - 0.2).stretch_to_fit_height(menu.step * 0.55 * 0.62)
+            new.move_to(P3(menu.card.get_x(), menu.rows[i].get_y()))
             if hl[0] is None:
                 hl[0] = new
                 return FadeIn(new, run_time=0.3)

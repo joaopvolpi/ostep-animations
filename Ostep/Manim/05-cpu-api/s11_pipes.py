@@ -18,6 +18,7 @@ class S11Pipes(Ep05Scene):
 
         # S11.1
         glyph = pipe_glyph(1.6).move_to(S11_PIPE)
+        glyph[0].stretch_to_fit_height(0.55)     # taller pill so the | glyph stays inside its border
         with self.narrate("Redirection connects a program to a file. A close relative connects it to another program: the pipe."):
             self.play(self.terms.note("pipe"), Create(glyph))
 

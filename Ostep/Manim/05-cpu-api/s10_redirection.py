@@ -25,8 +25,9 @@ class S10Redirection(Ep05Scene):
         self.add(shop, ut, run0)
 
         fd = FdTable(center=(0, -0.2))
-        clone = proc(CHI, "ready", scale=0.55, label="sh")
-        bottom_to(clone, fd.panel.get_top() + UP * 0.0)
+        clone = proc(CHI, "ready", scale=0.55, label=None)   # its label would sit on the panel: it goes beside
+        bottom_to(clone, fd.panel.get_top() + UP * 0.06)
+        clone_lab = Text("sh", font_size=20, color=TEXT, weight="BOLD")
         term = mk_term(5.0, 2, 18).move_to(P3(-3.6, 2.3))
         step_names = ["close(1)", "open(file)", "exec(wc)"]
         chips = VGroup(*[program_chip(n, DIM, 20) for n in step_names]).arrange(RIGHT, buff=0.5).move_to(P3(0, -2.6))
@@ -43,6 +44,8 @@ class S10Redirection(Ep05Scene):
             self.play(gap_sh.animate.scale(0.55 / 0.4).move_to(clone.get_center()), FadeIn(fd), FadeIn(chips), run_time=1.0)
             self.remove(gap_sh)
             self.add(clone)
+            clone_lab.next_to(clone, RIGHT, buff=0.05).align_to(clone, DOWN).shift(UP * 0.1)
+            self.add(clone_lab)
             self.play(FadeIn(term), run_time=0.3)
             self.play(term.type(cmd))
             line = term.lines[-1][-1]
@@ -62,7 +65,7 @@ class S10Redirection(Ep05Scene):
         self.say("This is redirection.", self.terms.show("redirection", hold=0.5))
 
         # S10.4
-        glow = DashedVMobject(Circle(radius=0.85).move_to(clone), num_dashes=30).set_stroke(CPU_COLOR, 3)
+        glow = DashedVMobject(Circle(radius=0.72).move_to(clone), num_dashes=30).set_stroke(CPU_COLOR, 3)
         with self.narrate("The shell does it in the gap."):
             self.play(Create(glow), run_time=0.8)
             self.wait(0.6)
@@ -74,23 +77,27 @@ class S10Redirection(Ep05Scene):
 
         # S10.6
         scan, marks = fd.scan_free(taken=(0,), free=1)
-        tag = tagged("lowest free = 1", CPU_COLOR, 18, CPU_COLOR).move_to(P3(-2.2, 0.3))
+        tag = tagged("lowest free = 1", CPU_COLOR, 18, CPU_COLOR).move_to(P3(-4.4, 0.9))
         with self.narrate("UNIX always hands out the lowest free file descriptor. Remember our three plugs, 0, 1, 2? "
                           "Plug zero is taken, plug one was just freed, so the file takes plug number one."):
             self.play(light(1), FadeOut(ghost), run_time=0.4)
             self.play(scan)
             self.play(FadeIn(tag), run_time=0.4)
             anim, plug, cable = fd.plug_into(1, f_icon, below=0.8)
-            self.play(anim)
+            # stdout no longer reaches the screen: dim that monitor (it also frees the spot under the file)
+            self.allow_overlap(plug, None, "the new plug lands in its socket")
+            self.allow_overlap(fd.plugs[1], None, "the old plug is popped out of its socket")
+            self.play(anim, fd.devices[1].animate.set_opacity(0))
             self.wait(1.0)
             self.play(FadeOut(marks), FadeOut(tag), run_time=0.4)
 
         # S10.7
-        wc_new = proc(CHI, "ready", scale=0.55, label="wc")
+        wc_new = proc(CHI, "ready", scale=0.55, label=None)
         wc_new.move_to(clone)
+        wc_lab = Text("wc", font_size=20, color=TEXT, weight="BOLD").move_to(clone_lab).shift(RIGHT * 0.3)
         with self.narrate("And open files stay open across exec()."):
             self.play(light(2), FadeOut(glow), run_time=0.4)
-            self.play(FadeOut(clone), FadeIn(wc_new), run_time=0.8)
+            self.play(FadeOut(clone), FadeOut(clone_lab), FadeIn(wc_new), FadeIn(wc_lab), run_time=0.8)
             self.play(Indicate(fd.plugs, color=CPU_COLOR, scale_factor=1.1), Indicate(fd.cables, color=CPU_COLOR),
                       run_time=1.0)
 
@@ -106,7 +113,7 @@ class S10Redirection(Ep05Scene):
                 self.play(t.animate.move_to(f_icon.get_center()).scale(0.5).set_opacity(0), run_time=1.0)
                 self.remove(t)
             f_icon.label.next_to(f_icon.page, RIGHT, buff=0.1)
-            out.next_to(f_icon, LEFT, buff=0.15)
+            out.next_to(f_icon, DOWN, buff=0.12)
             self.play(FadeIn(out, shift=LEFT * 0.2), run_time=0.5)
             self.wait(1.0)
 
@@ -114,7 +121,7 @@ class S10Redirection(Ep05Scene):
         self.add(stu)
         with self.narrate("And wc doesn't even know!"):
             self.play(stu.change("excited"), run_time=0.5)
-            self.play(stu.thinks("I just print to stdout…", max_width=3.5, font_size=24), run_time=0.8)
+            self.play(stu.thinks("I just print\nto stdout…", max_width=2.4, font_size=22, side=LEFT), run_time=0.8)
             self.wait(1.0)
             self.play(stu.remove_bubble())
 
@@ -130,4 +137,4 @@ class S10Redirection(Ep05Scene):
             self.wait(1.0)
 
         # transition: everything fades except the Terminal
-        self.play(*[FadeOut(m) for m in (fd, wc_new, f_icon, out, plug, cable, chips, term)], run_time=0.8)
+        self.play(*[FadeOut(m) for m in (fd, wc_new, wc_lab, f_icon, out, plug, cable, chips, term)], run_time=0.8)

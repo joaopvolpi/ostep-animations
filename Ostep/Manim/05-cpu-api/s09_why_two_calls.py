@@ -105,7 +105,7 @@ class S09WhyTwoCalls(Ep05Scene):
         # S09.10
         gap_anim, gap_lab = loop.highlight_gap()
         gap_mid = loop.arrows["f_e"].point_from_proportion(0.5)
-        gap_sh = proc(CHI, "ready", scale=0.4, label="sh").move_to(gap_mid + LEFT * 0.75)
+        gap_sh = proc(CHI, "ready", scale=0.4, label="sh").move_to(gap_mid + RIGHT * 0.2)
         with self.narrate("And here's the key. Between fork() and exec(), there's a gap, where the code is running "
                           "in the child, but it's still the shell's code."):
             self.play(loop.unlight("prompt"), gap_anim, run_time=0.8)

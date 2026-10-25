@@ -23,7 +23,7 @@ class S15UsefulTools(Ep05Scene):
             for r in rows:
                 self.play(term.print(r, run_time=0.3))
             for line, col in zip(list(term.lines)[-4:-1], (PAR, CHI, SHC)):
-                dots.add(Dot(radius=0.07, color=col).move_to(line.get_left() + RIGHT * 0.15))
+                dots.add(Dot(radius=0.07, color=col).move_to(line.get_left() + LEFT * 0.15))
             self.play(FadeIn(dots), run_time=0.5)
             self.wait(1.0)
 

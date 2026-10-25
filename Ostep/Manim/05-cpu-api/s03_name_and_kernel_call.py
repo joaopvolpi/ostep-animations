@@ -21,7 +21,9 @@ class S03NameAndKernelCall(Ep05Scene):
         with self.narrate("First, a name. Every process has an ID, a number the OS uses to refer to it."):
             self.play(GrowFromCenter(cpu), FadeIn(par), run_time=0.7)
             self.play(par.change("running"), run_time=0.4)
-            self.play(hop_seat(par, cpu), run_time=0.6)
+            set_label(par, None)     # on the chip the label would sit on the pins: it goes beside it
+            par_lbl = cpu_side_label(cpu, f"PID {PID_P}")
+            self.play(hop_seat(par, cpu), FadeIn(par_lbl), run_time=0.6)
             self.play(FadeIn(tag, scale=0.6), stu.change("curious", look_at=tag), run_time=0.5)
             self.play(Indicate(tag, scale_factor=1.15), Indicate(par.label if False else tag, color=CPU_COLOR),
                       run_time=0.8)

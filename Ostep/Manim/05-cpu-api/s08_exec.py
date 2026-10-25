@@ -156,7 +156,7 @@ class S08Exec(Ep05Scene):
 
         # S08.13
         noway = Arrow(P3(-0.6, -0.1), chi.get_right() + DOWN * 0.1, buff=0.1, color=KERNEL_COLOR, stroke_width=6)
-        nw_lab = Text("no way back", font_size=22, color=KERNEL_COLOR).next_to(noway, DOWN, buff=0.1)
+        nw_lab = Text("no way back", font_size=22, color=KERNEL_COLOR).next_to(noway.get_start(), DOWN, buff=0.15)
         l3 = code.line_mob(3)
         strike = Line(l3.get_left(), l3.get_right()).set_stroke(KERNEL_COLOR, 3)
         with self.narrate("If it works, exec() never returns. The code that came after it is gone."):
