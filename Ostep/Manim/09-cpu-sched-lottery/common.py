@@ -123,6 +123,32 @@ class Ep09Scene(NarratedScene):
             return self.terms.show(text, **kw)
         return self.terms.note(text)
 
+    def fade_stage(self, *keep, run_time=0.8, hosts=True, strip=True, extra=()):
+        """Fade out everything except the badge, the crux strip, the hosts (unless ``hosts``/``strip`` is
+        False), the docked term and ``keep``: the clean hand-off to the next scene.  Looks inside scene-level
+        groups, so a kept mobject nested by an earlier play() is not faded with its group."""
+        kept = [getattr(self, "badge", None), self.terms.docked, *keep]
+        if strip:
+            kept.append(getattr(self, "strip", None))
+        if hosts:
+            kept += [getattr(self, "stu", None), getattr(self, "prof", None)]
+        ids = {id(x) for k in kept if k is not None for x in k.get_family()}
+        gone = []
+
+        def collect(m):
+            if id(m) in ids or getattr(m, "is_scrim", False):
+                return
+            if any(id(x) in ids for x in m.get_family()[1:]):
+                for s in m.submobjects:
+                    collect(s)
+            else:
+                gone.append(m)
+        for m in list(self.mobjects):
+            collect(m)
+        if gone or extra:
+            self.play(*[FadeOut(m) for m in gone], *extra, run_time=run_time)
+            self.wait(0.25)       # let the empty stage settle: the next scene starts from it
+
     def add_docked(self, text):
         m = self.terms.docked_now(text)
         self.add(m)
@@ -157,7 +183,7 @@ def build_s01_end():
     l75 = Text("75%", font_size=26, color=INK_DARK).move_to(P3(3.4, 1.0) + P3(-0.35, -0.2))
     l25 = Text("25%", font_size=26, color=INK_DARK).move_to(P3(3.4, 1.0) + P3(0.42, 0.45))
     stu = Student("confused").move_to(STU_DIALOGUE + DOWN * 0.0)
-    prof = Professor("happy").flip().move_to(PROF_DIALOGUE + DOWN * 0.0)
+    prof = Professor("happy").flip().move_to(PROF_DIALOGUE + DOWN * 0.1)
     chips = VGroup(*[sched_chip(n, 0.95, 0.46).move_to(P3(x, -3.0)).set_opacity(0.3)
                      for n, x in (("RR", -1.2), ("SJF", 0.0), ("MLFQ", 1.25))])
     tags = VGroup(*[Text(t, font_size=18, color=DIM).next_to(c, UP, buff=0.08).set_opacity(0.3)

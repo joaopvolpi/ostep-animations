@@ -39,6 +39,8 @@ def icon(i):
     if i == 3:
         return VGroup(VruntimeMeter(COL["A"], 0.8, 0.22, level=0.7), VruntimeMeter(COL["B"], 0.8, 0.22, level=0.3)).arrange(RIGHT, buff=0.2)
     t = RBTree(at=(0, 0), dx=0.2, dy=0.28, radius=0.09, font_size=8)
+    for nd in t.nodes.values():
+        nd.remove(nd[1])      # labels would not fit inside the tiny circles
     return t.scale(1.0)
 
 

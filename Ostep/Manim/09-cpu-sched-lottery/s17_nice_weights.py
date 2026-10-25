@@ -24,7 +24,7 @@ def make_table():
 
 class S17NiceWeights(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="confused", prof="happy")
         stu = self.stu
         a = proc("A", scale=0.5).move_to(P3(-1.0, 0.75))
         b = proc("B", scale=0.5).move_to(P3(0.4, 0.75))
@@ -89,3 +89,4 @@ class S17NiceWeights(Ep09Scene):
         self.say("A gets about three quarters of forty-eight: thirty-six milliseconds. B gets twelve.",
                  Transform(eq, eq2), Succession(Wait(1.5), GrowFromEdge(ba, LEFT), GrowFromEdge(bb, LEFT), FadeIn(la), FadeIn(lb)))
         self.beat(0.8)
+        self.fade_stage()

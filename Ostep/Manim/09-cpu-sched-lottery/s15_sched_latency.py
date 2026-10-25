@@ -17,7 +17,7 @@ def make_timeline():
 
 class S15SchedLatency(Ep09Scene):
     def construct(self):
-        self.world(term="Completely Fair Scheduler (CFS)", stu="neutral", prof="neutral")
+        self.world(term="Completely Fair Scheduler (CFS)", stu="curious", prof="happy")
         stu, prof = self.stu, self.prof
         cpu = CPU(size=0.8, label="CPU").move_to(P3(-5.2, 1.5))
         tl = make_timeline()
@@ -28,24 +28,31 @@ class S15SchedLatency(Ep09Scene):
             meters[n].next_to(procs[n], RIGHT, buff=0.1)
         spot = Spotlight(height=0.7, spread=0.3)
         spot.move_beam_to(meters["A"].get_center() + DOWN * 0.45)
-        self.add(cpu, tl)
-        self.add(*procs.values(), *meters.values())
 
         # S15.1
         sw = Text("switch?", font_size=22, color=CPU_COLOR).move_to(P3(-3.6, 1.5))
         self.say("But when does CFS stop the running process? Every millisecond?",
-                 stu.change("confused"), Succession(*[Indicate(cpu, color=CPU_COLOR, scale_factor=1.15, run_time=0.25)
-                                                       for _ in range(6)]), FadeIn(sw))
+                 stu.change("confused"), FadeIn(cpu), FadeIn(tl),
+                 *[FadeIn(p) for p in procs.values()], *[FadeIn(m) for m in meters.values()],
+                 Succession(Wait(1.0), *[Indicate(cpu, color=CPU_COLOR, scale_factor=1.15, run_time=0.25)
+                                         for _ in range(6)]), FadeIn(sw))
 
         # S15.2
-        ss = Seesaw(3.6, "switch often", "switch rarely").move_to(P3(0, 1.4))
+        ss = Seesaw(3.6, "", "").move_to(P3(0, 1.3))
         ss.set_angle_now(0)
+        # the pan labels sit beside the pans (not above them), so the tilted beam never crosses them
+        ss_l = Text("switch often", font_size=22, color=TEXT)
+        ss_r = Text("switch rarely", font_size=22, color=TEXT)
+        ss_l.add_updater(lambda m: m.next_to(ss.left_pan.plate, LEFT, buff=0.1))
+        ss_r.add_updater(lambda m: m.next_to(ss.right_pan.plate, RIGHT, buff=0.1))
+        ss_l.update(0)
+        ss_r.update(0)
         fair = VGroup(Text("fair", font_size=20, color=TEXT), tick_mark(0.25),
                       Text("cost", font_size=20, color=TEXT), x_mark(0.25)).arrange(RIGHT, buff=0.12).move_to(P3(-2.6, 0.2))
         many = [tl.fill("CPU", t, "running", color=COL["AB"[t % 2]], run_time=0.15) for t in range(1, 13)]
         self.say("That's the tension. Switch often, and you're fair even over tiny windows, but you pay for every "
                  "context switch.",
-                 FadeOut(sw), FadeIn(ss), Succession(Wait(0.8), ss.tilt(14, run_time=0.8)), FadeIn(fair),
+                 FadeOut(sw), FadeIn(ss), FadeIn(ss_l), FadeIn(ss_r), Succession(Wait(0.8), ss.tilt(14, run_time=0.8)), FadeIn(fair),
                  Succession(Wait(3.0), *many))
 
         # S15.3
@@ -65,7 +72,7 @@ class S15SchedLatency(Ep09Scene):
         tl.purge()
         self.say("CFS uses two knobs. First, sched_latency, typically forty-eight milliseconds, divided by the number of "
                  "runnable processes.",
-                 self.term("sched_latency"), FadeOut(ss), FadeIn(eq), Create(br.line if hasattr(br, "line") else br)
+                 self.term("sched_latency"), FadeOut(ss), FadeOut(ss_l), FadeOut(ss_r), FadeIn(eq), Create(br.line if hasattr(br, "line") else br)
                  if False else FadeIn(br))
 
         # S15.5
@@ -74,7 +81,7 @@ class S15SchedLatency(Ep09Scene):
         self.say("Four processes: twelve milliseconds each.", Transform(eq, eq2), Succession(*blocks))
 
         # S15.6
-        lbls = VGroup(*[Text("12", font_size=18, color=INK_DARK).move_to(tl.cell_center("CPU", 2 * k + 1) + RIGHT * 0.0)
+        lbls = VGroup(*[Text("12", font_size=18, color=INK_DARK).move_to((tl.cell_center("CPU", 2 * k + 1) + tl.cell_center("CPU", 2 * k + 2)) / 2)
                         for k in range(4)])
         anims = [FadeIn(lbls), FadeIn(spot)]
         seq2 = [tl.fill_span("CPU", 8 + 2 * k, 10 + 2 * k, "running", color=COL["ABCD"[k]], run_time=0.4) for k in range(4)]
@@ -98,3 +105,4 @@ class S15SchedLatency(Ep09Scene):
                                                       *[FadeOut(m) for m in marks]),
                             *pairs))
         self.beat(0.8)
+        self.fade_stage()

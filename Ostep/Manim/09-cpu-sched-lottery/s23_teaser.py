@@ -13,7 +13,8 @@ class S23Teaser(Ep09Scene):
         head = Text("Recap", font_size=44, color=VIRT, weight=BOLD).move_to(P3(-6.2, 2.3), aligned_edge=LEFT)
         lines = VGroup(*[Text(wrap_text(s, 8.8, 24), font_size=24, color=TEXT, line_spacing=0.75) for s in LINES])
         lines.arrange(DOWN, aligned_edge=LEFT, buff=0.25).move_to(P3(-6.2, 1.8), aligned_edge=UL)
-        self.add(head, lines)
+        icons = [icon(i).move_to(P3(5.0, lines[i].get_center()[1])) for i in range(5)]
+        self.add(head, lines, *icons)
         stu = Student("neutral").move_to(STU_DIALOGUE)
         prof = Professor("neutral").flip().move_to(PROF_DIALOGUE)
         cpu = CPU(size=0.8, label="CPU").move_to(P3(0, 1.7))
@@ -23,11 +24,11 @@ class S23Teaser(Ep09Scene):
 
         # S23.1
         self.say("Everything so far has been about one CPU. My laptop has eight. What changes?",
-                 FadeOut(VGroup(head, lines)), FadeIn(stu), FadeIn(prof), FadeIn(cpu), FadeIn(q), *[FadeIn(p) for p in ps])
+                 FadeOut(VGroup(head, lines, *icons)), FadeIn(stu), FadeIn(prof), FadeIn(cpu), FadeIn(q), *[FadeIn(p) for p in ps])
         self.play(stu.change("curious"), run_time=0.5)
 
         # S23.2
-        chips = [CPU(size=0.8, label="CPU" if k == 0 else "").move_to(cpu) for k in range(4)]
+        chips = [CPU(size=0.8, label="CPU" if k == 3 else "").move_to(cpu) for k in range(4)]
         self.add(*chips)
         self.remove(cpu)
         arrows = VGroup(*[Arrow(P3(x, 1.3), P3(x * 0.4, 0.8), buff=0.05, stroke_width=3, color=DIM,

@@ -9,7 +9,7 @@ from lottery_world import *  # noqa: E402,F401,F403
 
 class S08TheList(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="curious", prof="proud")
         W = build_s08()
         cw, jl, bars, total, drum, dlab, cpu = (W[k] for k in ("cw", "jl", "bars", "total", "drum", "dlab", "cpu"))
 
@@ -37,6 +37,8 @@ class S08TheList(Ep09Scene):
         win = winner_text("?")
         self.add(win)
         ball, anim = drum.draw(300, CPU_COLOR, run_time=0.9)
+        ball[0].scale(1.5)   # three digits fit inside the small ball
+        ball[1].scale(0.85)
         with self.narrate("Say the random number comes out as three hundred."):
             self.play(FadeIn(win), drum.spin(1, run_time=1.0))
             self.play(anim)
@@ -55,7 +57,7 @@ class S08TheList(Ep09Scene):
                  Succession(cw.move_bar(0, 3, run_time=0.6), cw.move_bar(0, 4, run_time=0.6)))
 
         # S08.6
-        bubble = Text("100 > 300? no", font_size=22, color=TEXT, font=MONO_FONT).move_to(P3(2.9, -2.0), aligned_edge=LEFT)
+        bubble = Text("100 > 300? no", font_size=22, color=TEXT, font=MONO_FONT).move_to(P3(2.0, -2.0), aligned_edge=LEFT)
         nx = x_mark(0.3).next_to(bubble, RIGHT, buff=0.15)
         self.say("A adds a hundred: the counter is a hundred. Is that more than three hundred? No, keep going.",
                  Succession(cw.move_bar(0, 5, run_time=0.5), Transform(cnt, counter_text(100), run_time=0.7),
@@ -72,7 +74,8 @@ class S08TheList(Ep09Scene):
         # S08.8
         bubble3 = Text("400 > 300? yes", font_size=22, color=TEXT, font=MONO_FONT).move_to(bubble, aligned_edge=LEFT)
         ok = tick_mark(0.3).next_to(bubble3, RIGHT, buff=0.15)
-        pc = proc("C", scale=0.4, label="").move_to(jl.node_center(2))
+        ring = Circle(radius=jl.nodes[2][0].width / 2).set_fill(opacity=0).set_stroke(CPU_COLOR, 5).move_to(jl.node_center(2))
+        pc = proc("C", scale=0.4, label="").move_to(jl.node_center(2) + UP * 0.85)
         self.add(pc)
         pc.set_opacity(0)
         self.say("C adds two hundred and fifty: four hundred. Now it's more than three hundred. Stop. C wins.",
@@ -80,6 +83,6 @@ class S08TheList(Ep09Scene):
                             cw.move_bar(0, 5, run_time=0.4), Transform(cnt, counter_text(400), run_time=0.5),
                             cw.move_bar(0, 6, run_time=0.4), AnimationGroup(FadeIn(bubble3), FadeIn(ok)),
                             cw.move_bar(0, 7, run_time=0.5),
-                            AnimationGroup(jl.nodes[2][0].animate.set_stroke(CPU_COLOR, 5), pc.animate.set_opacity(1)),
+                            AnimationGroup(FadeIn(ring), pc.animate.set_opacity(1)),
                             hop_to(pc, cpu.slot_point(), run_time=0.9)))
         self.beat(0.5)

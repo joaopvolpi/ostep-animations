@@ -10,10 +10,9 @@ from s06_ticket_currency import tag_row  # noqa: E402
 
 class S07TransferInflation(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="frustrated", prof="happy")
         stu, prof = self.stu, self.prof
         tags = tag_row(1)
-        self.add(tags)
         div = DashedLine(P3(0, 2.0), P3(0, -2.2), color=DIM, dash_length=0.1, stroke_width=2)
 
         client = proc("A", scale=0.6, label="client").move_to(P3(-5.0, 0.2))
@@ -28,7 +27,7 @@ class S07TransferInflation(Ep09Scene):
         # S07.1
         req = Dot(radius=0.1, color=CPU_COLOR).move_to(client.get_center() + RIGHT * 0.5)
         self.say("Ticket transfer. A client asks a server for help, and lends it its tickets while the server works.",
-                 self.term("ticket transfer"), FadeIn(div),
+                 self.term("ticket transfer"), FadeIn(div), FadeIn(tags),
                  FadeIn(client), FadeIn(server), FadeIn(cst), FadeIn(sst))
         self.add(req)
         self.play(glide(req, server.get_center() + LEFT * 0.5, 0.7))

@@ -30,7 +30,7 @@ def tag_row(lit):
 
 class S06TicketCurrency(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="frustrated", prof="happy")
         # S06.1
         tags = tag_row(0)
         tags_dim = tag_row(-1)
@@ -74,13 +74,17 @@ class S06TicketCurrency(Ep09Scene):
                  Succession(Wait(1.5), AnimationGroup(FadeIn(n1), FadeIn(n2), FadeIn(n3))))
 
         # S06.6
-        tot = Text("total: 200", font_size=24, color=CPU_COLOR).move_to(P3(5.2, -2.2))
+        tot = Text("total: 200", font_size=24, color=CPU_COLOR).move_to(P3(4.4, -0.55))
         drum = RaffleDrum(0.8).move_to(P3(2.6, -2.35))
         ball, anim = drum.draw(137, CPU_COLOR, run_time=0.8)
+        ball[0].scale(1.5)   # three digits fit inside the small ball
+        ball[1].scale(0.85)
         self.add(drum)
         drum.set_opacity(0)
-        self.say("Two hundred in total, and the lottery runs on those.",
-                 drum.animate.set_opacity(1), FadeIn(tot), drum.spin(1, run_time=1.2))
-        self.play(anim)
-        self.play(glide(ball, n3.get_left() + LEFT * 0.4, 0.7))
-        self.play(Indicate(n3, color=CPU_COLOR), FadeOut(ball))
+        with self.narrate("Two hundred in total, and the lottery runs on those."):
+            self.play(drum.animate.set_opacity(1), FadeIn(tot), drum.spin(1, run_time=1.2))
+            self.play(anim)
+            self.play(glide(ball, n3.get_left() + LEFT * 0.4, 0.7))
+            self.play(Indicate(n3, color=CPU_COLOR), FadeOut(ball))
+        self.beat(0.4)
+        self.fade_stage()

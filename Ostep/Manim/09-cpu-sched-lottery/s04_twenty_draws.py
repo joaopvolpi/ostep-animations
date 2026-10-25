@@ -24,13 +24,15 @@ class S04TwentyDraws(Ep09Scene):
         stu.set_expression("excited")
         hop_to(a, cpu.slot_point()).begin()
         a.move_to(cpu.slot_point() + (a.get_center() - base_point(a)))
-        self.add(cpu, drum, a, b, sa, sb, strip, labs, total, mk)
+        paper = paper_chip("Waldspurger & Weihl, 1994").scale(0.75).move_to(P3(-4.4, 2.1))   # as S03 ends
+        a.set_expression("running")
+        self.add(cpu, drum, a, b, sa, sb, strip, labs, total, mk, paper)
 
         # S04.1
-        tl = Timeline(["CPU"], ticks=20, x_range=(-3.8, 5.0), top=-2.0, row_height=0.42, row_kinds=["cpu"],
+        tl = Timeline(["CPU"], ticks=20, x_range=(-3.8, 4.4), top=-2.0, row_height=0.42, row_kinds=["cpu"],
                       tick_labels=False, label_font=20)
         tally = Text("A: 0 · B: 0", font_size=24, color=TEXT, font=MONO_FONT).move_to(P3(-3.4, -1.4))
-        self.say("Let's draw twenty.", FadeOut(cap), FadeOut(total), Create(tl), FadeIn(tally),
+        self.say("Let's draw twenty.", FadeOut(cap), FadeOut(total), FadeOut(paper), Create(tl), FadeIn(tally),
                  FadeOut(mk), stu.change("neutral"))
         # tally helper
         counts = {"A": 0, "B": 0}
@@ -44,7 +46,7 @@ class S04TwentyDraws(Ep09Scene):
             counts[who] += 1
             return Succession(
                 AnimationGroup(FadeIn(m, scale=0.5), Flash(strip.segs[who], color=COL[who], flash_radius=0.3, run_time=rt)
-                               if False else Indicate(strip.segs[who], color=COL[who], scale_factor=1.03, run_time=rt)),
+                               if False else Indicate(VGroup(strip.segs[who], strip.seg_labels[who]), color=COL[who], scale_factor=1.03, run_time=rt)),
                 tl.fill("CPU", i, "running", color=COL[who], run_time=rt * 0.6),
                 FadeOut(m, run_time=rt * 0.3))
 
@@ -87,12 +89,10 @@ class S04TwentyDraws(Ep09Scene):
         dotted.shift(UP * 0.0)
         rng = np.random.default_rng(3)
         more = rng.random(40) < 0.75
-        self.say("The longer the two jobs compete, the closer they get to seventy-five and twenty-five.",
-                 FadeOut(br), FadeOut(note), FadeOut(neq),
-                 FadeIn(bar_bg), FadeIn(bar_a), Create(dotted),
-                 Succession(tl.extend(60, run_time=0.8)))
         a_ct = 16
-        with self.narrate(""):
+        with self.narrate("The longer the two jobs compete, the closer they get to seventy-five and twenty-five."):
+            self.play(FadeOut(br), FadeOut(note), FadeOut(neq), FadeIn(bar_bg), FadeIn(bar_a), Create(dotted),
+                      tl.extend(60, run_time=0.8), run_time=0.8)
             for k in range(21, 61):
                 who = "A" if more[k - 21] else "B"
                 a_ct += who == "A"
@@ -100,3 +100,4 @@ class S04TwentyDraws(Ep09Scene):
                 self.play(tl.fill("CPU", k, "running", color=COL[who], run_time=0.08),
                           bar_a.animate.stretch_to_fit_width(3.6 * frac, about_edge=LEFT), run_time=0.1)
         self.beat(1.0)
+        self.fade_stage()

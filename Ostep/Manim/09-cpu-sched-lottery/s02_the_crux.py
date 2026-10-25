@@ -28,7 +28,7 @@ class S02TheCrux(Ep09Scene):
         # S02.2 (card appears)
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT, question_size=34, subtitle_size=22)
         card.move_to(P3(0, 0.5))
-        self.say_crux(card, stu.change("neutral"), sub_anims=(stu.look_at(card),), hold=0.6)
+        self.say_crux(card, stu.change("neutral"), lead="A raffle. Hold that thought, because it brings us to the crux: {q}", sub_anims=(stu.look_at(card),), hold=0.6)
 
         # S02.3
         self.say("This kind of scheduler is called proportional-share, or sometimes fair-share.",

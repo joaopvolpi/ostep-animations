@@ -9,7 +9,7 @@ from lottery_world import *  # noqa: E402,F401,F403
 
 class S09TheRulerView(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="curious", prof="proud")
         stu, prof = self.stu, self.prof
         W = build_s08()
         cw, jl, bars, total, drum, dlab, cpu = (W[k] for k in ("cw", "jl", "bars", "total", "drum", "dlab", "cpu"))
@@ -18,7 +18,10 @@ class S09TheRulerView(Ep09Scene):
         cnt, win = counter_text(400), winner_text(300)
         ptr = jl.pointer(2)
         jl.nodes[2][0].set_stroke(CPU_COLOR, 5)
-        self.add(cw, bar, jl, bars, total, drum, dlab, cpu, cnt, win, ptr)
+        bubble3 = Text("400 > 300? yes", font_size=22, color=TEXT, font=MONO_FONT).move_to(P3(2.0, -2.0), aligned_edge=LEFT)
+        ok3 = tick_mark(0.3).next_to(bubble3, RIGHT, buff=0.15)
+        ring = Circle(radius=jl.nodes[2][0].width / 2).set_fill(opacity=0).set_stroke(CPU_COLOR, 5).move_to(jl.node_center(2))
+        self.add(cw, bar, jl, bars, total, drum, dlab, cpu, cnt, win, ptr, bubble3, ok3, ring)
         pc = proc("C", scale=0.4, label="")
         pc.move_to(cpu.slot_point() + (pc.get_center() - base_point(pc)))
         self.add(pc)
@@ -30,7 +33,7 @@ class S09TheRulerView(Ep09Scene):
             strip.segs[n].set_opacity(0)
             strip.seg_labels[n].set_opacity(0)
         self.add(strip)
-        gone = VGroup(cw, bar, cnt, win, drum, dlab, cpu, pc, total, ptr, bars, jl.head, jl.head_arrow, jl.arrows, jl.null,
+        gone = VGroup(cw, bar, cnt, win, drum, dlab, cpu, pc, total, ptr, bars, bubble3, ok3, ring, jl.head, jl.head_arrow, jl.arrows, jl.null,
                       *jl.captions)
         self.say("It's like laying the tickets end to end on a ruler…",
                  stu.change("excited"), FadeOut(gone),
@@ -47,7 +50,7 @@ class S09TheRulerView(Ep09Scene):
         self.add(mk_hi)
         self.say("…and seeing whose stretch the winner lands on!",
                  Transform(mk_hi, mk.set_opacity(1)),
-                 Succession(Wait(1.5), Indicate(strip.segs["C"], color=CPU_COLOR, scale_factor=1.05)))
+                 Succession(Wait(1.5), Indicate(VGroup(strip.segs["C"], strip.seg_labels["C"]), color=CPU_COLOR, scale_factor=1.05)))
 
         # S09.3
         self.say("That's the picture.", prof.change("happy"))

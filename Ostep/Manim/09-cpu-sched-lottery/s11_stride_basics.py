@@ -19,13 +19,14 @@ def make_lanes(x0=-5.2, scale=0.04):
 
 class S11StrideBasics(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="curious", prof="explaining")
         stu, prof = self.stu, self.prof
 
         # S11.1
         drum = RaffleDrum(1.2).move_to(P3(4.2, 0.0))
         cloud = bad_luck_cloud("4 / 20", 1.5).move_to(P3(4.2, 1.9))
         self.add(drum)
+        self.allow_overlap(cloud[1], cloud[0], "the label sits inside the cloud icon's own puffs")
         drum.set_opacity(0)
         self.say("Why use randomness at all, then? Can't we get the proportions exactly right?",
                  stu.change("frustrated"), drum.animate.set_opacity(1),
@@ -75,3 +76,4 @@ class S11StrideBasics(Ep09Scene):
                  FadeOut(pass_cap), FadeIn(spot), FadeIn(rule),
                  Succession(Wait(1.0), *[spot.animate(run_time=0.7).move_beam_to(P3(-5.2, LANE_Y[n])) for n in "BCA"]))
         self.beat(0.8)
+        self.fade_stage()

@@ -8,14 +8,15 @@ from common import *  # noqa: E402,F401,F403
 
 
 def mini_card(text, w=1.5, color=DIM):
-    r = RoundedRectangle(width=w, height=0.34, corner_radius=0.06).set_fill(CARD_FILL, 1).set_stroke(color, 1.5)
-    t = Text(text, font_size=14, color=TEXT, font=MONO_FONT).move_to(r)
+    t = Text(text, font_size=14, color=TEXT, font=MONO_FONT)
+    r = RoundedRectangle(width=max(w, t.width + 0.3), height=0.34, corner_radius=0.06).set_fill(CARD_FILL, 1).set_stroke(color, 1.5)
+    t.move_to(r)
     return VGroup(r, t)
 
 
 class S05UseRandomness(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="confused", prof="explaining")
         stu, prof = self.stu, self.prof
 
         # S05.1
@@ -56,13 +57,14 @@ class S05UseRandomness(Ep09Scene):
         t1b = Text("random: no bad workload", font_size=20, color=TEXT).move_to(P3(-1.0, ys[0]))
         tick = tick_mark(0.3).move_to(P3(1.4, ys[0]))
         self.say("Random has no such workload.",
-                 FadeOut(gear), FadeOut(t1), FadeOut(cross), FadeOut(lru), FadeIn(die), FadeIn(t1b),
+                 FadeOut(gear), FadeOut(t1), FadeOut(cross), FadeOut(jag), FadeOut(lru), FadeIn(die), FadeIn(t1b),
                  Succession(Wait(0.6), FadeIn(tick)))
 
         # S05.5
         left = VGroup(*[mini_card("cpu used: 12.4 ms") for _ in range(2)]).arrange(DOWN, buff=0.1).move_to(P3(-2.3, ys[1]))
         right = VGroup(*[mini_card("tickets: 100") for _ in range(2)]).arrange(DOWN, buff=0.1).move_to(P3(0.2, ys[1]))
         strike = Line(left.get_corner(DL), left.get_corner(UR)).set_stroke(KERNEL_COLOR, 4)
+        self.allow_overlap(strike, left, "the strike line crosses out the CPU-use cards")
         self.say("Two: almost no state. A counting scheduler must track every process's CPU use; random only needs each "
                  "process's tickets.",
                  FadeIn(b2), FadeIn(left), Succession(Wait(2.0), FadeIn(right), Create(strike)))
@@ -76,5 +78,5 @@ class S05UseRandomness(Ep09Scene):
                  FadeIn(b3), FadeIn(sw), FadeIn(t3), FadeIn(drum), Succession(Wait(1.0), anim))
         self.beat(0.5)
         # transition: the card slides out
-        self.play(card.slide_out(LEFT), FadeOut(VGroup(b1, b2, b3, die, t1b, jag, tick, left, right, strike, sw, t3, drum, ball)),
+        self.play(card.slide_out(LEFT), FadeOut(VGroup(b1, b2, b3, die, t1b, tick, left, right, strike, sw, t3, drum, ball)),
                   run_time=0.8)

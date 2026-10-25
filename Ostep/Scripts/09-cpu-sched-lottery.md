@@ -54,7 +54,7 @@ Every scheduler so far optimized a number: turnaround time, response time. But w
 > **THE CRUX: HOW TO SHARE THE CPU PROPORTIONALLY**
 > How can we design a scheduler to share the CPU proportionally? What are the key mechanisms for doing so? How effective are they?
 
-**Narrator (V.O.):** This kind of scheduler is called **proportional-share**, or sometimes **fair-share**. Instead of minimizing a time, it tries to guarantee that each job gets a certain percentage of the CPU. Let's find out how.
+**Narrator (V.O.):** A raffle. Hold that thought, because it brings us to the crux: how to share the CPU proportionally? What are the key mechanisms for doing so? How effective are they? This kind of scheduler is called **proportional-share**, or sometimes **fair-share**. Instead of minimizing a time, it tries to guarantee that each job gets a certain percentage of the CPU. Let's find out how.
 
 *Visual idea:* Crux card in the Virtualization accent (orange); section badge "09 · Proportional Share" top-left; term highlight "proportional share".
 

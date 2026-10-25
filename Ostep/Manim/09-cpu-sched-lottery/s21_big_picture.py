@@ -35,7 +35,7 @@ def runners_icon():
 
 class S21BigPicture(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="neutral", prof="explaining")
         stu, prof = self.stu, self.prof
         icons = [RaffleDrum(0.8).move_to(P3(CX[0], 1.5)), runners_icon().move_to(P3(CX[1], 1.5)), tree_icon().move_to(P3(CX[2], 1.5))]
         words = [Text(w, font_size=26, color=VIRT).move_to(P3(x, 0.6)) for w, x in zip(("random", "deterministic", "efficient"), CX)]
@@ -75,11 +75,12 @@ class S21BigPicture(Ep09Scene):
         # S21.5
         ok = tick_mark(0.35).next_to(mlfq, UP, buff=0.1)
         strike = Line(qcard.get_corner(DL), qcard.get_corner(UR)).set_stroke(KERNEL_COLOR, 4)
+        self.allow_overlap(strike, qcard, "the strike-through crosses out the question card")
         self.say("MLFQ-style schedulers handle that automatically.",
                  Indicate(mlfq, color=CPU_COLOR), FadeIn(ok), Create(strike))
 
         # S21.6
-        pie = TargetPie((0.75, 0.25), radius=0.45, label=None).move_to(P3(5.4, -1.7))
+        pie = TargetPie((0.75, 0.25), radius=0.45, label=None).move_to(P3(5.4, -1.1))
         self.say("Still, in many domains that isn't the main worry.",
                  qcard.animate.shift(LEFT * 9), strike.animate.shift(LEFT * 9), FadeOut(mlfq), FadeOut(ok), FadeIn(pie))
         self.remove(qcard, strike)
@@ -87,8 +88,8 @@ class S21BigPicture(Ep09Scene):
         # S21.7
         cloud = cloud_icon(1.6).move_to(P3(-2.6, -1.5))
         rack = server_rack_icon(0.6, 1.0).scale(0.7).move_to(cloud.get_center() + DOWN * 0.05)
-        win = vm_window("Windows", COL["B"], 1.5, 0.9, "25%").move_to(P3(0.0, -1.6))
-        lin = vm_window("Linux", COL["A"], 1.5, 0.9, "75%").move_to(P3(2.0, -1.6))
+        win = vm_window("Windows", COL["B"], 1.5, 1.3, "25%").move_to(P3(0.0, -1.45))
+        lin = vm_window("Linux", COL["A"], 1.5, 1.3, "75%").move_to(P3(2.0, -1.45))
         self.say("In a cloud data center, you might give a quarter of the CPU to a Windows VM and the rest to your Linux install.",
                  FadeIn(cloud), FadeIn(rack), FadeIn(win), FadeIn(lin))
 
@@ -104,4 +105,4 @@ class S21BigPicture(Ep09Scene):
                  Transform(icons[2], eev), FadeIn(tag), stu.change("surprised"),
                  Succession(Wait(3.0), prof.change("happy")))
         self.beat(0.8)
-        self.play(FadeOut(VGroup(*icons, *words, *subs, *strips, tag, cloud, rack, win, lin, pie, ok2)), run_time=0.8)
+        self.fade_stage(hosts=False, strip=False)

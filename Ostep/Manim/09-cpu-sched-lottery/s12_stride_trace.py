@@ -12,7 +12,7 @@ X0, SC = -4.6, 0.033     # pass 0..200 fits x in [-4.6, 2.0]
 
 class S12StrideTrace(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="neutral", prof="explaining")
         stu, prof = self.stu, self.prof
         lanes = {n: PassLane(n, COL[n], STRIDE[n], LANE_Y[n], x0=X0, scale=SC, length=200) for n in "ABC"}
         procs = {n: proc(n, scale=0.5).move_to(P3(X0 - 0.7, LANE_Y[n] - 0.1)) for n in "ABC"}
@@ -26,8 +26,8 @@ class S12StrideTrace(Ep09Scene):
         spot.move_beam_to(P3(X0, LANE_Y["A"]))
         axis = Line(P3(X0, 2.15), P3(X0 + 200 * SC, 2.15)).set_stroke(DIM, 2)
         axl = VGroup(*[Text(str(v), font_size=18, color=DIM).move_to(P3(X0 + v * SC, 1.9)) for v in (0, 100, 200)])
-        self.add(*lanes.values(), *procs.values(), *bars.values(), axis, axl)
-        self.play(FadeIn(table), FadeIn(tl), FadeIn(spot), run_time=0.8)
+        self.play(FadeIn(table), FadeIn(tl), FadeIn(spot), FadeIn(axis), FadeIn(axl),
+                  *[FadeIn(x) for x in (*lanes.values(), *procs.values(), *bars.values())], run_time=0.8)
 
         tick = {"n": 0}
 
@@ -69,7 +69,7 @@ class S12StrideTrace(Ep09Scene):
         self.say("Now A, at a hundred, runs.", a1, Succession(Wait(0.6), a2))
 
         # S12.7
-        cyc = Line(P3(X0 + 200 * SC, 2.0), P3(X0 + 200 * SC, -1.2)).set_stroke(CPU_COLOR, 3)
+        cyc = Line(P3(X0 + 200 * SC, 1.6), P3(X0 + 200 * SC, -1.2)).set_stroke(CPU_COLOR, 3)
         cyc_l = Text("cycle complete", font_size=20, color=CPU_COLOR).move_to(P3(X0 + 200 * SC - 0.2, -1.45))
         with self.narrate("And so on."):
             for vals, newp in (((200, 200, 120), 160), ((200, 200, 160), 200)):
@@ -92,7 +92,7 @@ class S12StrideTrace(Ep09Scene):
                  FadeOut(VGroup(cyc, cyc_l)), FadeIn(tally))
 
         # S12.9
-        ratio = MathTex(r"250:100:50=5:2:1", font_size=32, color=TEXT).move_to(P3(4.2, -2.4))
+        ratio = MathTex(r"250:100:50=5:2:1", font_size=32, color=TEXT).move_to(P3(0.3, -1.75))
         ok = tick_mark(0.35).next_to(ratio, RIGHT, buff=0.15)
         self.say("Five, two, one: exactly the ratio of their tickets, two hundred and fifty, a hundred, and fifty.",
                  Write(ratio), Succession(Wait(2.5), FadeIn(ok)))

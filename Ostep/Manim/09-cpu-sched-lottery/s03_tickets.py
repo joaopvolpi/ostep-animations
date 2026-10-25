@@ -24,6 +24,7 @@ class S03Tickets(Ep09Scene):
         self.add(cpu)
         ball, anim = drum.draw(42, CPU_COLOR)
         self.add(drum)
+        self.allow_overlap(ball, drum, "the drawn ball rolls out of the drum")
         self.say("Every so often, hold a lottery to decide who runs next.",
                  FadeIn(cpu), FadeIn(drum), Succession(Wait(0.4), drum.spin(1, run_time=1.5), anim))
         self.play(FadeOut(ball), run_time=0.4)

@@ -17,7 +17,7 @@ def block_row(ms, y, colors):
 
 class S16MinGranularity(Ep09Scene):
     def construct(self):
-        self.world(term="sched_latency", stu="neutral", prof="neutral")
+        self.world(term="sched_latency", stu="confused", prof="happy")
         cols = [PROCESS_COLORS[i % 6] for i in range(10)]
         dots = VGroup(*[Dot(radius=0.14, color=c) for c in cols]).arrange(RIGHT, buff=0.25).move_to(P3(0, 1.3))
         eq = MathTex(r"48 \div 10 = 4.8\ \text{ms}", font_size=40, color=TEXT).move_to(P3(0, 2.2))

@@ -17,7 +17,7 @@ def list_node(v, x, y):
 
 class S19RedBlackTree(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="excited", prof="proud")
         stu, prof = self.stu, self.prof
         LY = 1.6
         xs = [-6.0 + 0.58 * i for i in range(10)]
@@ -52,16 +52,15 @@ class S19RedBlackTree(Ep09Scene):
         newv[0].set_stroke(CPU_COLOR, 3)
         ptr = Arrow(P3(xs[1], LY + 0.8), P3(xs[1], LY + 0.3), buff=0, color=CPU_COLOR, stroke_width=4,
                     max_tip_length_to_length_ratio=0.35)
-        self.say("But after it runs, its vruntime grows, and it must be re-inserted in order.",
-                 Transform(first, newv), FadeIn(ptr))
-        with self.narrate(""):
+        with self.narrate("But after it runs, its vruntime grows, and it must be re-inserted in order."):
+            self.play(Transform(first, newv), FadeIn(ptr), run_time=1.0)
             for k in range(2, 9):
                 xi = xs[min(k, 9) - 0] if False else xs[k - 1 + 1 if k - 1 + 1 < 10 else 9]
                 self.play(glide(ptr, P3(xs[k] if k < 10 else xs[9], LY + 0.55), 0.3),
                           Transform(steps_l, Text(f"steps: {k}", font_size=22, color=TEXT, font=MONO_FONT).move_to(steps_l)),
                           run_time=0.35)
-        self.play(Transform(steps_l, Text("steps: 8", font_size=22, color=TEXT, font=MONO_FONT).move_to(steps_l)),
-                  glide(first, P3((xs[6] + xs[7]) / 2, LY - 0.55), 0.6), run_time=0.7)
+            self.play(Transform(steps_l, Text("steps: 8", font_size=22, color=TEXT, font=MONO_FONT).move_to(steps_l)),
+                      glide(first, P3((xs[6] + xs[7]) / 2, LY - 0.55), 0.6), run_time=0.7)
 
         # S19.5
         on = Text("O(n)", font_size=30, color=KERNEL_COLOR).move_to(P3(-3.4, 0.6))
@@ -79,10 +78,32 @@ class S19RedBlackTree(Ep09Scene):
         # S19.7
         tree = RBTree(at=(3.2, 1.3), dx=0.5, dy=0.62, radius=0.21)
         nxt = Text("next to run", font_size=18, color=CPU_COLOR).next_to(tree.node(1), LEFT, buff=0.12)
+        # each node arrives together with the edge to its parent (edges under the nodes), stubs last
+        edge_of, k = {}, 0
+        for v, (l, r, _c) in tree.spec.items():
+            if v not in tree.nodes:
+                continue
+            for ch in (l, r):
+                if ch is not None:
+                    edge_of[ch] = tree.edges[k]
+                    k += 1
+        # edges and stubs run from circle rim to circle rim, never across a node's label
+        centers = {v: tree.nodes[v].get_center() for v in tree.nodes}
+        rad = tree.nodes[14][0].width / 2
+
+        def at_node(pt):
+            return any(np.linalg.norm(pt - c) < 1e-3 for c in centers.values())
+        for ln in [*tree.edges, *[m for m in tree.stubs if isinstance(m, Line)]]:
+            p0, p1 = ln.get_start(), ln.get_end()
+            d = (p1 - p0) / np.linalg.norm(p1 - p0)
+            ln.put_start_and_end_on(p0 + d * rad, p1 - d * rad if at_node(p1) else p1)
+        for e in [*tree.edges, *tree.stubs]:
+            e.set_z_index(-1)
+        reveal = [AnimationGroup(*([Create(edge_of[v])] if v in edge_of else []), FadeIn(tree.node(v), scale=0.6))
+                  for v in (14, 9, 18, 1, 10, 17, 22, 5, 21, 24)]
         self.say("CFS uses a red-black tree, ordered by vruntime.",
-                 self.term("red-black tree"), Create(tree.edges), FadeIn(tree.stubs),
-                 LaggedStart(*[FadeIn(tree.node(v), scale=0.6) for v in (14, 9, 18, 1, 10, 17, 22, 5, 21, 24)],
-                             lag_ratio=0.2, run_time=3.0))
+                 self.term("red-black tree"),
+                 Succession(LaggedStart(*reveal, lag_ratio=0.2, run_time=3.0), FadeIn(tree.stubs, run_time=0.5)))
         self.play(tree.highlight_min(), FadeIn(nxt), run_time=0.8)
 
         # S19.8
@@ -92,10 +113,9 @@ class S19RedBlackTree(Ep09Scene):
         olog = Text("O(log n)", font_size=30, color=PERS).move_to(P3(3.2, -1.7))
         self.add(steps_t)
         steps_t.set_opacity(0)
-        self.say("It's balanced: it does a little extra work on each insert to stay shallow, so find, insert and delete "
-                 "are all logarithmic.",
-                 FadeOut(nxt), steps_t.animate.set_opacity(1), FadeIn(tptr))
-        with self.narrate(""):
+        with self.narrate("It's balanced: it does a little extra work on each insert to stay shallow, so find, insert and delete "
+                          "are all logarithmic."):
+            self.play(FadeOut(nxt), steps_t.animate.set_opacity(1), FadeIn(tptr), run_time=0.8)
             for i, v in enumerate(path, 1):
                 self.play(glide(tptr, tree.pos[v] + UP * 0.45, 0.6),
                           Transform(steps_t, Text(f"steps: {i}", font_size=22, color=TEXT, font=MONO_FONT).move_to(steps_t)),
@@ -118,3 +138,4 @@ class S19RedBlackTree(Ep09Scene):
                  "scale, it isn't.",
                  prof.change("explaining"), FadeIn(tip, shift=UP * 0.2))
         self.beat(0.8)
+        self.fade_stage()

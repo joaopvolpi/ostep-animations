@@ -9,7 +9,7 @@ from common import *  # noqa: E402,F401,F403
 
 class S10HowFair(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="excited", prof="happy")
         stu, prof = self.stu, self.prof
 
         def make_tl():

@@ -9,19 +9,20 @@ from common import *  # noqa: E402,F401,F403
 
 class S20Sleeper(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="curious", prof="explaining")
         stu = self.stu
         mA = VruntimeMeter(COL["A"], height=2.0, width=0.5, max_value=20.0).move_to(P3(-2.4, -0.2))
         mB = VruntimeMeter(COL["B"], height=2.0, width=0.5, max_value=20.0).move_to(P3(2.4, -0.2))
         a = proc("A", scale=0.5).next_to(mA, DOWN, buff=0.1)
         b = proc("B", scale=0.5).next_to(mB, DOWN, buff=0.1)
-        cpu = CPU(size=0.8, label="CPU").move_to(P3(0, 1.8))
-        clock = ClockIcon(0.4, color=TEXT).move_to(P3(0, -0.2))
+        cpu = CPU(size=0.8, label="CPU").move_to(P3(0, 1.3))
+        clock = ClockIcon(0.4, color=TEXT).move_to(P3(0, -1.1))
         ruler = Line(P3(-3.0, -2.55), P3(3.0, -2.55)).set_stroke(DIM, 2)
         r0 = Text("0 s", font_size=18, color=DIM).next_to(ruler.get_start(), DOWN, buff=0.08)
         r10 = Text("10 s", font_size=18, color=DIM).next_to(ruler.get_end(), DOWN, buff=0.08)
         prog = Line(P3(-3.0, -2.55), P3(-2.99, -2.55)).set_stroke(CPU_COLOR, 5)
-        self.add(mA, mB, a, b, cpu, clock, ruler, r0, r10)
+
+        self.play(*[FadeIn(x) for x in (mA, mB, a, b, cpu, clock, ruler, r0, r10)], run_time=0.7)
 
         # S20.1
         self.say("One last trap. A runs all the time.",
@@ -42,8 +43,8 @@ class S20Sleeper(Ep09Scene):
                  b.change("ready"), FadeOut(zz), FadeIn(gap))
 
         # S20.4
-        starve = Text("starved", font_size=22, color=KERNEL_COLOR).next_to(a, DOWN, buff=0.35)
-        longbar = Rectangle(width=5.0, height=0.3).set_fill(COL["B"], 1).set_stroke(TEXT, 1).move_to(P3(0, -1.9))
+        starve = Text("starved", font_size=22, color=KERNEL_COLOR).move_to(mA.get_bottom() + DOWN * 0.4)
+        longbar = Rectangle(width=5.0, height=0.3).set_fill(COL["B"], 1).set_stroke(TEXT, 1).move_to(P3(0, -2.3))
         lb = Text("B runs 10 s in a row", font_size=18, color=INK_DARK).move_to(longbar)
         self.say("So B hogs the CPU for ten seconds while A starves!",
                  stu.change("surprised"), FadeOut(gap),
@@ -69,3 +70,4 @@ class S20Sleeper(Ep09Scene):
                  FadeOut(VGroup(ruler, r0, r10, prog)), FadeIn(tl), FadeIn(tagb), FadeIn(zz2),
                  Succession(Wait(0.5), *[tl.fill("CPU", t, "running", color=COL["AB"[t % 2]], run_time=0.25) for t in range(1, 9)]))
         self.beat(0.6)
+        self.fade_stage()

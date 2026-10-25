@@ -14,8 +14,10 @@ class S01APromise(Ep09Scene):
         # S01.1
         rack = server_rack_icon(1.0, 1.8).scale(1.1).move_to(P3(0, 0.9))
         chip = CPU(size=0.42, label="", pins=3).move_to(rack.get_center() + UP * 0.1)
+        chip.set_z_index(2)    # a play() nests it in a scene-level group below the rack otherwise
+        self.allow_overlap(chip, rack, "the CPU chip sits on the server rack icon")
         self.say("Picture a cloud server.", FadeIn(rack), FadeIn(chip, scale=0.6),
-                 Succession(Wait(0.6), Indicate(chip, color=CPU_COLOR, scale_factor=1.3)))
+                 Succession(Wait(1.1), Indicate(chip, color=CPU_COLOR, scale_factor=1.3)))
 
         # S01.2
         a, b = proc("A", scale=0.6), proc("B", scale=0.6)
@@ -27,6 +29,8 @@ class S01APromise(Ep09Scene):
         l25 = Text("25%", font_size=26, color=INK_DARK).move_to(PIE_AT + P3(0.42, 0.45))
         sect = pie.sectors
         self.add(a, b)
+        self.allow_overlap(a, b, "both customers hop out of the same rack and cross for an instant")
+        self.allow_overlap(sect, sect, "pie sectors touch along their radii")
         self.say("Two customers share one CPU. One of them paid for three quarters of the machine. "
                  "The other paid for one quarter.",
                  hop_bottom(a, apos - P3(0, 0.45), run_time=1.0), hop_bottom(b, bpos - P3(0, 0.45), run_time=1.0),
@@ -92,7 +96,7 @@ class S01APromise(Ep09Scene):
 
         # S01.8
         self.say("None lets you say, on purpose, \"you get seventy-five percent.\"",
-                 pie.pulse(), *[chips[n].animate.set_opacity(0.3) for n in chips],
+                 Indicate(VGroup(pie.sectors, l75, l25)), *[chips[n].animate.set_opacity(0.3) for n in chips],
                  tags.animate.set_opacity(0.3))
 
         # S01.9
@@ -102,9 +106,8 @@ class S01APromise(Ep09Scene):
         drum = RaffleDrum(1.4).move_to(P3(8.0, -0.6))
         self.add(drum)
         self.say("Surprisingly, like a raffle.", prof.change("happy"),
-                 drum.animate(run_time=1.6).move_to(P3(5.6, -0.6)),
-                 Succession(Wait(0.4), drum.spin(1, run_time=2.0)))
-        self.play(drum.spin(1, run_time=1.5))
+                 drum.animate(run_time=1.6).move_to(P3(5.6, -0.6)))
+        self.play(drum.spin(1, run_time=2.0))
 
 
 def Wobble_(m):

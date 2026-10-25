@@ -59,7 +59,7 @@
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | (transition) | Server, customers, chips and drum `FadeOut`; the pie shrinks to the top-right target position (6.0, 3.0). The Section badge "09 · Proportional Share" writes in at the top-left. Characters glide to corners. |
-| 2 | (card appears) | Crux card, `VIRT` frame, header "THE CRUX" (font 22): **"How to share the CPU proportionally?"** (font 34). Subtitle (font 22, `DIM`): "What are the key mechanisms for doing so? How effective are they?" |
+| 2 | "A raffle. Hold that thought, because it brings us to the crux: How to share the CPU proportionally?" (then the subtitle question, read as it fades in) | Crux card, `VIRT` frame, header "THE CRUX" (font 22): **"How to share the CPU proportionally?"** (font 34). Subtitle (font 22, `DIM`): "What are the key mechanisms for doing so? How effective are they?" |
 | 3 | "This kind of scheduler is called **proportional-share**, or sometimes **fair-share**." | Term highlight "proportional share" (alt label "fair-share" underneath in `DIM`). |
 | 4 | "Instead of minimizing a time, it tries to guarantee that each job gets a certain percentage of the CPU." | The pie pulses; a tiny Timeline strip (one row, 10 cells) draws under the crux card and fills 7–8 coral, 2–3 mint, as a preview. |
 | 5 | "Let's find out how." | The card shrinks to a one-line strip at top-center (0, 3.2), font 24 "How to share the CPU proportionally?". The preview strip fades. |

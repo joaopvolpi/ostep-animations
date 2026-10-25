@@ -12,7 +12,7 @@ PY = -0.9
 
 class S14EnterCFS(Ep09Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral")
+        self.world(stu="excited", prof="happy")
         stu, prof = self.stu, self.prof
         cpu = CPU(size=1.2, label="CPU").move_to(P3(0, 1.0))
 
@@ -77,3 +77,4 @@ class S14EnterCFS(Ep09Scene):
         # S14.9
         self.say("Same flavor: whoever has had the least goes next.", prof.change("happy"))
         self.beat(0.8)
+        self.fade_stage()
