@@ -75,8 +75,8 @@ class S12SchedulerSwitch(Ep06Scene):
 
         # S12.6
         bad = save_slot(0.35, COL["A"]).next_to(a, UP, buff=0.05)
-        load = VGroup(Arrow(P3(3.4, 2.0), P3(3.4, 1.4), buff=0, color=COL["B"], stroke_width=5),
-                      Text("load", font_size=20, color=COL["B"]).move_to(P3(3.9, 1.8)))
+        load = VGroup(Arrow(P3(3.4, 2.85), P3(3.4, 2.35), buff=0, color=COL["B"], stroke_width=5),
+                      Text("load", font_size=20, color=COL["B"]).move_to(P3(2.8, 2.65)))
         self.say("The video-game save! Pause one, load the other!", stu.change("excited"),
                  AnimationGroup(FadeOut(ghost_r), FadeOut(ghost_m), FadeIn(bad, scale=1.5), FadeIn(load, shift=UP * 0.2)))
 

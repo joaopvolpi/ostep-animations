@@ -28,7 +28,7 @@ def build_end():
     """S01 end state."""
     cpu = CPU(1.4).move_to(S1_CPU)
     a = proc("A", "running", scale=1.0)
-    bottom_to(a, cpu.slot_point() + UP * 0.02)
+    bottom_to(a, cpu.slot_point() + UP * 0.12)
     mem = Memory(cells=8, width=1.2, height=3.2).move_to(S1_MEM)
     scr = mem_scribbles(mem)
     disk = Disk().move_to(S1_DISK)
@@ -60,7 +60,7 @@ class S01JustRunIt(Ep06Scene):
                             AnimationGroup(FadeIn(a, shift=DOWN * 0.3), FadeIn(main_lab), run_time=0.8),
                             GrowArrow(main_arr), Wait(2.0),
                             AnimationGroup(FadeOut(main_arr), FadeOut(main_lab),
-                                           hop_bottom(a, cpu.slot_point() + UP * 0.02, run_time=0.8))))
+                                           hop_bottom(a, cpu.slot_point() + UP * 0.12, run_time=0.8))))
         a.set_expression("running")
 
         # S01.2

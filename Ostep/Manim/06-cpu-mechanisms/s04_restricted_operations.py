@@ -79,7 +79,7 @@ class S04RestrictedOperations(Ep06Scene):
         names = ["mov", "add", "ld", "st", "cmp", "jmp"]
         row = VGroup(*[snippet(n, 18, pad=0.1) for n in names]).arrange(RIGHT, buff=0.15).move_to(P3(-1.5, 1.9))
         glyph = CPU(0.8, label=None, pins=3).move_to(S4_GLYPH)
-        mag = magnifier_icon(1.0).move_to(P3(-1.0, 2.5))
+        mag = magnifier_icon(0.9).move_to(P3(-1.0, 1.35))
         self.say("Then let the OS inspect every instruction before it runs.", stu.change("confused"),
                  Succession(AnimationGroup(FadeIn(row), FadeIn(glyph), FadeIn(mag), FadeOut(arc), FadeOut(files)),
                             row.animate(run_time=3.0, rate_func=linear).shift(RIGHT * 1.6)))

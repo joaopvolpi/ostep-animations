@@ -173,7 +173,7 @@ class S13WatchingASwitch(Ep06Scene):
 
         # S13.13
         p2 = Arrow(P3(-0.6, -1.3), pA.get_right() + RIGHT * 0.05, buff=0, color=KERNEL_COLOR, stroke_width=5)
-        t2 = tag("software · explicit", KERNEL_COLOR, 16).move_to(P3(-1.4, -1.05))
+        t2 = tag("software · explicit", KERNEL_COLOR, 16).move_to(P3(-1.9, -0.72))
         self.say("When the OS switches, the software saves the kernel registers into the process structure.",
                  AnimationGroup(FadeOut(p1), FadeOut(t1), GrowArrow(p2), FadeIn(t2)))
 
@@ -191,7 +191,7 @@ class S13WatchingASwitch(Ep06Scene):
 
         # S13.15
         osblocks = tl.blocks_in("OS")
-        lab = Text("enter as A → leave as B", font_size=20, color=TEXT).move_to(P3(4.3, -3.1))
+        lab = Text("enter as A →\nleave as B", font_size=18, color=TEXT, line_spacing=0.8).move_to(P3(4.15, -3.2))
         arr = Arrow(lab.get_left() + LEFT * 0.05, osblocks.get_right() + RIGHT * 0.05, buff=0.05, color=KERNEL_COLOR, stroke_width=4)
         self.say("We enter switch() in A's context and leave it in B's.",
                  AnimationGroup(FadeIn(lab), GrowArrow(arr), Indicate(osblocks, color=KERNEL_COLOR)))

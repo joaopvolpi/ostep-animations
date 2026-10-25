@@ -28,8 +28,8 @@ SAY = [
 def recap_lines():
     lines = VGroup(*[Text(wrap_text(s, 8.0, 24), font_size=24, color=TEXT, line_spacing=0.75) for s in RECAP])
     lines.arrange(DOWN, aligned_edge=LEFT, buff=0.32).move_to(P3(-6.2, 2.4), aligned_edge=UL)
-    if lines.get_bottom()[1] < -3.3:
-        lines.scale_to_fit_height(5.6).move_to(P3(-6.2, 2.4), aligned_edge=UL)
+    if lines.get_bottom()[1] < -2.1:
+        lines.scale_to_fit_height(4.5).move_to(P3(-6.2, 2.4), aligned_edge=UL)
     return lines
 
 
@@ -78,6 +78,7 @@ class S17Recap(Ep06Scene):
         lines = recap_lines()
         icons = icons_for(lines)
 
+        self.allow_overlap(icons[2][0].rule, icons[2][0], "the table rule hugs its first row at icon size")
         # S17.1
         self.say("So, today:",
                  AnimationGroup(FadeOut(VGroup(m, *r.values()), run_time=1.0), FadeIn(header, shift=RIGHT * 0.3)))

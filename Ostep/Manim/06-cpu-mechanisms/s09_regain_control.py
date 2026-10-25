@@ -7,11 +7,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import *  # noqa: E402,F401,F403
 
 REST9 = P3(-1.8, -2.3)
-TT9 = P3(-4.2, -1.55)
+TT9 = P3(-4.3, -1.33)
 
 
 def small_table():
-    return TrapTable(width=3.4, height=1.6, filled=3, dim_rows=(1,)).move_to(TT9)
+    return TrapTable(width=3.4, height=1.6, filled=3, dim_rows=(1,)).scale(0.65).move_to(TT9)
 
 
 def build_end():
@@ -46,7 +46,7 @@ class S09RegainControl(Ep06Scene):
         # S09.1
         stop = DashedLine(w.token.get_top() + UP * 0.05, P3(-0.7, 0.1), dash_length=0.12).add_tip(tip_length=0.2)
         start = DashedLine(w.token.get_top() + UP * 0.05, P3(3.2, 0.7), dash_length=0.12).add_tip(tip_length=0.2)
-        l1 = Text("stop", font_size=22, color=TEXT).move_to(P3(-1.4, -0.9))
+        l1 = Text("stop", font_size=22, color=TEXT).move_to(P3(-1.95, -0.9))
         l2 = Text("start", font_size=22, color=TEXT).move_to(P3(1.2, -0.5))
         self.say("Problem number two: switching between processes. Sounds simple: just stop one and start another.",
                  Succession(AnimationGroup(FadeIn(w.rings["B"]), FadeIn(b, shift=DOWN * 0.3)), Wait(1.5),
@@ -71,5 +71,7 @@ class S09RegainControl(Ep06Scene):
         # S09.5
         crux = CruxCard(CRUX_Q3, CRUX_SUB3, accent=VIRT).move_to(P3(0, 0.4))
         self.play(FadeOut(VGroup(lock, lk, zz, leg)), run_time=0.6)
-        self.say_crux(crux, hold=0.3, lead="Which brings us to the crux: {q}")
-        self.say("There are two answers. Let's start with the polite one.", crux.dock(font_size=22))
+        world = VGroup(w.boundary, w.gauge, w.chip, w.rings["A"], w.rings["B"], a, b, w.token, tt)
+        self.say_crux(crux, FadeOut(world, run_time=0.8), hold=0.3, lead="Which brings us to the crux: {q}")
+        self.say("There are two answers. Let's start with the polite one.", crux.dock(font_size=22),
+                 Succession(Wait(0.8), FadeIn(world, run_time=0.8)))

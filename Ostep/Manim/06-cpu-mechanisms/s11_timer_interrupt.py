@@ -53,10 +53,11 @@ class S11TimerInterrupt(Ep06Scene):
         rib = trust_ribbon()
         self.add(w.boundary, w.gauge, w.chip, w.token, tt, old, rib, *w.rings.values(), a, b, stu, prof)
 
+        self.allow_overlap(w.token.arm, w.token.text, "the token's arm leaves from behind its own badge")
         # S11.1
         new = strip(CRUX_Q4)
         timer = make_timer()
-        loop = loop_arrow(0.4).move_to(P3(0, 2.7))
+        loop = loop_arrow(0.4).move_to(P3(0.95, 1.85))
         self.say("Which leaves us with a harder question: How to gain control without cooperation?", ReplacementTransform(old, new))
         self.say("The answer was found many years ago, and it's simple: a timer interrupt.",
                  Succession(FadeIn(timer, shift=LEFT * 0.8), self.note("timer interrupt")),
@@ -77,16 +78,19 @@ class S11TimerInterrupt(Ep06Scene):
                             AnimationGroup(FadeOut(bl), FadeOut(loop), Flash(a.get_center(), color=CPU_COLOR))))
         a.set_expression("ready")
 
+        r1 = tt.row(1)
+        hl = Rectangle(width=tt.frame.width - 0.15, height=r1.height + 0.06).set_fill(CPU_COLOR, 0.25).set_stroke(CPU_COLOR, 1.5)
+        hl.move_to(r1.get_center()).set_x(tt.frame.get_center()[0])
         # S11.4
         self.say("…and a pre-configured interrupt handler in the OS runs.",
-                 Succession(w.down("A"), tt.highlight_row(1), Wait(0.5)),
+                 Succession(w.down("A"), FadeIn(hl, run_time=0.4), Wait(0.5)),
                  late(1.5, self.note("interrupt handler")))
 
         # S11.5
         t1 = tag("keep A?", DIM, 20).move_to(P3(-1.7, -0.75))
         t2 = tag("run B?", DIM, 20).move_to(P3(1.7, -0.75))
         self.say("The OS has regained control. It can stop this process and start another.", stu.change("excited"),
-                 AnimationGroup(FadeIn(t1, scale=1.3), FadeIn(t2, scale=1.3), tt.unhighlight()))
+                 AnimationGroup(FadeIn(t1, scale=1.3), FadeIn(t2, scale=1.3), FadeOut(hl, run_time=0.3)))
 
         # S11.6
         sw = PowerSwitch(0.7, on=False).move_to(SW11 + P3(0, 0.0))
@@ -112,7 +116,7 @@ class S11TimerInterrupt(Ep06Scene):
         ks = KernelStack("k-stack(A)").move_to(KS11)
         pk = RegPacket(COL["A"]).move_to(a.get_center())
         hw = Text("hardware", font_size=20, color=CPU_COLOR).move_to(P3(2.0, -0.9))
-        never = tag("A never asked", DIM, 18).next_to(a, UP, buff=0.05)
+        never = tag("A never asked", DIM, 18).next_to(a, LEFT, buff=0.1)
         self.say("The hardware does its part too: it saves the running program's state onto the kernel stack, the "
                  "same dance as a trap, though this time the program never asked.",
                  Succession(FadeIn(ks), FadeIn(pk, scale=0.4, run_time=0.4), FadeIn(hw), ks.push(pk, run_time=1.6),
@@ -128,13 +132,13 @@ class S11TimerInterrupt(Ep06Scene):
                  Succession(FadeIn(pg), ReplacementTransform(pg, pl), Wait(0.5), FadeOut(pl)))
 
         # S11.11
-        tip = TipCard("Use the timer interrupt to regain control", width=5.0, font_size=24).move_to(P3(0, 1.9))
+        tip = TipCard("Use the timer interrupt to regain control", width=5.0, font_size=24).move_to(P3(0, 0.9))
         rib2 = trust_ribbon("no trust needed")
         self.say("This is the non-cooperative approach: the OS takes control by force, with hardware help.",
                  Succession(self.note("non-cooperative"), AnimationGroup(Transform(rib, rib2), timer.ring(0.8)), tip.slide_in(LEFT)))
 
 
         # S11.12
-        tip2 = TipCard("Misbehaving process? One strike, and you're out.", title="TIP", width=5.0, font_size=24).move_to(P3(0, 1.9))
+        tip2 = TipCard("Misbehaving process? One strike, and you're out.", title="TIP", width=5.0, font_size=24).move_to(P3(0, 0.9))
         self.say("And a process that misbehaves gets one strike: it's out.",
                  Succession(tip.slide_out(LEFT), tip2.slide_in(LEFT), Wait(1.0), tip2.slide_out(LEFT)))

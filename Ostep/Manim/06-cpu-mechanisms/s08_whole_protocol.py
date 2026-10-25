@@ -19,7 +19,13 @@ class S08WholeProtocol(Ep06Scene):
                               top=2.5, bottom=-1.95, row_h=0.4, font_size=20, header_size=24)
         thumb = LDEThumb().move_to(P3(3.6, -2.75))
         self.add(stu, prof, chart.rows_group, chart.cursor, chart.arrows)
-        W_ = chart.write_row
+
+        def W_(col, text, **kw):
+            anim = chart.write_row(col, text, **kw)
+            new = chart.items[-1]
+            for old in chart.items[-4:-1]:
+                self.allow_overlap(old, new, "the new row fades in as the older rows scroll up past it")
+            return anim
 
         # S08.1
         self.say("Let's put it together. Limited direct execution has two phases.",
@@ -66,11 +72,12 @@ class S08WholeProtocol(Ep06Scene):
                             W_(PR, "Run main()", run_time=0.8)))
 
         # S08.8
-        self.say("The program runs. When it needs a service, it traps: registers saved, kernel mode, trap handler.",
-                 Succession(W_(PR, "Call system call", run_time=0.8), W_(PR, "trap into OS", bold=True, run_time=0.8),
-                            W_(HW, "save regs (to kernel stack)", run_time=0.8),
-                            AnimationGroup(W_(HW, "move to kernel mode", run_time=0.8), thumb.ride("kernel")),
-                            W_(HW, "jump to trap handler", run_time=0.8)))
+        with self.narrate("The program runs. When it needs a service, it traps: registers saved, kernel mode, trap handler."):
+            self.play(W_(PR, "Call system call", run_time=0.8))
+            self.play(W_(PR, "trap into OS", bold=True, run_time=0.8))
+            self.play(W_(HW, "save regs (to kernel stack)", run_time=0.8))
+            self.play(AnimationGroup(W_(HW, "move to kernel mode", run_time=0.8), thumb.ride("kernel")))
+            self.play(W_(HW, "jump to trap handler", run_time=0.8))
 
         # S08.9
         self.say("The OS does the work, and returns from the trap.",
@@ -78,10 +85,11 @@ class S08WholeProtocol(Ep06Scene):
                             W_(OS, "return-from-trap", bold=True, run_time=0.8)))
 
         # S08.10
-        self.say("The registers come back, user mode returns, and the program continues right after the trap.",
-                 Succession(W_(HW, "restore regs (from kernel stack)", run_time=0.9),
-                            AnimationGroup(W_(HW, "move to user mode", run_time=0.9), thumb.ride("user")),
-                            W_(HW, "jump to PC after trap", run_time=0.9), W_(PR, "...", run_time=0.6)))
+        with self.narrate("The registers come back, user mode returns, and the program continues right after the trap."):
+            self.play(W_(HW, "restore regs (from kernel stack)", run_time=0.9))
+            self.play(AnimationGroup(W_(HW, "move to user mode", run_time=0.9), thumb.ride("user")))
+            self.play(W_(HW, "jump to PC after trap", run_time=0.9))
+            self.play(W_(PR, "...", run_time=0.6))
 
         # S08.11
         self.say("Finally main() returns into exit(), one more system call, and the OS cleans up.",

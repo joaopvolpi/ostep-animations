@@ -8,15 +8,17 @@ from common import *  # noqa: E402,F401,F403
 from s06_system_call import build_end as s06_end  # noqa: E402
 
 REST7 = P3(-2.6, -2.3)
-TT_POS = P3(3.5, -1.45)
+TT_POS = P3(3.0, -1.45)
 H_COLS = [CPU_COLOR, VIRT, USER_COLOR]
 
 
 def handler_boxes():
     g = VGroup()
-    for name, c, x in zip(("syscall", "timer", "keyboard"), H_COLS, (2.3, 3.5, 4.7)):
+    for name, c, x in zip(("syscall", "timer", "keyboard"), H_COLS, (1.8, 3.0, 4.2)):
         b = RoundedRectangle(width=1.1, height=0.45, corner_radius=0.08).set_fill(c, 0.12).set_stroke(c, 2.5)
         t = Text(name, font=FONT, font_size=16, color=TEXT).move_to(b)
+        b.set_z_index(1)
+        t.set_z_index(2)
         g.add(VGroup(b, t).move_to(P3(x, -3.05)))
     return g
 
@@ -33,7 +35,7 @@ class S07TrapTable(Ep06Scene):
 
         # S07.1
         sticky = sticky_note("jump to 0x40", 0.9).move_to(P3(1.7, 1.6))
-        b1 = tag("check permission", TEXT, 22).move_to(P3(-1.7, -1.7))
+        b1 = tag("check permission", TEXT, 22).move_to(P3(-0.7, -1.7))
         b2 = tag("do the work", TEXT, 22).move_to(P3(1.7, -1.7))
         arr = DashedLine(sticky.get_bottom() + DOWN * 0.1, b1.get_top() + UP * 0.05, dash_length=0.12).add_tip(tip_length=0.2)
         self.say("Wait. The trap jumps into the kernel. Which code? Does the program say?", stu.change("curious"),
@@ -61,6 +63,7 @@ class S07TrapTable(Ep06Scene):
                  Succession(AnimationGroup(FadeOut(a), FadeOut(w.rings["A"]), FadeOut(sticky), FadeOut(xm), FadeOut(b1), FadeOut(b2)),
                             w.down(None), AnimationGroup(FadeIn(sw), FadeIn(boot)), sw.flip(True)))
 
+        self.allow_overlap(w.token.arm, w.token.text, "the token's arm leaves from behind its own badge")
         # S07.5
         tt = TrapTable(filled=0, dim_rows=(1,)).move_to(TT_POS)
         steps = [FadeIn(tt, run_time=0.8)]
@@ -73,7 +76,7 @@ class S07TrapTable(Ep06Scene):
         # S07.6
         hbx = handler_boxes()
         ars = VGroup(*[Arrow(P3(x, TT_POS[1] - 0.95), P3(x, -2.8), buff=0.02, stroke_width=3, tip_length=0.12, color=c)
-                       for x, c in zip((2.3, 3.5, 4.7), H_COLS)])
+                       for x, c in zip((1.8, 3.0, 4.2), H_COLS)])
         slot = RoundedRectangle(width=1.2, height=0.4, corner_radius=0.06).set_fill(CARD_FILL, 1).set_stroke(DIM, 2).move_to(P3(0, -2.95))
         rem = Text("remember", font_size=20, color=DIM).next_to(slot, LEFT, buff=0.15)
         addr = Text("0x1000", font=MONO_FONT, font_size=18, color=TEXT).move_to(tt.header).set_z_index(20)
@@ -89,12 +92,12 @@ class S07TrapTable(Ep06Scene):
 
         # S07.8
         load = Arrow(tt.get_bottom() + LEFT * 1.3, slot.get_right() + RIGHT * 0.65, buff=0.08, color=KERNEL_COLOR, stroke_width=4)
-        priv = Text("privileged", font_size=22, color=KERNEL_COLOR, weight=BOLD).move_to(P3(1.5, -2.3))
+        priv = Text("privileged", font_size=22, color=KERNEL_COLOR, weight=BOLD).move_to(P3(0.0, -3.55))
         self.say("Installing the table is itself a privileged instruction.",
                  AnimationGroup(GrowArrow(load), FadeIn(priv)))
 
         # S07.9
-        mine = bottom_to(proc("A", "ready", scale=0.8), P3(-2.8, 0.8))
+        mine = bottom_to(proc("A", "ready", scale=0.8), P3(-4.4, 0.8))
         mt = TrapTable(rows=("my code", "my code", "my code"), filled=3, width=3.6).scale(0.4).move_to(P3(-2.8, 2.5))
         self.say("And if I could install my own table?", stu.change("excited"),
                  AnimationGroup(FadeOut(VGroup(load, priv, sw, boot)), FadeIn(mine), FadeIn(mt)))
@@ -106,18 +109,18 @@ class S07TrapTable(Ep06Scene):
                             Indicate(pl, color=RED_BAD), ShiftBy(mt, UP * 2.2, run_time=1.0), FadeOut(pl)))
 
         # S07.11
-        eax = VGroup(RoundedRectangle(width=1.3, height=0.42, corner_radius=0.06).set_fill(CARD_FILL, 1).set_stroke(DIM, 2),
+        eax = VGroup(RoundedRectangle(width=1.7, height=0.42, corner_radius=0.06).set_fill(CARD_FILL, 1).set_stroke(DIM, 2),
                      Text("eax", font=MONO_FONT, font_size=20, color=DIM)).move_to(P3(-0.9, 1.4))
         eax[1].move_to(eax[0].get_left() + RIGHT * 0.4)
-        card = tag("#5", CPU_COLOR, 22).move_to(mine.get_right() + UP * 0.5)
+        card = tag("#5", CPU_COLOR, 22).move_to(mine.get_right() + UP * 0.5).set_z_index(5)
         self.say("The program doesn't give an address. It gives a system-call number.",
                  Succession(AnimationGroup(FadeOut(mt), FadeIn(eax), FadeIn(card), self.note("system-call number")),
-                            PacketFly(card, eax[0].get_right() + LEFT * 0.35, arc=0.3, run_time=0.8)))
+                            PacketFly(card, eax[0].get_right() + LEFT * 0.45, arc=0.3, run_time=0.8)))
 
         # S07.12
         ok = tick_mark(0.3).next_to(w.token, UP, buff=0.05)
         hit = tag("#5 = open()", CPU_COLOR, 18).next_to(hbx[0], DOWN, buff=0.0).shift(DOWN * 0.0)
-        hit.move_to(P3(2.3, -3.52))
+        hit.move_to(P3(1.8, -3.52))
         self.say("The handler checks that it's valid and runs the matching code.",
                  Succession(PacketFly(card, w.token.get_center(), arc=0.4, fade=True, run_time=1.0), FadeIn(ok, scale=1.5),
                             tt.highlight_row(0), hbx[0][0].animate.set_fill(CPU_COLOR, 0.6), FadeIn(hit)))
@@ -131,7 +134,7 @@ class S07TrapTable(Ep06Scene):
                  Succession(FadeOut(ok), FadeIn(pr_l), FadeIn(both)))
 
         # S07.14
-        tip = TipCard("Be wary of user inputs.", width=4.0, font_size=26).move_to(P3(3.6, 1.7))
+        tip = TipCard("Be wary of user inputs.", width=4.0, font_size=26).move_to(P3(3.3, 1.7))
         wcode = snippet("write(fd, buf, n)", 22).move_to(P3(-3.3, 1.4))
         kmem = VGroup(Rectangle(width=0.9, height=1.6).set_fill(KERNEL_COLOR, 0.5).set_stroke(KERNEL_COLOR, 3),
                       Text("kernel memory", font_size=16, color=TEXT)).move_to(P3(-3.6, -1.9))
@@ -140,6 +143,6 @@ class S07TrapTable(Ep06Scene):
         x2 = x_mark(0.4).move_to(kmem[0].get_center())
         self.say("And the kernel stays suspicious even then. A write() whose buffer points inside kernel memory must "
                  "be refused.", prof.change("proud"),
-                 Succession(AnimationGroup(FadeOut(both), FadeOut(pr_l), FadeOut(VGroup(mine, eax, hit)), tip.slide_in()),
+                 Succession(AnimationGroup(FadeOut(both), FadeOut(pr_l), FadeOut(VGroup(mine, eax, hit)), run_time=0.5), tip.slide_in(),
                             AnimationGroup(FadeIn(wcode), FadeIn(kmem)), GrowArrow(bufarr), FadeIn(x2, scale=1.8)))
         self.play(tip.slide_out(), FadeOut(VGroup(wcode, kmem, bufarr, x2)), run_time=0.8)

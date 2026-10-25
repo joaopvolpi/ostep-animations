@@ -47,7 +47,7 @@ class S03NaiveProtocol(Ep06Scene):
 
         # S03.8
         n1, n2 = numeral(1).move_to(P3(6.15, 1.5)), numeral(2).move_to(P3(6.15, 0.3))
-        icon_a = proc("A", "ready", scale=0.45).move_to(P3(6.1, -0.7))
+        icon_a = proc("A", "ready", scale=0.45).move_to(P3(6.1, -1.0))
         bang = Text("!", font_size=44, color=RED_BAD, weight=BOLD).next_to(icon_a, UP, buff=0.0)
         self.say("But it raises two problems. One: how do we stop the program from doing what we don't want, "
                  "while still running it efficiently?",

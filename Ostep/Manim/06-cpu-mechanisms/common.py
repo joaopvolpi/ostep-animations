@@ -5,6 +5,7 @@ User/Kernel boundary.  ``World`` bundles the chip, the OS token, the boundary, t
 privilege gauge and the process benches, and offers ``down()`` / ``up()`` (a trap and a
 return-from-trap) as single animations.
 """
+import os
 import sys
 from pathlib import Path
 
@@ -159,6 +160,7 @@ class World:
         self.chip = CPU(chip_size, label="CPU", pins=3)
         self.chip.move_to(self.useat if level == "user" else self.kseat).set_z_index(2)
         self.token = KernelToken(scale=token_scale).set_z_index(5)
+        self.token.arm.set_z_index(4)
         bottom_to(self.token, self.rest)
         self.procs = {}
         self.rings = {}
@@ -167,10 +169,10 @@ class World:
     # -- geometry
     def slot(self, seat):
         """Bottom point of whatever stands on a chip at ``seat``."""
-        return np.array(seat) + UP * (self.cs / 2 + 0.02)
+        return np.array(seat) + UP * (self.cs / 2 + 0.12)
 
     def chip_slot(self):
-        return self.chip.get_center() + UP * (self.cs / 2 + 0.02)
+        return self.chip.get_center() + UP * (self.cs / 2 + 0.12)
 
     # -- building
     def add_proc(self, name, expr="ready", where="bench"):
@@ -183,7 +185,7 @@ class World:
         return p
 
     def add_ring(self, name):
-        r = bench_ring(COL[name]).move_to(BENCH[name] + DOWN * 0.1).set_z_index(1)
+        r = bench_ring(COL[name]).move_to(BENCH[name] + DOWN * 0.38).set_z_index(-3)
         self.rings[name] = r
         return r
 
@@ -247,6 +249,20 @@ class Ep06Scene(NarratedScene):
     def setup(self):
         super().setup()
         self.terms = TermHighlight(accent=VIRT)
+
+    def play(self, *args, **kwargs):
+        # layout-check only: the ghost check remembers mobjects by id(); keep every shown mobject alive so
+        # a freed one's id is never reused by a new mobject (false "ghost" reports)
+        if os.environ.get("OSTEP_CHECK"):
+            keep = self.__dict__.setdefault("_keepalive", {})
+            for top in self.mobjects:
+                for m in top.get_family():
+                    keep[id(m)] = m
+        super().play(*args, **kwargs)
+        if os.environ.get("OSTEP_CHECK"):
+            for top in self.mobjects:
+                for m in top.get_family():
+                    keep[id(m)] = m
 
     def check_bounds(self, label="end", xlim=6.75, ylim=3.85):
         for m in self.mobjects:

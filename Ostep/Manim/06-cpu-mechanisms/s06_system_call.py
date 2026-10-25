@@ -6,7 +6,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from common import *  # noqa: E402,F401,F403
 
-S6_DISK = P3(5.05, -2.2)
+S6_DISK = P3(4.9, -1.0)
 S6_REST = P3(3.3, -1.4)
 
 
@@ -80,8 +80,9 @@ class S06SystemCall(Ep06Scene):
         self.play(FadeOut(trap_code), run_time=0.3)
 
         # S06.7
-        allowed = tag("allowed?", GREEN_OK, 20).move_to(P3(2.5, -0.85))
+        allowed = tag("allowed?", GREEN_OK, 20).move_to(P3(2.5, -0.7))
         data = Square(0.2).set_fill(DISK_COLOR, 1).set_stroke(TEXT, 1).move_to(disk.get_center())
+        self.allow_overlap(w.token.arm, w.token.text, "the token's arm leaves from behind its own badge")
         self.say("Now the OS can do the privileged work, if it allows it.",
                  Succession(w.token.reach(disk.get_left() + UP * 0.1, run_time=0.8), FadeIn(allowed, scale=1.3),
                             Indicate(allowed, color=GREEN_OK), FadeIn(data),

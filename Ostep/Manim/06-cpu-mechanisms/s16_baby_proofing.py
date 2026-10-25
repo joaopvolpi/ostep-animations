@@ -18,7 +18,7 @@ def mini_world():
     boundary = UserKernelBoundary(y=BY, x_range=(-7.2, 7.2), label_size=26)
     chip = CPU(CHIP, label="CPU", pins=3).move_to(USER_SEAT).set_z_index(2)
     a = proc("A", "running", scale=PS)
-    bottom_to(a, chip.slot_point() + UP * 0.02).set_z_index(4)
+    bottom_to(a, chip.slot_point() + UP * 0.2).set_z_index(4)
     token = KernelToken().set_z_index(5)
     bottom_to(token, P3(-2.3, -2.3))
     token.badge.set_fill(opacity=0.35).set_stroke(opacity=0.35)
@@ -65,6 +65,7 @@ class S16BabyProofing(Ep06Scene):
         P = m.parts
         dimmer = Rectangle(width=7.3, height=8.2).set_fill(BG, 0.65).set_stroke(width=0).move_to(P3(3.35, 0)).set_z_index(8)
 
+        self.allow_overlap(P["tt"].rule, P["tt"], "the table rule hugs its first row at 45% size")
         # S16.1
         self.say("One more picture to hold onto. This is how the world works, too.",
                  AnimationGroup(FadeOut(VGroup(*stage), run_time=1.0), FadeIn(m, run_time=1.0), FadeIn(dimmer, run_time=1.0)),
@@ -84,7 +85,7 @@ class S16BabyProofing(Ep06Scene):
 
         # S16.4
         tl = m.parts["boundary"].line
-        a1 = Arrow(r["cab"].get_top() + UP * 0.05, P3(tl.get_left()[0] + 0.6, tl.get_center()[1]) + UP * 0.05, buff=0.05, color=DIM, stroke_width=3)
+        a1 = Arrow(r["cab"].get_top() + UP * 0.05, P3(tl.get_left()[0] + 2.2, tl.get_center()[1]) + UP * 0.05, buff=0.05, color=DIM, stroke_width=3)
         a2 = Arrow(r["soc"].get_right() + RIGHT * 0.05, P["tt"].get_left() + LEFT * 0.05, buff=0.05, color=DIM, stroke_width=3)
         a3 = Arrow(r["clock"].get_right() + RIGHT * 0.05, P["timer"].get_left() + LEFT * 0.05, buff=0.05, color=DIM, stroke_width=3)
         self.say("The OS baby-proofs the CPU.",
@@ -106,10 +107,10 @@ class S16BabyProofing(Ep06Scene):
         self.say("Then it runs processes only in restricted mode, at full speed, and steps in only for privileged "
                  "operations, or when a process has held the CPU too long.",
                  Succession(FadeIn(fast), Wait(2.0),
-                            AnimationGroup(ShiftBy(chip, dy, run_time=0.6), ShiftBy(a, dy, run_time=0.6), Flash(P3(fx, by), color=CPU_COLOR, flash_radius=0.2)),
+                            AnimationGroup(ShiftBy(chip, dy, run_time=0.6), ShiftBy(a, dy, run_time=0.6), Flash(P3(fx - 0.65, by), color=CPU_COLOR, flash_radius=0.2)),
                             AnimationGroup(ShiftBy(chip, up, run_time=0.6), ShiftBy(a, up, run_time=0.6)),
                             Wait(1.5),
-                            AnimationGroup(ShiftBy(chip, dy, run_time=0.6), ShiftBy(a, dy, run_time=0.6), Flash(P3(fx, by), color=CPU_COLOR, flash_radius=0.2)),
+                            AnimationGroup(ShiftBy(chip, dy, run_time=0.6), ShiftBy(a, dy, run_time=0.6), Flash(P3(fx - 0.65, by), color=CPU_COLOR, flash_radius=0.2)),
                             AnimationGroup(ShiftBy(chip, up, run_time=0.6), ShiftBy(a, up, run_time=0.6))))
 
         # S16.7
