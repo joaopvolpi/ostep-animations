@@ -72,8 +72,10 @@ class S01ProgramTalksToItself(Ep05Scene):
         # S01.7
         with self.narrate("Because after one particular line, there are two of the program."):
             self.play(prof.change("happy", look_at=walker), FadeOut(q), run_time=0.6)
-            self.play(walker.circumscribe(2), run_time=1.2)
-            self.wait(0.5)
+            bar.set_y(walker.line_mob(2).get_y())   # the bar left with S01.5: back, on the fork line
+            walker._lines[0] = 2
+            self.play(FadeIn(bar), run_time=0.5)
+            self.wait(1.2)
         self.play(FadeOut(walker.bars[0]), run_time=0.3)
 
         # S01.8
