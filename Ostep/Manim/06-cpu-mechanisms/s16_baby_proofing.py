@@ -64,13 +64,10 @@ class S16BabyProofing(Ep06Scene):
         m = mini_world()
         P = m.parts
         dimmer = Rectangle(width=7.3, height=8.2).set_fill(BG, 0.65).set_stroke(width=0).move_to(P3(3.35, 0)).set_z_index(8)
-        newterm = self.terms._make("limited direct execution", self.terms.dock_size, self.terms.accent,
-                                   self.terms.dock_at, right_aligned=True)
 
         # S16.1
         self.say("One more picture to hold onto. This is how the world works, too.",
-                 AnimationGroup(FadeOut(VGroup(*stage), run_time=1.0), Transform(self.terms.docked, newterm, run_time=1.0),
-                                FadeIn(m, run_time=1.0), FadeIn(dimmer, run_time=1.0)),
+                 AnimationGroup(FadeOut(VGroup(*stage), run_time=1.0), FadeIn(m, run_time=1.0), FadeIn(dimmer, run_time=1.0)),
                  Succession(Wait(0.8), AnimationGroup(FadeIn(r["room"]), FadeIn(r["rug"]), FadeIn(r["baby"]))))
 
         # S16.2
@@ -117,9 +114,9 @@ class S16BabyProofing(Ep06Scene):
 
         # S16.7
         self.say("So that's the \"limited\" in limited direct execution!", stu.change("excited"),
-                 Indicate(self.terms.docked, color=VIRT, scale_factor=1.2))
+                 self.note("limited direct execution"))
 
         # S16.8
-        self.say("That's the \"limited.\"", prof.change("proud"), self.terms.docked.animate.set_color(VIRT))
+        self.say("That's the \"limited.\"", prof.change("proud"))
         self.beat(1.5)
         self.play(FadeOut(self.badge))

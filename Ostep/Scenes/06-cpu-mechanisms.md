@@ -116,7 +116,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "So the CPU gets two **modes**." | The dashed boundary **draws** across the screen (left to right) and the two zones tint in. The Disk slides down into the kernel zone. The CPU chip settles on the user seat with A standing on it. Term highlight "user mode / kernel mode" (docks small). |
+| 1 | "So the CPU gets two **modes**." | The dashed boundary **draws** across the screen (left to right) and the two zones tint in. The Disk slides down into the kernel zone. The CPU chip settles on the user seat with A standing on it. Term note "user mode / kernel mode". |
 | 2 | "In **user mode**, code is restricted: if a process tries to issue an I/O request…" | The gauge reads USER (cyan). A reaches toward the Disk; a request arrow leaves A and heads for the boundary. |
 | 3 | "…the processor raises an exception, and the OS will most likely kill it." | The arrow hits the boundary and bounces (flash `flash_at`). A "!" pops over A, a red `x_mark` stamps it; A turns `done`/greyed and fades (`FadeOut`). Term highlight "privileged operation" (small, near the gauge). |
 | 4 | "In **kernel mode**, where the OS runs, code can do anything, including every privileged operation." | The CPU chip (with a fresh A gone) is empty. A red **OS token** hops onto the chip; the chip slides down across the line to the kernel seat (0, −1.9) (`UserKernelBoundary.cross`); the gauge flips to KERNEL (red). The token's arm reaches the Disk freely; a data packet flows back. |
@@ -245,7 +245,7 @@
 
 | # | Narration | On screen / animation |
 |---|---|---|
-| 1 | "Which leaves us with a harder question: How to gain control without cooperation? The answer was found many years ago, and it's simple: a **timer interrupt**." | The crux strip transforms to the new question. The timer box slides in. Term highlight "timer interrupt". A runs on the chip in an infinite loop (loop arrow). |
+| 1 | "Which leaves us with a harder question: How to gain control without cooperation? The answer was found many years ago, and it's simple: a **timer interrupt**." | The crux strip transforms to the new question. The timer box slides in. Term note "timer interrupt". A runs on the chip in an infinite loop (loop arrow). |
 | 2 | "A timer device can be programmed to raise an interrupt every few milliseconds." | The alarm clock face's hand spins; every 1 s a small bell ring animation (waves) fires. A small label "every X ms" with a tick mark on a mini Timeline. |
 | 3 | "When it fires, the running process is halted, whatever it was doing…" | The timer rings; a lightning bolt flies from the timer to the CPU chip. A freezes (outline), regardless of the loop. |
 | 4 | "…and a pre-configured **interrupt handler** in the OS runs." | The chip rides down across the line (gauge → KERNEL); the OS token hops on. Term highlight "interrupt handler". The trap table's `timer` row lights; a handler box lights. |
@@ -358,11 +358,11 @@
 | 4 | "The OS baby-proofs the CPU." | The room's three items map to the LDE world on the right with arrows: cabinet lock → user mode (dashed boundary); socket cover → trap table; wall clock → timer. The LDE world un-dims. |
 | 5 | "At boot it sets up the trap handlers and starts the timer." | The trap table and the timer light up one by one (each with the boot power switch icon). |
 | 6 | "Then it runs processes only in restricted mode, at full speed, and steps in only for privileged operations, or when a process has held the CPU too long." | A runs on the chip at the user seat (full speed, a "FAST" tag in green from S01), the OS token asleep; two little interventions: a trap and a timer interrupt briefly send the chip down and back (two quick crossings), then A is back. |
-| 7 | "So that's the 'limited' in limited direct execution!" | Student (excited). The word "limited" in the term strip pulses. |
+| 7 | "So that's the 'limited' in limited direct execution!" | Student (excited). Term note "limited direct execution" slides into the dock as the words are said. |
 | 8 | "That's the 'limited.'" | Professor (proud). Hold 1.5 s. |
 
 **Characters:** Student (excited), Professor (proud).
-**Ends with:** the LDE world fully lit, the playroom on the left, the term strip "limited direct execution" glowing. Section badge `FadeOut` at the end.
+**Ends with:** the LDE world fully lit, the playroom on the left, the term note "limited direct execution" (fades by itself). Section badge `FadeOut` at the end.
 **Implementation notes:** `cabinet_lock` and `socket_cover` are small new icons (see New assets). The Professor cameo in the room is optional; if it looks cluttered, drop it.
 
 ### S17 — Recap   (beats: B13) · ~0:35
