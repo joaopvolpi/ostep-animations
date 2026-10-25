@@ -24,7 +24,7 @@ class S13Signals(Ep05Scene):
         bolt = bolt_glyph(0.8, CPU_COLOR, "kill(pid, sig)").move_to(P3(-4.2, 2.8))
         with self.narrate("Back to the interface. Beyond those three calls, there are more. "
                           "In UNIX, kill() sends a signal to a process."):
-            self.play(FadeIn(p, scale=0.6), FadeIn(stu), FadeIn(prof), self.terms.show("signal", hold=0.5))
+            self.play(FadeIn(p, scale=0.6), FadeIn(stu), FadeIn(prof), self.terms.note("signal"))
             self.play(FadeIn(bolt, scale=0.5), run_time=0.4)
             self.play(hit(p, bolt))
             self.play(squash(p), FadeOut(bolt, scale=0.3), run_time=0.5)

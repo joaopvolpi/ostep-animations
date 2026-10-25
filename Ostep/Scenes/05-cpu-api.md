@@ -18,7 +18,7 @@
 | **grep / wc in the pipe** | `PROCESS_COLORS[3]` (sky) / `[4]` | S11 only. |
 | **Programs** | A program is a small file icon with a label chip: `p1`/`p3` in `DIM`, `wc` in sky | The code region of a Memory column shows its program chip. |
 | Section badge | Top-left (−6.6, 3.6): `VIRT` dot + "05 · Process API", font 22, `DIM` | Appears in S02, stays on until S17. |
-| Term highlight | Two strengths. **Unveil** (`terms.show`: scrim, big term at center, then docks top-right) only for the key terms: `fork()`, non-deterministic, `exec()`, redirection, signal. **Note** (`terms.note`: slides straight into the top-right dock, no veil) for every other term: PID, parent, child, `wait()`, shell, pipe, user, superuser (root), man pages. | The dock is carried over between scenes (each scene starts with the previous docked term). |
+| Term highlight | Two strengths. **Unveil** (`terms.show`: scrim, big term at center, then docks top-right) only for the key terms: `fork()`, non-deterministic, `exec()`, redirection. **Note** (`terms.note`: slides straight into the top-right dock, no veil) for every other term: PID, parent, child, `wait()`, shell, pipe, signal, user, superuser (root), man pages. | A docked term shows for 2 s, then fades by itself. |
 | Characters (corner mode) | Student at (−5.8, −2.8), scale 0.75, facing right. Professor at (5.8, −2.8), scale 0.75, `flip()`. | Default. "Dialogue mode" (S18): Student (−2.6, −1.2), Professor (2.6, −1.2), scale 1. |
 | Terminal | `Terminal` prop, `MONO_FONT`, prompt `prompt>` in `DIM` | The "what the user sees" window, reused in nearly every scene. |
 | Code block `p1.c` (trimmed) | `Code`, monokai, font 20, 8 lines, at (−3.9, 0.5) when used | Error check omitted; caption "p1.c (error check omitted)" in `DIM`. |
