@@ -48,16 +48,22 @@ def icon(k):
     return VGroup(lanes, ball.next_to(lanes, RIGHT, buff=0.3))
 
 
+def recap_layout():
+    """Recap title, the five lines and their icons: S18 builds them, S19 starts from them."""
+    head = Text("Recap", font_size=44, color=VIRT, weight=BOLD).move_to(P3(-6.2, 2.85), aligned_edge=LEFT)
+    lines = VGroup(*[Text(wrap_text(s, 7.8, 26), font_size=26, color=TEXT, line_spacing=0.75) for s in LINES])
+    lines.arrange(DOWN, aligned_edge=LEFT, buff=0.3).move_to(P3(-6.2, 2.25), aligned_edge=UL)
+    if lines.get_bottom()[1] < -2.0:
+        lines.scale_to_fit_height(4.2).move_to(P3(-6.2, 2.25), aligned_edge=UL)
+    icons = [icon(k).move_to(P3(4.9, lines[k].get_center()[1])) for k in range(5)]
+    return head, lines, icons
+
+
 class S18Recap(Ep07Scene):
     def construct(self):
         self.world(opened=(0, 1, 2, 3), stu="neutral", prof="explaining", strip=False)
         stu, prof = self.stu, self.prof
-        head = Text("Recap", font_size=44, color=VIRT, weight=BOLD).move_to(P3(-6.2, 2.85), aligned_edge=LEFT)
-        lines = VGroup(*[Text(wrap_text(s, 7.8, 26), font_size=26, color=TEXT, line_spacing=0.75) for s in LINES])
-        lines.arrange(DOWN, aligned_edge=LEFT, buff=0.3).move_to(P3(-6.2, 2.25), aligned_edge=UL)
-        if lines.get_bottom()[1] < -2.0:
-            lines.scale_to_fit_height(4.2).move_to(P3(-6.2, 2.25), aligned_edge=UL)
-        icons = [icon(k).move_to(P3(4.9, lines[k].get_center()[1])) for k in range(5)]
+        head, lines, icons = recap_layout()
 
         # S18.1
         self.say("So, today:", Write(head), prof.change("happy"))

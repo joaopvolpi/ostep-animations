@@ -29,7 +29,7 @@ class S06Convoy(Ep07Scene):
         old = VGroup(*fifo.br.values(), *fifo.mk.values(), fifo.ro.shown)
         self.say("That's the first assumption going away.",
                  strip.locks[0].open(), tl.clear_blocks(0.9), FadeOut(old),
-                 Succession(Wait(0.8), LaggedStart(*[FadeIn(b, shift=DOWN * 0.2) for b in bars], lag_ratio=0.4)))
+                 after(0.8, LaggedStart(*[FadeIn(b, shift=DOWN * 0.2) for b in bars], lag_ratio=0.4)))
         tl.purge()
 
         # S06.3
@@ -67,8 +67,8 @@ class S06Convoy(Ep07Scene):
                 if (i, t) in tl.block_at:
                     red.append(tl.block_at[(i, t)].animate.set_stroke(KERNEL_COLOR, 3.5))
         self.say("This is the convoy effect: short consumers of a resource get stuck behind a heavyweight one.",
-                 self.term("convoy effect", hold=0.8), Succession(Wait(1.5), AnimationGroup(*red)),
-                 Succession(Wait(2.5), Indicate(tl.blocks_in("A"), scale_factor=1.05, run_time=1.5)))
+                 self.term("convoy effect", hold=0.8), after(1.5, AnimationGroup(*red)),
+                 after(2.5, Indicate(tl.blocks_in("A"), scale_factor=1.05, run_time=1.5)))
 
         # S06.8
         cg = VGroup(tl, *cv.br.values(), *cv.mk.values(), ro.shown)
@@ -76,7 +76,7 @@ class S06Convoy(Ep07Scene):
         tray, ps, extras = shopper_line()
         self.say("It's your supermarket line again.",
                  cg.animate.scale(0.5).move_to(P3(3.3, -0.3)),
-                 Succession(Wait(0.8), AnimationGroup(FadeIn(tray, shift=RIGHT * 0.5),
+                 after(0.8, AnimationGroup(FadeIn(tray, shift=RIGHT * 0.5),
                                                       *[FadeIn(p, shift=RIGHT * 0.5) for p in ps], FadeIn(extras))))
         self.beat(0.6)
         self.play(FadeOut(VGroup(tray, *ps, extras), shift=LEFT * 0.5), Restore(cg), run_time=1.2)

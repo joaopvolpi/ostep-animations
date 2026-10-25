@@ -36,7 +36,7 @@ class S17BigPicture(Ep07Scene):
 
         # S17.1
         self.say("Let's step back. We started with a supermarket line and built four policies.",
-                 FadeOut(VGroup(lock5, ball, kr)), Succession(Wait(1.0), AnimationGroup(
+                 FadeOut(VGroup(lock5, ball, kr)), after(1.0, AnimationGroup(
                      FadeIn(frame, scale=0.95), Create(seps), FadeIn(heads), FadeIn(mq), Create(mtray), FadeIn(mlab))),
                  stu.change("neutral"), prof.change("explaining"))
 
@@ -77,5 +77,6 @@ class S17BigPicture(Ep07Scene):
         c2 = Ellipse(width=2.0, height=0.7).set_stroke(VIRT, 3).move_to(heads[2])
         self.say("Two metrics, and no policy wins both.",
                  Create(c1), Create(c2), prof.change("explaining"),
-                 Succession(Wait(0.8), LaggedStart(*[Indicate(r[2], scale_factor=1.3) for r in rows], lag_ratio=0.3, run_time=1.5)))
-        self.beat(1.0)
+                 after(0.8, LaggedStart(*[Indicate(r[2], scale_factor=1.3) for r in rows], lag_ratio=0.3, run_time=1.5)))
+        self.beat(0.6)
+        self.fade_stage(self.badge, stu, prof, run_time=0.8)

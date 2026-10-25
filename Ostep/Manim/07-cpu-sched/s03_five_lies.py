@@ -16,7 +16,7 @@ BAR_X0 = [3.0, 3.6, 3.3]
 
 class S03FiveLies(Ep07Scene):
     def construct(self):
-        self.world(stu="neutral", prof="happy", strip=False)
+        self.world(stu="neutral", prof="neutral", strip=False)
         stu, prof = self.stu, self.prof
         strip = make_strip()
         crux = crux_strip_mobs()
@@ -37,14 +37,14 @@ class S03FiveLies(Ep07Scene):
         cluster = VGroup(*[proc(n, scale=0.5) for n in "ABC"]).arrange(RIGHT, buff=0.15).move_to(P3(4.4, 0.5))
         wl = Text("workload", font_size=26, color=DIM).next_to(cluster, UP, buff=0.2)
         self.say("To think clearly, let's first simplify. The processes running in the system are the workload…",
-                 Succession(Wait(3.0), self.term("workload", hold=0.5)), FadeIn(cluster, shift=LEFT * 0.4), FadeIn(wl))
+                 after(3.0, self.term("workload", hold=0.5)), FadeIn(cluster, shift=LEFT * 0.4), FadeIn(wl))
 
         # S03.2
         bars = VGroup(*[sj_bar(l, 1.0, COL[n], n, x, y) for n, l, x, y in
                         zip("ABC", (2.4, 1.0, 1.7), BAR_X0, BAR_Y)])
         self.say("…and we'll call each one a job.",
                  self.term("job", hold=0.4, size=48),
-                 Succession(Wait(1.0), AnimationGroup(*[ReplacementTransform(c, b) for c, b in zip(cluster, bars)],
+                 after(1.0, AnimationGroup(*[ReplacementTransform(c, b) for c, b in zip(cluster, bars)],
                                                       FadeOut(wl))))
 
         # S03.3
@@ -54,33 +54,33 @@ class S03FiveLies(Ep07Scene):
         # S03.4
         eq = VGroup(*[sj_bar(1.6, 1.0, COL[n], n, x, y) for n, x, y in zip("ABC", BAR_X0, BAR_Y)])
         self.say("One: every job runs for the same amount of time.",
-                 Write(cards[0][1]), Succession(Wait(0.8), GrowFromCenter(locks[0])),
-                 Succession(Wait(1.2), AnimationGroup(*[Transform(b, e) for b, e in zip(bars, eq)]),
+                 Write(cards[0][1]), after(0.8, GrowFromCenter(locks[0])),
+                 after(1.2, AnimationGroup(*[Transform(b, e) for b, e in zip(bars, eq)]),
                             AnimationGroup(*[Indicate(b, scale_factor=1.1) for b in bars])))
 
         # S03.5
         line = DashedLine(P3(3.2, 1.5), P3(3.2, -0.3), dash_length=0.12).set_stroke(DIM, 2)
         aligned = VGroup(*[sj_bar(1.6, 1.0, COL[n], n, 3.2, y) for n, y in zip("ABC", BAR_Y)])
         self.say("Two: all jobs arrive at the same moment.",
-                 Write(cards[1][1]), Succession(Wait(0.8), GrowFromCenter(locks[1])),
-                 Succession(Wait(1.0), Create(line), AnimationGroup(*[Transform(b, e) for b, e in zip(bars, aligned)])))
+                 Write(cards[1][1]), after(0.8, GrowFromCenter(locks[1])),
+                 after(1.0, Create(line), AnimationGroup(*[Transform(b, e) for b, e in zip(bars, aligned)])))
 
         # S03.6
         self.say("Three: once started, a job runs to completion.",
-                 Write(cards[2][1]), Succession(Wait(0.8), GrowFromCenter(locks[2])))
+                 Write(cards[2][1]), after(0.8, GrowFromCenter(locks[2])))
 
         # S03.7
         disk = Disk(0.8, 0.65).move_to(P3(4.0, -1.1))
         cross = x_mark(0.5).move_to(disk)
         self.say("Four: jobs only use the CPU. They never do I/O.",
-                 Write(cards[3][1]), Succession(Wait(0.8), GrowFromCenter(locks[3])),
-                 Succession(Wait(1.5), FadeIn(disk, scale=0.6), Create(cross)))
+                 Write(cards[3][1]), after(0.8, GrowFromCenter(locks[3])),
+                 after(1.5, FadeIn(disk, scale=0.6), Create(cross)))
 
         # S03.8
         ball = CrystalBall(0.4, color=DIM).move_to(P3(5.5, -1.3))
         self.say("Five: the run-time of each job is known in advance.",
-                 Write(cards[4][1]), Succession(Wait(0.8), GrowFromCenter(locks[4])),
-                 Succession(Wait(1.5), FadeIn(ball, scale=0.6)))
+                 Write(cards[4][1]), after(0.8, GrowFromCenter(locks[4])),
+                 after(1.5, FadeIn(ball, scale=0.6)))
 
         # S03.9
         self.say("Known in advance? How would the OS ever know that?",
@@ -111,4 +111,4 @@ class S03FiveLies(Ep07Scene):
         tagt = Text("scheduling discipline", font_size=20, color=DIM).next_to(strip, RIGHT, buff=0.3)
         self.say("…until we have a fully-operational scheduling discipline. Like a Death Star, but for CPUs.",
                  prof.change("happy"), FadeIn(tagt))
-        self.beat(0.8)
+        self.play(FadeOut(tagt), stu.change("neutral"), run_time=0.6)

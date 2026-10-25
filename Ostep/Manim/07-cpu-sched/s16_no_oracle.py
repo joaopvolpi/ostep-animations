@@ -14,6 +14,7 @@ class S16NoOracle(Ep07Scene):
         tl = make_lanes()
         set_lane_blocks(tl, OVERLAP_CPU, OVERLAP_DISK)
         m140 = tl.completion_marker(None, 14, "140", color=DIM)
+        m140.set_opacity(0.6)
         m100 = tl.completion_marker(None, 10, "100", color=TEXT)
         disk = Disk(0.7, 0.6).move_to(P3(-5.75, 0.2))
         self.add(tl, m140, m100, disk)
@@ -39,19 +40,19 @@ class S16NoOracle(Ep07Scene):
         qbars = VGroup(*[sj_bar(1, w, COL[n], "?", x, -1.2) for n, w, x in
                          zip("ABC", (1.8, 1.0, 1.4), (-3.4, -0.5, 1.8))])
         self.say("Both SJF and STCF need to know job lengths before running them.",
-                 FadeIn(t1), FadeIn(t2), FadeIn(n1), FadeIn(n2), Succession(Wait(0.8), Indicate(t1), Indicate(t2)),
-                 Succession(Wait(1.5), LaggedStart(*[FadeIn(b, shift=UP * 0.2) for b in qbars], lag_ratio=0.4)))
+                 FadeIn(t1), FadeIn(t2), FadeIn(n1), FadeIn(n2), after(0.8, Indicate(t1), Indicate(t2)),
+                 after(1.5, LaggedStart(*[FadeIn(b, shift=UP * 0.2) for b in qbars], lag_ratio=0.4)))
 
         # S16.4
-        stage = Rectangle(width=1.8, height=0.12).set_fill(DIM, 1).set_stroke(TEXT, 2).move_to(P3(-4.5, -1.55))
+        stage = Rectangle(width=1.8, height=0.12).set_fill(DIM, 1).set_stroke(TEXT, 2).move_to(P3(-4.5, -1.65))
         walker = proc("A", scale=0.55)
         bottom_to(walker, P3(-6.3, -1.45))
         qm = question_mark(0.4, color=CPU_COLOR).move_to(P3(-4.5, -0.45))
         qoutline = Rectangle(width=1.0, height=0.2).set_fill(opacity=0).set_stroke(DIM, 2).next_to(qm, DOWN, buff=0.1)
         self.say("In a general-purpose OS, the system usually knows very little about how long a program will run.",
                  ball.crack(run_time=1.5), FadeOut(VGroup(t1, t2, n1, n2, qbars)),
-                 Succession(Wait(1.5), FadeIn(stage), FadeIn(walker),
-                            hop_bottom(walker, P3(-4.5, -1.49), run_time=1.0), FadeIn(qm), FadeIn(qoutline)))
+                 after(1.5, FadeIn(stage), FadeIn(walker),
+                            hop_bottom(walker, P3(-4.5, -1.52), run_time=1.0), FadeIn(qm), FadeIn(qoutline)))
 
         # S16.5
         self.say("So the best schedulers we found can't actually be built?",

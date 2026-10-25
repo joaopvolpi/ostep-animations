@@ -33,7 +33,7 @@ class S01ThreeCarts(Ep07Scene):
         # S01.3
         self.say("…the family in front of you starts unloading. Three carts. Piled high.",
                  FadeIn(family, shift=DOWN * 0.2),
-                 Succession(Wait(1.2), LaggedStart(*[GrowFromCenter(c) for c in carts], lag_ratio=0.8, run_time=2.4)))
+                 after(1.2, LaggedStart(*[GrowFromCenter(c) for c in carts], lag_ratio=0.8, run_time=2.4)))
 
         # S01.4
         self.say("Plus a checkbook.", GrowFromCenter(checkbook), desk.blink(run_time=0.8))
@@ -42,7 +42,7 @@ class S01ThreeCarts(Ep07Scene):
         sw = stopwatch_icon(0.24).move_to(you.get_top() + UP * 0.35 + RIGHT * 0.1)
         self.say("I'm going to be here all day.",
                  stu.animate.shift(RIGHT * 3.2), FadeIn(sw),
-                 Succession(Wait(0.4), Rotate(sw.hand, -3 * TAU, about_point=sw[0].get_center(),
+                 after(0.4, Rotate(sw.hand, -3 * TAU, about_point=sw[0].get_center(),
                                               run_time=1.6, rate_func=linear)))
 
         # S01.6
@@ -56,7 +56,7 @@ class S01ThreeCarts(Ep07Scene):
         self.say("Everyone has felt this. And everyone has an instinct about what the store should do: "
                  "let the milk go first.",
                  prof.animate.shift(LEFT * 3.2),
-                 Succession(Wait(3.5), FadeIn(wish, run_time=1.0), Wait(1.5), FadeOut(wish, run_time=0.8)))
+                 after(3.5, FadeIn(wish, run_time=1.0), Wait(1.5), FadeOut(wish, run_time=0.8)))
 
         # S01.7
         inout = Text("In… Out…", font_size=24, color=DIM).next_to(stu, UP, buff=0.15)

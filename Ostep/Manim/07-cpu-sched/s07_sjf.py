@@ -21,6 +21,10 @@ class S07SJF(Ep07Scene):
         title = policy_title("FIFO")
         self.add(cv.group(), bars, title)
         tl = cv.tl
+        for j in "BC":   # S06 ends with B and C's waiting cells outlined in red
+            for t in range(1, 11):
+                if (tl.row_index(j), t) in tl.block_at:
+                    tl.block_at[(tl.row_index(j), t)].set_stroke(KERNEL_COLOR, 3.5)
         sj = Chart("sjf")
         ro = sj.ro
         ro.shown = VGroup()
@@ -31,18 +35,18 @@ class S07SJF(Ep07Scene):
 
         # S07.2
         spot = Spotlight(height=0.7, spread=0.3)
-        spot.move_beam_to(bars[1].get_center() + DOWN * 0.15)
+        spot.move_beam_to(bars[1].get_center() + DOWN * 0.3)
         order = [(1, "1st"), (2, "2nd"), (0, "3rd")]
-        tags = VGroup(*[Text(t, font_size=20, color=DIM).next_to(bars[i], DOWN, buff=0.12) for i, t in order])
+        tags = VGroup(*[Text(t, font_size=20, color=DIM).next_to(bars[i], DOWN, buff=0.4) for i, t in order])
         sweep = []
         for k, (i, _) in enumerate(order):
-            tgt = bars[i].get_center() + DOWN * 0.15
+            tgt = bars[i].get_center() + DOWN * 0.3
             if i == 0:
                 tgt = P3(-3.0, tgt[1])
             sweep.append(spot.animate(run_time=0.8).move_beam_to(tgt))
         self.say("Run the shortest job first, then the next shortest, and so on.",
                  FadeIn(spot),
-                 Succession(Wait(0.5), *[Succession(s, FadeIn(tags[k], run_time=0.3)) for k, s in enumerate(sweep)]))
+                 after(0.5, *[Succession(s, FadeIn(tags[k], run_time=0.3)) for k, s in enumerate(sweep)]))
         self.play(FadeOut(spot), FadeOut(tags), run_time=0.4)
 
         # S07.3
@@ -58,7 +62,7 @@ class S07SJF(Ep07Scene):
             self.play(FadeOut(cv.ro.shown), *ro.reveal_numerator(), run_time=1.0)
             self.play(Write(ro.eq), run_time=0.5)
             ro.shown.add(ro.eq)
-            self.play(*ro.strike("110"))
+            self.play(*strike_below(self, ro, "110"))
             self.play(ro.count_value(110, run_time=1.4))
             self.play(*ro.frame_value(True))
 
@@ -78,7 +82,7 @@ class S07SJF(Ep07Scene):
         proof = proof_sheet(0.6).move_to(P3(-2.6, 3.05))
         xm = x_mark(0.4).move_to(proof)
         self.say("We're in a systems class, so we'll skip the proof.",
-                 stu.change("bored"), FadeIn(proof), Succession(Wait(1.2), Create(xm)))
+                 stu.change("bored"), FadeIn(proof), after(1.2, Create(xm)))
 
         # S07.8
         sign = VGroup(RoundedRectangle(width=3.2, height=0.5, corner_radius=0.08).set_fill("#2E6BC4", 1).set_stroke(TEXT, 2),
@@ -89,9 +93,14 @@ class S07SJF(Ep07Scene):
         head = Text("The principle of SJF", font_size=24, color=TEXT)
         body = VGroup(head, sign, lane).arrange(DOWN, buff=0.25)
         card = TipCard(body, title="TIP", width=4.8, height=3.7).move_to(P3(4.0, 0.1))
+        # the chart leaves while the tip card is up (it would sit under the card), and comes back after
+        ro.shown.remove(ro.old_mob, ro.old_strike)
+        stage = VGroup(tl, *cv.mk.values(), *cv.br.values(), ro.shown)
         self.say("But the supermarket got there first: that's the 'ten items or less' lane.",
-                 card.slide_in(RIGHT), Succession(Wait(2.0), mint.animate(run_time=1.0).shift(RIGHT * 0.45)))
+                 card.slide_in(RIGHT), FadeOut(stage),
+                 FadeOut(VGroup(br, bt, ro.old_mob, ro.old_strike, tag, note)), after(2.0, mint.animate(run_time=1.0).shift(RIGHT * 0.45)))
 
         # S07.9
         self.beat(1.0)
-        self.play(card.slide_out(RIGHT), FadeOut(VGroup(proof, xm)), run_time=0.7)
+        self.play(card.slide_out(RIGHT), FadeOut(VGroup(proof, xm)), FadeIn(stage),
+                  stu.change("neutral"), prof.change("happy"), run_time=0.7)

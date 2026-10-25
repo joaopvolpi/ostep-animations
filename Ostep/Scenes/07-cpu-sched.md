@@ -66,7 +66,7 @@
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | (transition) | The checkout scene dims to nothing (`FadeOut`) except the `Spotlight`, which floats up to the center. The Section badge "07 · Scheduling" forms at top-left. Characters glide to corner mode. |
-| 2 | (card appears) | Crux card: header "THE CRUX", question in bold (font 32): **"How to develop scheduling policy?"** `Write`. |
+| 2 | "Which brings us to the crux: How to develop scheduling policy?" (then the card's follow-up questions, read aloud) | Crux card: header "THE CRUX", question in bold (font 32): **"How to develop scheduling policy?"** `Write`. |
 | 3 | "Remember mechanisms versus policies? Last episode we met the mechanism: the context switch." | A `GearPair` (mechanism) rolls in at left (−4, −1.5), turning; a tag "Ep. 06" attaches. |
 | 4 | "It tells the OS *how* to stop one process and start another." | The gears' arm lifts a tiny process and swaps it. |
 | 5 | "Today is about the *which*." | The gears slide aside and dim; the `Spotlight` swings and rests over a small Queue of A, B, C at the right (2.5, −1.5). |
@@ -328,7 +328,7 @@
 | 5 | "But A computes for ten, then does a ten-millisecond I/O, over and over." | A's bar is divided into five 10 ms bursts (coral) separated by 10 ms I/O gaps (drawn as disk-lane blocks, coral outline). |
 | 6 | "B just computes for fifty." | B's bar is one solid mint 5-cell block. |
 | 7 | "Using STCF, what should the scheduler do?" | Student (curious); the Spotlight bobs between the two. |
-| 8 | (what-if) | Banner "naive": the lanes fill: CPU: A, idle, A, idle, A, idle, A, idle, A (cells at 0, 20, 40, 60, 80); Disk: A's I/O in the gaps; then B from 90 to 140. The idle gaps are hatched grey. The Computer pops at (5.2, −2.9) scale 0.6 → sleeping each time. |
+| 8 | "Naively, the scheduler runs a burst of A, then sits idle while A waits on the disk, again and again, and only then runs B." |  Banner "naive": the lanes fill: CPU: A, idle, A, idle, A, idle, A, idle, A (cells at 0, 20, 40, 60, 80); Disk: A's I/O in the gaps; then B from 90 to 140. The idle gaps are hatched grey. The Computer pops at (5.2, −2.9) scale 0.6 → sleeping each time. |
 | 9 | "Poor use of resources." | A label "Poor use of resources" in red; readout "CPU idle: 40 ms" appears. |
 
 **Characters:** Student (curious), Computer (sleeping).

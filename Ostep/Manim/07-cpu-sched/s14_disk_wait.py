@@ -16,17 +16,17 @@ class S14DiskWait(Ep07Scene):
 
         # S14.1
         self.say("Now the fourth assumption. Real jobs do I/O.",
-                 strip.locks[3].open(), FadeOut(prof), Succession(Wait(1.0), AnimationGroup(
+                 strip.locks[3].open(), FadeOut(prof), after(1.0, AnimationGroup(
                      Create(tl.grid), FadeIn(tl.row_labels), FadeIn(tl.tick_labels), FadeIn(disk))))
 
         # S14.2
         a = proc("A", scale=0.5)
         bottom_to(a, P3(-2.5, 1.12))
-        tag = ep_tag("state · Ep. 04", font_size=18).move_to(P3(5.0, 3.15))
+        tag = ep_tag("state · Ep. 04", font_size=18).move_to(P3(4.6, 2.3))
         self.play(FadeIn(a), run_time=0.4)
         self.say("When a job asks the disk for data, it's blocked, so the scheduler has to run someone else.",
                  self.term("blocked", hold=0.8), FadeIn(tag),
-                 Succession(Wait(3.8), hop_bottom(a, P3(-5.55, 1.12), run_time=0.9)))
+                 after(3.8, hop_bottom(a, P3(-5.55, 1.12), run_time=0.9)))
         self.play(a.change("blocked"), run_time=0.5)
 
         # S14.3
@@ -34,19 +34,19 @@ class S14DiskWait(Ep07Scene):
         spot.move_beam_to(P3(3.5, 1.2))
         q = question_mark(0.4).next_to(spot.lamp, RIGHT, buff=0.15)
         self.say("And when the I/O completes, there's another decision.",
-                 FadeIn(spot), FadeIn(q), Succession(Wait(1.0), q.animate(run_time=0.6).shift(UP * 0.12),
+                 FadeIn(spot), FadeIn(q), FadeOut(tag), after(1.0, q.animate(run_time=0.6).shift(UP * 0.12),
                                                      q.animate(run_time=0.6).shift(DOWN * 0.12)))
 
         # S14.4
-        barA = sj_bar(5, CELL14, COL["A"], "50 ms", LANE_X[0], 2.6)
-        barB = sj_bar(5, CELL14, COL["B"], "50 ms", LANE_X[0], 2.15)
+        barA = sj_bar(5, CELL14, COL["A"], "50 ms", LANE_X[0], 2.3)
+        barB = sj_bar(5, CELL14, COL["B"], "50 ms", LANE_X[0], 1.9)
         la, lb = Text("A", font_size=22, color=COL["A"]).next_to(barA, LEFT, buff=0.12), \
             Text("B", font_size=22, color=COL["B"]).next_to(barB, LEFT, buff=0.12)
         self.say("Two jobs, A and B, each need fifty milliseconds of CPU.",
                  FadeIn(barA, shift=RIGHT * 0.3), FadeIn(barB, shift=RIGHT * 0.3), FadeIn(la), FadeIn(lb))
 
         # S14.5
-        bursts = lane_bursts(2.6)
+        bursts = lane_bursts(2.3)
         self.say("But A computes for ten, then does a ten-millisecond I/O, over and over.",
                  ReplacementTransform(barA, bursts))
         gaps = VGroup(*[Text("I/O", font_size=14, color=COL["A"]).move_to(bursts[k]) for k in (1, 3, 5, 7)])
@@ -63,10 +63,11 @@ class S14DiskWait(Ep07Scene):
 
         # S14.8 (what-if)
         banner = VGroup(RoundedRectangle(width=1.6, height=0.5, corner_radius=0.1).set_fill(CARD_FILL, 1).set_stroke(KERNEL_COLOR, 2.5),
-                        Text("naive", font_size=26, color=KERNEL_COLOR)).move_to(P3(5.4, 3.0))
+                        Text("naive", font_size=26, color=KERNEL_COLOR)).move_to(P3(5.0, 2.3))
         banner[1].move_to(banner[0])
         comp = Computer("sleeping").scale(0.6).move_to(PROF_CORNER)
-        with self.narrate("", min_time=0.0):
+        with self.narrate("Naively, the scheduler runs a burst of A, then sits idle while A waits on the disk, "
+                          "again and again, and only then runs B."):
             self.play(FadeIn(banner), FadeIn(comp), FadeOut(VGroup(spot, q)), run_time=0.6)
             for t in range(1, 15):
                 j = NAIVE_CPU[t]
@@ -80,4 +81,5 @@ class S14DiskWait(Ep07Scene):
         poor = Text("Poor use of resources", font_size=34, color=KERNEL_COLOR).move_to(P3(0, -1.3))
         idle = Text("CPU idle: 40 ms", font_size=28, color=CPU_COLOR).move_to(P3(0, -2.0))
         self.say("Poor use of resources.", Write(poor), FadeIn(idle, shift=UP * 0.2))
-        self.beat(1.0)
+        self.beat(0.6)
+        self.play(FadeOut(banner), run_time=0.4)

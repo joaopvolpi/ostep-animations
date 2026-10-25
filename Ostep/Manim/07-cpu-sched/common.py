@@ -37,7 +37,7 @@ G_TOP, G_STEP, G_RH = 1.3, 0.62, 0.34
 G_TICKS_Y = -1.6
 RO_AT = (0.0, -2.4, 0.0)
 TITLE_AT = np.array([0.0, 3.1, 0.0])
-STRIP_AT = (-6.6, 3.1, 0.0)
+STRIP_AT = (-6.6, 2.88, 0.0)
 
 
 def P3(x, y=0.0):
@@ -168,7 +168,8 @@ def turn_brackets(tl, sp, jobs="ABC", labels=None):
         a = sp["arrive"].get(j, 0)
         c = comp[j]
         lab = (labels or {}).get(j, str((c - a) * sp["per"]))
-        out[j] = tl.bracket(j, a, c, lab)
+        # row A carries an "arrives" label in the late-arrival charts: lift its bracket above it
+        out[j] = tl.bracket(j, a, c, lab, gap=0.38 if (j == jobs[0] and sp["arrive"]) else 0.1)
     return out
 
 
@@ -277,8 +278,32 @@ class Ep07Scene(NarratedScene):
         self.check_bounds()
         super().tear_down()
 
+    # the episode's few unveiled key terms; every other term is a quick note into the dock
+    KEY_TERMS = ("turnaround time", "convoy effect", "response time", "Round Robin")
+
+    def fade_stage(self, *keep, run_time=0.8):
+        """Fade out everything except ``keep`` (and the docked term): a clean hand-off to the next
+        scene.  Looks inside scene-level groups so a kept mobject nested in one is not faded."""
+        keep = {id(k) for k in keep if k is not None} | {id(self.terms.docked)}
+        gone = []
+
+        def collect(m):
+            if id(m) in keep or getattr(m, "is_scrim", False):
+                return
+            if any(id(x) in keep for x in m.get_family()[1:]):
+                for s in m.submobjects:
+                    collect(s)
+            else:
+                gone.append(m)
+        for m in self.mobjects:
+            collect(m)
+        if gone:
+            self.play(*[FadeOut(m) for m in gone], run_time=run_time)
+
     def term(self, text, **kw):
-        return self.terms.show(text, **kw)
+        if text in self.KEY_TERMS:
+            return self.terms.show(text, **kw)
+        return self.terms.note(text)
 
     def add_docked(self, text):
         m = self.terms.docked_now(text)
@@ -313,7 +338,7 @@ class Ep07Scene(NarratedScene):
 # ---------------------------------------------------------------------------
 Q_X = {"front": 0.8, "mid": -0.9, "back": -2.6}
 FLOOR_Y = -0.92
-COUNTER_AT = P3(4.5, -0.45)
+COUNTER_AT = P3(4.5, -0.3)
 
 
 def checkout_tray():
@@ -462,7 +487,7 @@ def make_scoreboard(rows, width=4.2, font=22, title_font=18):
     h = step * (len(rows) + 1) + 0.25
     frame = RoundedRectangle(width=width, height=h, corner_radius=0.15).set_fill(CARD_FILL, 1).set_stroke(DIM, 2)
     x_name = -width / 2 + 0.2
-    x_t, x_r = width / 2 - 2.0, width / 2 - 0.6
+    x_t, x_r = width / 2 - 1.65, width / 2 - 0.5
     top = h / 2 - 0.12 - step / 2
     heads = VGroup(Text("turnaround", font_size=16, color=DIM).move_to(P3(x_t, top)),
                    Text("response", font_size=16, color=DIM).move_to(P3(x_r, top)))
@@ -549,14 +574,30 @@ def lane_bursts(y, x0=LANE_X[0]):
     return g
 
 
-SB_AT = P3(-2.3, 2.55)
+SB_AT = P3(-2.35, 2.4)
 CLOCK_AT = P3(0.8, 2.4)
 
 
 def scoreboard_at(rows, y=None):
-    sb = make_scoreboard(rows, width=4.2)
+    sb = make_scoreboard(rows, width=3.5)
     sb.move_to(SB_AT if y is None else P3(SB_AT[0], y))
     return sb
+
+
+def after(delay, *anims):
+    """Run ``anims`` one after another, starting ``delay`` seconds into the play (no first-frame flash)."""
+    return late(delay, anims[0] if len(anims) == 1 else Succession(*anims))
+
+
+def strike_below(scene, ro, old, **kw):
+    """``ro.strike`` with the struck old value placed BELOW the current one (above, it would
+    land on the timeline's tick labels)."""
+    anims = ro.strike(old, **kw)
+    d = ro.value_mob.get_center() + DOWN * 0.7 - ro.old_mob.get_center()
+    ro.old_mob.shift(d)
+    ro.old_strike.shift(d)
+    scene.allow_overlap(ro.old_mob, ro.old_strike, "strike-through of the old value")
+    return anims
 
 
 def build_rr_end():

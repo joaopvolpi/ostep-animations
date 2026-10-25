@@ -29,7 +29,8 @@ class S02TheCrux(Ep07Scene):
         # S02.2 (card appears)
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT, question_size=32)
         card.move_to(P3(0, 0.9))
-        self.say_crux(card, stu.change("neutral"), prof.change("neutral"), hold=0.6)
+        self.say_crux(card, stu.change("neutral"), prof.change("neutral"), hold=0.6,
+                      lead="Which brings us to the crux: {q}")
 
         # S02.3
         gears = GearPair(0.5).move_to(P3(-4.2, -1.6))
@@ -52,7 +53,7 @@ class S02TheCrux(Ep07Scene):
         qa, qb, qc = [proc(n, scale=0.4) for n in "ABC"]
         qq.place(qa, qb, qc)
         spot3 = Spotlight(height=1.1, spread=0.4)
-        spot3.move_beam_to(P3(2.5 - 0.65, -2.0))
+        spot3.move_beam_to(P3(2.5 - 0.65, -2.12))
         self.say("Today is about the which.",
                  VGroup(gears, ep6, a, b).animate.shift(LEFT * 1.0).set_opacity(0.35),
                  FadeIn(qq), FadeIn(qa), FadeIn(qb), FadeIn(qc),
@@ -65,4 +66,4 @@ class S02TheCrux(Ep07Scene):
                  ReplacementTransform(card.question, strip[2], run_time=1.2),
                  FadeOut(card.header, run_time=0.5), FadeOut(card.subtitle, run_time=0.6),
                  prof.change("neutral"))
-        self.beat(0.8)
+        self.fade_stage(badge, stu, prof, strip[0], strip[2], run_time=0.8)

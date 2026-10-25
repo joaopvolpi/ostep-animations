@@ -9,7 +9,7 @@ from common import *  # noqa: E402,F401,F403
 
 class S05FIFO(Ep07Scene):
     def construct(self):
-        self.world(term="turnaround time", stu="neutral", prof="neutral")
+        self.world(term="turnaround time", stu="curious", prof="explaining")
         stu, prof = self.stu, self.prof
         sp = FIG["fifo"]
         tl = make_gantt(12, 10)
@@ -22,7 +22,7 @@ class S05FIFO(Ep07Scene):
         title = policy_title("FIFO")
         fcfs = Text("= FCFS", font_size=22, color=DIM).next_to(title, RIGHT, buff=0.2)
         self.say("The simplest policy imaginable: First In, First Out, FIFO, also called First Come, First Served.",
-                 Write(title), self.term("FIFO", hold=0.6), Succession(Wait(2.5), FadeIn(fcfs)))
+                 Write(title), self.term("FIFO", hold=0.6), after(2.5, FadeIn(fcfs)))
 
         # S05.2
         queue = Queue(label=None, center=(4.0, 1.95), slots=3, spacing=0.8)
@@ -51,7 +51,7 @@ class S05FIFO(Ep07Scene):
 
         # S05.6 - S05.8
         spot = Spotlight(height=0.9, spread=0.35)
-        spot.move_beam_to(queue.slot_point(0) + DOWN * 0.02)
+        spot.move_beam_to(queue.slot_point(0) + DOWN * 0.12)
         self.add(spot)
         names = "ABC"
         lines = ["A finishes at ten.", "B at twenty.", "C at thirty."]
@@ -63,7 +63,7 @@ class S05FIFO(Ep07Scene):
             if k == 0:
                 anims.append(FadeIn(spot))
             else:
-                anims.append(spot.animate.move_beam_to(queue.slot_point(k) + DOWN * 0.02))
+                anims.append(spot.animate.move_beam_to(queue.slot_point(k) + DOWN * 0.12))
                 anims.append(qs[k - 1].animate.set_opacity(0.3))
             self.say(lines[k], *anims, min_time=2.0)
 

@@ -63,7 +63,7 @@ frustrated at the bottom-left.
 > assumptions? What metrics are important? What basic approaches have been used in the earliest
 > computer systems?
 
-**Narrator (V.O.):** Remember mechanisms versus policies? Last episode we met the mechanism: the
+**Narrator (V.O.):** Which brings us to the crux: how to develop scheduling policy? Remember mechanisms versus policies? Last episode we met the mechanism: the
 context switch. It tells the OS *how* to stop one process and start another. Today is about the
 *which*. And the answer, as we'll see, is surprisingly full of trade-offs.
 
@@ -254,7 +254,7 @@ decision.
 
 **Narrator (V.O.):** Two jobs, A and B, each need fifty milliseconds of CPU. But A computes for ten,
 then does a ten-millisecond I/O, over and over. B just computes for fifty. Using STCF, what should the
-scheduler do?
+scheduler do? Naively, it runs a burst of A, then sits idle while A waits on the disk, again and again, and only then runs B.
 
 **Narrator (V.O.):** The trick: treat each ten-millisecond burst of A as its own little *job*. When the
 system starts, the shortest job is A's first burst. It runs. Then A goes to the disk and B takes over.

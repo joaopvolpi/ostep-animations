@@ -34,20 +34,31 @@ class S09STCF(Ep07Scene):
                          title="ASIDE: Preemptive schedulers", width=7.8, height=4.0).move_to(P3(0, 0.2))
         cc = card.content_center()
         cpu = CPU(1.0, label=None, pins=2).move_to(cc + DOWN * 0.15)
-        pa = proc("A", "running", scale=0.45)
+        # unlabeled creatures (a built-in label would sit on the CPU); the letters follow them
+        pa = Process("running", color=COL["A"], label=None).scale(0.45)
         bottom_to(pa, cpu.slot_point() + UP * 0.02)
-        pb = proc("B", scale=0.45)
+        pb = Process("ready", color=COL["B"], label=None).scale(0.45)
         bottom_to(pb, cc + P3(-2.6, -0.85))
+        tag_a = Text("A", font_size=18, color=COL["A"], weight=BOLD)
+        tag_b = Text("B", font_size=18, color=COL["B"], weight=BOLD)
+        tag_a.add_updater(lambda m: m.next_to(pa, UP, buff=0.05))
+        tag_b.add_updater(lambda m: m.next_to(pb, UP, buff=0.05))
+        tag_a.next_to(pa, UP, buff=0.05)
+        tag_b.next_to(pb, UP, buff=0.05)
         half = VGroup(Rectangle(width=1.2, height=0.3).set_fill(COL["A"], 0.15).set_stroke(COL["A"], 2),
                       Rectangle(width=0.6, height=0.3).set_fill(COL["A"], 1).set_stroke(COL["A"], 2).shift(LEFT * 0.3))
         half.move_to(cc + P3(2.6, -0.7))
-        inside = VGroup(cpu, pa, pb)
+        inside = VGroup(cpu, pa, pb, tag_a, tag_b)
+        self.allow_overlap(card, late.group(), "aside card laid over the chart it dims on purpose")
+        self.allow_overlap(inside, late.group(), "creatures on the opaque aside card, over the dimmed chart")
+        self.allow_overlap(tag_b, cpu, "B's letter follows it as it hops onto the CPU")
+        self.allow_overlap(tag_a, cpu, "A's letter follows it off the CPU")
         self.say("The scheduler can stop A, run something else, and come back later. That's preemption.",
                  card.slide_in(RIGHT), FadeIn(inside, shift=LEFT * 1.5),
-                 Succession(Wait(2.0), hop_bottom(pa, half.get_bottom() + UP * 0.0, run_time=0.8),
-                            AnimationGroup(FadeOut(pa), FadeIn(half)),
+                 after(2.0, hop_bottom(pa, half.get_bottom() + UP * 0.0, run_time=0.8),
+                            AnimationGroup(FadeOut(pa), FadeOut(tag_a), FadeIn(half)),
                             hop_bottom(pb, cpu.slot_point() + UP * 0.02, run_time=0.8)),
-                 Succession(Wait(3.0), self.term("preemption", hold=0.6)))
+                 after(3.0, self.term("preemption", hold=0.6)))
 
         # S09.3
         l1 = Text("non-preemptive (old batch)", font_size=22, color=DIM).move_to(cc + P3(-2.0, -1.5))
@@ -56,12 +67,13 @@ class S09STCF(Ep07Scene):
         gears = GearPair(0.2).next_to(l2, UP, buff=0.12).shift(RIGHT * 0.5)
         e6 = ep_tag("Ep. 06", font_size=16).next_to(gears, RIGHT, buff=0.1)
         glow = SurroundingRectangle(l2, color=PERS, buff=0.1, corner_radius=0.08)
+        self.allow_overlap(VGroup(l1, l2, clock, gears, e6, glow), late.group(), "aside content over the dimmed chart")
         self.say("Old batch systems were non-preemptive. Virtually every modern scheduler is preemptive, and it "
                  "uses exactly the machinery we built last time: the timer interrupt and the context switch.",
-                 FadeIn(l1), FadeIn(l2), Succession(Wait(2.5), Create(glow)),
-                 Succession(Wait(4.0), AnimationGroup(FadeIn(clock), FadeIn(gears), FadeIn(e6))),
-                 Succession(Wait(1.5), self.term("preemptive", hold=0.6)))
-        gone = VGroup(card, inside, half, l1, l2, clock, gears, e6, glow)
+                 FadeIn(l1), FadeIn(l2), after(2.5, Create(glow)),
+                 after(4.0, AnimationGroup(FadeIn(clock), FadeIn(gears), FadeIn(e6))),
+                 after(1.5, self.term("preemptive", hold=0.6)))
+        gone = VGroup(card, cpu, pb, tag_b, half, l1, l2, clock, gears, e6, glow)
         old = VGroup(*late.br.values(), *late.mk.values(), late.ro.shown, arrs)
         self.play(FadeOut(gone, shift=RIGHT * 1.5), FadeOut(dim), tl.clear_blocks(0.8), FadeOut(old), run_time=0.9)
         tl.purge()
@@ -69,7 +81,7 @@ class S09STCF(Ep07Scene):
         # S09.4
         alias = Text("= PSJF", font_size=22, color=DIM).next_to(title, RIGHT, buff=0.2)
         self.say("Add preemption to SJF and you get Shortest Time-to-Completion First, STCF (also called PSJF).",
-                 Transform(title, policy_title("STCF")), self.term("STCF", hold=0.8), Succession(Wait(3.0), FadeIn(alias)))
+                 Transform(title, policy_title("STCF")), self.term("STCF", hold=0.8), after(3.0, FadeIn(alias)))
 
         # S09.5
         spot = Spotlight(height=0.7, spread=0.3)
@@ -83,7 +95,7 @@ class S09STCF(Ep07Scene):
         a3 = tl.arrival_marker("C", 1)
         self.say("B and C arrive at ten. A has ninety seconds left.",
                  *cell_anims(tl, run, arr, 1, run_time=0.8),
-                 Succession(Wait(1.0), AnimationGroup(FadeIn(a2, shift=DOWN * 0.2), FadeIn(a3, shift=DOWN * 0.2),
+                 after(1.0, AnimationGroup(FadeIn(a2, shift=DOWN * 0.2), FadeIn(a3, shift=DOWN * 0.2),
                                                        Transform(bars[0], bar_to(bars[0], 9, CELL10, "90 s")))))
 
         # S09.7
@@ -115,6 +127,7 @@ class S09STCF(Ep07Scene):
         self.play(*ro.reveal_value(), run_time=0.8)
         self.play(*ro.frame_value(True), run_time=0.6)
         tag = VGroup(Star(5, outer_radius=0.14).set_fill(CPU_COLOR, 1).set_stroke(width=0),
-                     Text("optimal", font_size=24, color=PERS)).arrange(RIGHT, buff=0.1).move_to(P3(2.0, 3.1))
+                     Text("optimal", font_size=24, color=PERS)).arrange(RIGHT, buff=0.1).move_to(P3(-2.6, 3.0))
         self.play(FadeIn(tag, scale=1.4), run_time=0.6)
         self.beat(0.6)
+        self.play(FadeOut(VGroup(tag, alias)), run_time=0.5)

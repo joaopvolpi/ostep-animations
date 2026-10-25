@@ -9,7 +9,7 @@ from common import *  # noqa: E402,F401,F403
 
 class S10ResponseTime(Ep07Scene):
     def construct(self):
-        self.world(opened=(0, 1, 2), term="STCF", stu="neutral", prof="explaining")
+        self.world(opened=(0, 1, 2), term="STCF", stu="excited", prof="explaining")
         stu, prof, strip = self.stu, self.prof, self.strip
         st = Chart("stcf")
         title = policy_title("STCF")
@@ -26,7 +26,7 @@ class S10ResponseTime(Ep07Scene):
         cursor.move_to(term._slot(0) + RIGHT * 0.15)
         blink = Succession(*[Succession(FadeOut(cursor, run_time=0.25), FadeIn(cursor, run_time=0.25)) for _ in range(3)])
         self.say("But then came time-shared machines, and people sitting at terminals, typing.",
-                 FadeIn(term, shift=RIGHT * 0.6), stu.change("curious", look_at=term), Succession(Wait(1.0), FadeIn(cursor), blink))
+                 FadeIn(term, shift=RIGHT * 0.6), stu.change("curious", look_at=term), after(1.0, FadeIn(cursor), blink))
 
         # S10.3
         sw = stopwatch_icon(0.3).move_to(P3(-3.4, 2.6))
@@ -34,15 +34,15 @@ class S10ResponseTime(Ep07Scene):
                      Text("a", font=MONO_FONT, font_size=26, color=TEXT)).move_to(P3(-4.6, -1.7))
         key[1].move_to(key[0])
         self.say("Now they care about something else: how long until the computer responds.",
-                 Succession(Wait(0.8), FadeIn(key, scale=1.3), FadeOut(key, run_time=0.5, scale=0.8)),
-                 Succession(Wait(1.5), FadeIn(sw), Rotate(sw.hand, -TAU * 0.6, about_point=sw[0].get_center(), run_time=2.0, rate_func=linear)))
+                 after(0.8, FadeIn(key, scale=1.3), FadeOut(key, run_time=0.5, scale=0.8)),
+                 after(1.5, FadeIn(sw), Rotate(sw.hand, -TAU * 0.6, about_point=sw[0].get_center(), run_time=2.0, rate_func=linear)))
 
         # S10.4
         ten = Text("10 s", font_size=24, color=KERNEL_COLOR).next_to(sw, RIGHT, buff=0.2)
         self.say("That's response time: the time from when a job arrives to the first time it runs.",
                  self.term("response time", hold=0.8),
-                 Succession(Wait(1.2), AnimationGroup(Rotate(sw.hand, -TAU * 0.4, about_point=sw[0].get_center(), run_time=2.0, rate_func=linear))),
-                 Succession(Wait(3.5), FadeOut(cursor, run_time=0.1), term.type("a"), FadeIn(ten), stu.change("frustrated")))
+                 after(1.2, AnimationGroup(Rotate(sw.hand, -TAU * 0.4, about_point=sw[0].get_center(), run_time=2.0, rate_func=linear))),
+                 after(3.5, FadeOut(cursor, run_time=0.1), term.type("a"), FadeIn(ten), stu.change("frustrated")))
 
         # S10.5
         f = MathTex(r"T_{response}", "=", r"T_{firstrun}", "-", r"T_{arrival}", font_size=38).move_to(P3(0, -2.3))
@@ -58,8 +58,8 @@ class S10ResponseTime(Ep07Scene):
         self.say("Look at SJF with three jobs of five seconds each.",
                  FadeOut(VGroup(term, sw, ten, cg, f, ghost_f, cursor), run_time=0.6),
                  Transform(title, policy_title("SJF")),
-                 Succession(Wait(0.6), AnimationGroup(Create(tl.grid), FadeIn(tl.row_labels), FadeIn(tl.tick_labels))),
-                 Succession(Wait(1.6), LaggedStart(*[FadeIn(a, shift=DOWN * 0.2) for a in arrows], lag_ratio=0.4)))
+                 after(0.6, AnimationGroup(Create(tl.grid), FadeIn(tl.row_labels), FadeIn(tl.tick_labels))),
+                 after(1.6, LaggedStart(*[FadeIn(a, shift=DOWN * 0.2) for a in arrows], lag_ratio=0.4)))
 
         # S10.7
         br = ch.br

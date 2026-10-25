@@ -50,7 +50,7 @@ class S13TradeOff(Ep07Scene):
         # S13.5
         bad = x_mark(0.35).next_to(ro.box, RIGHT, buff=0.25)
         self.say("RR is one of the worst policies for turnaround, even worse than FIFO in many cases.",
-                 Wiggle(ro.value_mob, scale_value=1.25, rotation_angle=0.05 * TAU), Succession(Wait(1.0), Create(bad)))
+                 Wiggle(ro.value_mob, scale_value=1.25, rotation_angle=0.05 * TAU), after(1.0, Create(bad)))
 
         # S13.6
         self.say("It stretches every job out as long as it can.",
@@ -69,25 +69,26 @@ class S13TradeOff(Ep07Scene):
         seesaw = VGroup(beam, lsj, lrr)
         self.say("Neither. That's a trade-off.",
                  prof.change("happy"), self.term("trade-off", hold=0.6), FadeIn(sb, shift=LEFT * 0.4),
-                 Succession(Wait(1.2), FadeIn(tri), FadeIn(seesaw),
+                 after(1.2, FadeIn(tri), FadeIn(seesaw),
                             Rotate(seesaw, 0.2, about_point=piv, run_time=0.6),
                             Rotate(seesaw, -0.4, about_point=piv, run_time=0.9)))
 
         # S13.9
         hl = SurroundingRectangle(sb.row_groups[1], color=VIRT, buff=0.08)
-        fair = Text("fair", font_size=26, color=VIRT).next_to(beam.get_right(), DOWN, buff=0.2).shift(RIGHT * 0.2)
+        fair = Text("fair", font_size=26, color=VIRT).next_to(beam.get_end(), DOWN, buff=0.2).shift(RIGHT * 0.2)
         self.say("A policy that divides the CPU evenly (a fair one) does badly on turnaround.",
                  Create(hl), FadeIn(fair))
 
         # S13.10
         hl2 = SurroundingRectangle(sb.row_groups[0], color=VIRT, buff=0.08)
         self.say("A policy that runs short jobs to completion does well on turnaround, but makes others wait.",
-                 ReplacementTransform(hl, hl2), FadeOut(fair), Rotate(seesaw, 0.4, about_point=piv, run_time=0.9),
+                 ReplacementTransform(hl, hl2), FadeOut(fair, run_time=0.4), late(0.5, Rotate(seesaw, 0.4, about_point=piv, run_time=0.9)),
                  Indicate(tl.blocks_in("B"), scale_factor=1.1, run_time=1.5))
 
         # S13.11
         cake = cake_glyph(0.9).move_to(P3(3.4, -2.55))
         bite = Circle(radius=0.28).set_fill(BG, 1).set_stroke(width=0).move_to(cake.get_center() + UP * 0.25 + RIGHT * 0.45)
         self.say("You can't have your cake and eat it too.",
-                 FadeIn(cake, shift=UP * 0.3), Succession(Wait(1.0), FadeIn(bite, scale=0.3)), prof.change("proud"))
-        self.beat(1.0)
+                 FadeIn(cake, shift=UP * 0.3), after(1.0, FadeIn(bite, scale=0.3)), prof.change("proud"))
+        self.beat(0.6)
+        self.fade_stage(self.badge, self.strip, stu, prof, run_time=0.8)

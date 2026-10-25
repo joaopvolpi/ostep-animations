@@ -27,25 +27,25 @@ class S11RoundRobin(Ep07Scene):
         # S11.1
         self.say("Here's the idea. Instead of running jobs to completion, run one for a short time slice…",
                  Transform(title, policy_title("RR")), self.term("time slice", hold=0.8),
-                 Succession(Wait(2.0), AnimationGroup(FadeIn(clk, scale=1.3), FadeIn(clklab), clk.spin(1, run_time=1.5))),
+                 after(2.0, AnimationGroup(FadeIn(clk, scale=1.3), FadeIn(clklab), clk.spin(1, run_time=1.5))),
                  stu.change("curious"))
 
         # S11.2
-        alias = Text("= scheduling quantum", font_size=20, color=DIM).next_to(title, RIGHT, buff=0.2)
+        alias = Text("= scheduling quantum", font_size=18, color=DIM).next_to(title, RIGHT, buff=0.2)
         self.say("…(the book also calls it a scheduling quantum)…", FadeIn(alias, shift=LEFT * 0.2))
 
         # S11.3
         queue = Queue(label="Run queue", center=(3.6, 2.2), slots=3, spacing=0.8, font_size=18)
         ps = [proc(n, scale=0.38) for n in "ABC"]
         queue.place(*ps)
-        spot = Spotlight(height=0.8, spread=0.3)
-        spot.move_beam_to(queue.slot_point(0))
+        spot = Spotlight(height=0.5, spread=0.3)
+        spot.move_beam_to(queue.slot_point(0) + DOWN * 0.12)
         loop = loop_arrow(0.28, color=TEXT).move_to(P3(5.35, 2.4))
-        sweep = Succession(*[spot.animate(run_time=0.7).move_beam_to(queue.slot_point(k % 3)) for k in (1, 2, 0)])
+        sweep = Succession(*[spot.animate(run_time=0.7).move_beam_to(queue.slot_point(k % 3) + DOWN * 0.12) for k in (1, 2, 0)])
         self.say("…then switch to the next job in the queue, and the next, round and round until every job is done. "
                  "This is Round Robin.",
                  FadeIn(queue), *[FadeIn(p, shift=DOWN * 0.2) for p in ps], FadeIn(spot),
-                 Succession(Wait(1.5), sweep, FadeIn(loop)), self.term("Round Robin", hold=0.8))
+                 after(1.5, sweep, FadeIn(loop)), self.term("Round Robin", hold=0.8))
 
         # S11.4
         old = VGroup(*sj.br.values(), sj.ro.shown, spot, loop)
@@ -68,6 +68,6 @@ class S11RoundRobin(Ep07Scene):
         self.say("Response times: zero, one, and two. Average: one second. Down from five.",
                  *ro.reveal_numerator(run_time=1.2), prof.change("happy"))
         self.play(*ro.reveal_value(), run_time=0.7)
-        self.play(*ro.strike("5"), run_time=0.8)
-        self.play(*ro.frame_value(True), FadeOut(sb1), FadeIn(sb2), run_time=0.8)
+        self.play(*strike_below(self, ro, "5"), run_time=0.8)
+        self.play(*ro.frame_value(True), FadeOut(sb1), FadeIn(sb2), FadeOut(alias), run_time=0.8)
         self.beat(0.6)

@@ -50,7 +50,7 @@ class S08LateArrivals(Ep07Scene):
         nolab = Text("no interrupt", font_size=20, color=KERNEL_COLOR).next_to(stop, UP, buff=0.55).shift(RIGHT * 0.5)
         self.say("When B and C show up, A is already running, and SJF never interrupts.",
                  *cell_anims(tl, run, arr, 2, run_time=0.8),
-                 Succession(Wait(1.0), AnimationGroup(Create(stop), FadeIn(nolab)),
+                 after(1.0, AnimationGroup(Create(stop), FadeIn(nolab)),
                             Indicate(tl.blocks_in("A"), scale_factor=1.05, run_time=1.0)))
 
         # S08.6
@@ -72,7 +72,7 @@ class S08LateArrivals(Ep07Scene):
             b = formula[j]
             anims += [Create(b.line), FadeIn(b.caps), FadeIn(b.label)]
         self.say("But their turnaround counts from their arrival at ten.", *anims,
-                 Succession(Wait(1.0), Indicate(VGroup(b_arr.arrow, c_arr.arrow), scale_factor=1.6)))
+                 after(1.0, Indicate(VGroup(b_arr.arrow, c_arr.arrow), scale_factor=1.6)))
 
         # S08.9
         self.say("So that's a hundred, a hundred, and a hundred and ten.",
