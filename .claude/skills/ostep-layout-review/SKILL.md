@@ -45,6 +45,7 @@ This runs every scene as a Manim dry run with the layout check on and writes the
 | `chrome` | something touches the crux strip/card, badge or docked term | real |
 | `host` | something touches the Student or Professor | real |
 | `panel` | two panels partly overlap, or a creature/CPU partly overlaps a panel | real |
+| `spill` | a card's own text (title, label) sticks out past the card's edge | real: shrink/wrap the text or widen the card |
 | `zone:chrome`, `zone:host` | content inside the thin reserved margin around them | real (crowding) |
 
 Also printed: `[ghost] t=<s> FadeOut(X) re-shows something that is not on screen`. A FadeOut,

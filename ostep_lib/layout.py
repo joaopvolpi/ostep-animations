@@ -12,6 +12,7 @@ coarse grid and reports the overlaps that are almost always mistakes:
 * ``host``    something touches the Student or the Professor.
 * ``panel``   two panels (cards, code blocks, terminals, filled boxes) partly overlap, or an
               actor / prop partly overlaps a panel.
+* ``spill``   a card's own text (its title, a label) sticks out past the card's outer edge.
 * ``zone:chrome`` / ``zone:host``  content inside the reserved zone around the chrome or a host:
               a thin margin (``ZONE_MARGIN``) around their actual drawn shape, only while they are
               on screen (for hosts: panels, creatures and props only; a "?" over the head is fine).
@@ -313,6 +314,22 @@ def find_overlaps(scene, mid_play=False):
             kind = _judge(a, b, roles[i], roles[j], cut)
             if kind and not _is_allowed(allowed, a, b):
                 found.append((kind, a, b, (x0, y0, x1, y1)))
+    # spill: a card's own text that straddles the card's outer edge (a title too long for its frame);
+    # the pair loop skips a text and its own card, so check that edge here
+    pos = {id(u): k for k, u in enumerate(units)}
+    for i, t in enumerate(units):
+        g = t.group
+        if not t.is_text or g is None or id(g) not in pos or roles[pos[id(g)]] not in ("panel", "chrome"):
+            continue
+        gb, tb = g.box, t.box
+        if (gb[2] - gb[0]) * (gb[3] - gb[1]) * RES * RES < PANEL_AREA:
+            continue        # no real frame (a badge's dot, a term's underline)
+        iw = min(gb[2], tb[2]) - max(gb[0], tb[0])
+        ih = min(gb[3], tb[3]) - max(gb[1], tb[1])
+        inside = iw > 0 and ih > 0 and iw * ih >= 0.5 * (tb[2] - tb[0]) * (tb[3] - tb[1])
+        out = max(gb[0] - tb[0], tb[2] - gb[2], gb[1] - tb[1], tb[3] - gb[3])
+        if inside and out >= 2 and not _is_allowed(allowed, g, t):
+            found.append(("spill", g, t, tuple(tb)))
     # reserved zones: a thin margin around the chrome and the hosts
     hit_pairs = {(id(a), id(b)) for _, a, b, _ in found}
     r = max(1, int(round(ZONE_MARGIN / RES)))

@@ -605,6 +605,10 @@ class TipCard(VGroup):
         else:
             self.body = body
         self.icon = icon if icon is not None else VGroup()
+        # a long title shrinks to stay inside the frame (0.3 margin each side, room for the icon)
+        room = width - 0.6 - (0.55 if icon is not None else 0)
+        if self.header.width > room:
+            self.header.scale_to_fit_width(room)
         hb = self.body.height if len(self.body.get_family()) > 1 or len(self.body.points) else 0
         h = height or (0.45 + 0.35 + hb + 0.5)
         self.frame = RoundedRectangle(width=width, height=h, corner_radius=0.2)
