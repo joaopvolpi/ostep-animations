@@ -127,5 +127,5 @@ class S01JustRunIt(Ep06Scene):
         self.say("An operating system with no control over anything is just a library. "
                  "A very sad state of affairs for an aspiring operating system.",
                  prof.change("thinking"),
-                 Succession(Wait(2.0), AnimationGroup(ReplacementTransform(os_box, book), FadeOut(wall), FadeOut(glow),
+                 Succession(Wait(2.0), AnimationGroup(ReplacementTransform(os_box, book), FadeOut(wall), FadeOut(glow), FadeOut(gauge),
                                                       run_time=1.0), stu.change("sad")))

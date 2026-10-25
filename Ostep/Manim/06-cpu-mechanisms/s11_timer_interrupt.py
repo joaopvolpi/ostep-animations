@@ -101,6 +101,7 @@ class S11TimerInterrupt(Ep06Scene):
                             w.token.reach(rowp, run_time=0.6), tt.row(1).animate.set_color(TEXT), w.token.retract(0.4),
                             FadeOut(VGroup(sw, boot))))
 
+        self.drop(sw)
         # S11.7
         btn = tag("START", TEXT, 20).move_to(P3(5.0, 0.35))
         priv = Text("privileged", font_size=20, color=KERNEL_COLOR, weight=BOLD).next_to(btn, DOWN, buff=0.1)

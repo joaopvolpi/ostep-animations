@@ -359,7 +359,7 @@
 | 5 | "At boot it sets up the trap handlers and starts the timer." | The trap table and the timer light up one by one (each with the boot power switch icon). |
 | 6 | "Then it runs processes only in restricted mode, at full speed, and steps in only for privileged operations, or when a process has held the CPU too long." | A runs on the chip at the user seat (full speed, a "FAST" tag in green from S01), the OS token asleep; two little interventions: a trap and a timer interrupt briefly send the chip down and back (two quick crossings), then A is back. |
 | 7 | "So that's the 'limited' in limited direct execution!" | Student (excited). Term note "limited direct execution" slides into the dock as the words are said. |
-| 8 | "That's the 'limited.'" | Professor (proud). Hold 1.5 s. |
+| 8 | "That's the 'limited.'" | Professor (proud). Hold 1 s. |
 
 **Characters:** Student (excited), Professor (proud).
 **Ends with:** the LDE world fully lit, the playroom on the left, the term note "limited direct execution" (fades by itself). Section badge `FadeOut` at the end.

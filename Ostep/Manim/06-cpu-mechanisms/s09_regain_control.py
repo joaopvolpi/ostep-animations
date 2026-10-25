@@ -39,7 +39,8 @@ class S09RegainControl(Ep06Scene):
         w.add_ring("A")
         tt = small_table()
         leg = chart_legend()
-        self.add(w.boundary, w.gauge, w.chip, w.rings["A"], a, w.token, tt, leg, stu, prof)
+        self.add(leg, stu, prof)
+        start_world = [w.boundary, w.gauge, w.chip, w.rings["A"], a, w.token, tt]
         b = w.add_proc("B", "ready", where="bench")
         w.add_ring("B")
 
@@ -49,7 +50,8 @@ class S09RegainControl(Ep06Scene):
         l1 = Text("stop", font_size=22, color=TEXT).move_to(P3(-1.95, -0.9))
         l2 = Text("start", font_size=22, color=TEXT).move_to(P3(1.2, -0.5))
         self.say("Problem number two: switching between processes. Sounds simple: just stop one and start another.",
-                 Succession(AnimationGroup(FadeIn(w.rings["B"]), FadeIn(b, shift=DOWN * 0.3)), Wait(1.5),
+                 AnimationGroup(*[FadeIn(m_, run_time=1.0) for m_ in start_world]),
+                 Succession(Wait(1.0), AnimationGroup(FadeIn(w.rings["B"]), FadeIn(b, shift=DOWN * 0.3)), Wait(0.7),
                             AnimationGroup(Create(stop), FadeIn(l1)), AnimationGroup(Create(start), FadeIn(l2))))
 
         # S09.2

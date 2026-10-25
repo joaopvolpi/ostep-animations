@@ -119,5 +119,5 @@ class S16BabyProofing(Ep06Scene):
 
         # S16.8
         self.say("That's the \"limited.\"", prof.change("proud"))
-        self.beat(1.5)
+        self.beat(1.0)
         self.play(FadeOut(self.badge))

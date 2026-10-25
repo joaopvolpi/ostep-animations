@@ -295,6 +295,11 @@ class Ep06Scene(NarratedScene):
     def term(self, text, **kw):
         return self.terms.show(text, **kw)
 
+    def drop(self, *mobs):
+        """Remove mobjects AND all their parts from the scene (a part animated on its own, e.g. a switch knob,
+        is a separate top-level entry and survives a FadeOut of its parent)."""
+        self.remove(*[x for m in mobs for x in m.get_family()])
+
     def note(self, text, **kw):
         return self.terms.note(text, **kw)
 

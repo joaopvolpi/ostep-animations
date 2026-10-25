@@ -59,12 +59,14 @@ class S10Cooperative(Ep06Scene):
         # S10.4
         div = snippet("1/0", 22, RED_BAD).move_to(P3(1.9, 2.0))
         xm = x_mark(0.4).move_to(P3(3.4, 1.3))
-        self.say("A process that does something illegal, like dividing by zero, also traps into the OS, which will "
-                 "probably terminate it.",
-                 Succession(FadeIn(div, scale=1.4), Wait(0.5), w.down("B"), FadeOut(div),
-                            FadeIn(xm, scale=1.8),
-                            AnimationGroup(FadeOut(b), FadeOut(w.rings["B"]), FadeOut(xm)),
-                            w.up("A")))
+        with self.narrate("A process that does something illegal, like dividing by zero, also traps into the OS, which will "
+                          "probably terminate it."):
+            self.play(FadeIn(div, scale=1.4))
+            self.wait(0.5)
+            self.play(w.down("B"))
+            self.play(FadeOut(div), FadeIn(xm, scale=1.8))
+            self.play(AnimationGroup(FadeOut(b), FadeOut(w.rings["B"]), FadeOut(xm)))
+            self.play(w.up("A"))
 
         # S10.5
         loop = loop_arrow(0.4).move_to(a.get_right() + RIGHT * 0.45 + UP * 0.2)
@@ -89,6 +91,7 @@ class S10Cooperative(Ep06Scene):
                                            FadeIn(w.rings["B"], run_time=0.05), w.token.wake(0.05)),
                             FadeOut(black, run_time=0.2)))
 
+        self.drop(sw)
         # S10.7
         self.say("That's the plan?", stu.change("sad"))
         self.beat(1.0)
