@@ -134,6 +134,10 @@ class NarratedScene(Scene):
         # the animation that fades it, e.g. Terminal.clear(): that part was visible until now)
         on = {id(m) for top in self.mobjects for m in top.get_family()} | getattr(self, "_shown_ids", set())
         self._ever_ids = getattr(self, "_ever_ids", set()) | on
+        seen = self.__dict__.setdefault("_ever_seen", {})
+        for top in self.mobjects:
+            for m in top.get_family():
+                seen[id(m)] = m
 
         def visible_leaves(m):          # what actually draws (a fresh VGroup of on-screen parts is fine)
             return [x for x in m.get_family() if x.has_points() and not x.submobjects
@@ -171,6 +175,12 @@ class NarratedScene(Scene):
         super().play(*args, **kwargs)        # Scene.wait plays a Wait, so this covers holds too
         if os.environ.get("OSTEP_CHECK"):
             self._shown_ids = {id(m) for top in self.mobjects for m in top.get_family()}
+            # keep every mobject ever shown alive: a freed one's id() could be reused by a new
+            # mobject, which would then look like one that left (a false ghost)
+            seen = self.__dict__.setdefault("_ever_seen", {})
+            for top in self.mobjects:
+                for m in top.get_family():
+                    seen[id(m)] = m
             self._ever_ids = getattr(self, "_ever_ids", set()) | self._shown_ids
             self._check_bounds()
             self._layout_sample()
