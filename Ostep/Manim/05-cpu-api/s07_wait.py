@@ -112,7 +112,11 @@ class S07Wait(Ep05Scene):
         # S07.6
         case1 = Text("case 1", font_size=26, color=CPU_COLOR, weight="BOLD").move_to(P3(-1.0, 1.55))
         z2 = zombie_mini(0.35).move_to(tl.cell_center("child", 3) + UP * 0.0)
-        with self.narrate("Two cases. If the child happens to run first, it prints and exits, and when the parent "
+        self.say("Here's the answer. Remember, after fork() it's the scheduler that decides who runs first, "
+                 "the parent or the child, and we can't predict it. So there are two cases, and wait() "
+                 "has to handle both.", prof.change("explaining"), sd.glow_zone("ready"))
+        self.play(sd.unglow_zone("ready"), run_time=0.4)
+        with self.narrate("Case one: the child happens to run first. It prints and exits, and when the parent "
                           "finally runs, wait() returns immediately."):
             self.play(FadeIn(case1), run_time=0.4)
             self.play(tl.fill("parent", 1, "ready"), tl.fill("child", 1, "running"), tl.fill_cpu(1))
@@ -127,7 +131,7 @@ class S07Wait(Ep05Scene):
         # S07.7
         case2 = Text("case 2", font_size=26, color=CPU_COLOR, weight="BOLD").move_to(P3(-1.0, 1.55))
         wtag = mono("wait()", 18, PAR).move_to(tl.cell_center("parent", 1) + UP * 0.55)
-        with self.narrate("If the parent runs first, it calls wait() right away, blocks, and the CPU goes to the child."):
+        with self.narrate("Case two: the parent runs first. It calls wait() right away, blocks, and the CPU goes to the child."):
             self.play(tl.unfill_ticks([1, 2, 3], run_time=1.0), FadeOut(z2), FadeOut(r1), mt.clear(),
                       Transform(case1, case2))
             tl.purge()

@@ -140,8 +140,10 @@ finished before it continues. For that, there's **`wait()`**. The parent calls i
 **Narrator (V.O.):** Add one `wait()` to the parent's branch, and the output becomes deterministic.
 Can you see why? Pause the video and think about it.
 
-**Narrator (V.O.):** Two cases. If the child happens to run first, it prints and exits, and when the
-parent finally runs, `wait()` returns immediately. If the parent runs first, it calls `wait()` right
+**Narrator (V.O.):** Here's the answer. Remember, after `fork()` it's the scheduler that decides who
+runs first, the parent or the child, and we can't predict it. So there are two cases, and `wait()` has
+to handle both. Case one: the child happens to run first. It prints and exits, and when the
+parent finally runs, `wait()` returns immediately. Case two: the parent runs first. It calls `wait()` right
 away, blocks, and the CPU goes to the child. Only once the child has exited does the parent wake up.
 Either way, the child prints first.
 

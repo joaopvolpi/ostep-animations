@@ -222,7 +222,20 @@ class Ep05Scene(NarratedScene):
     def fade_stage(self, *keep, run_time=0.8):
         """Fade out everything except ``keep`` (+ the docked term): a clean hand-off to the next scene."""
         keep = {id(k) for k in keep if k is not None} | {id(self.terms.docked)}
-        gone = [m for m in self.mobjects if id(m) not in keep and not getattr(m, "is_scrim", False)]
+        gone = []
+
+        def collect(m):
+            # a play() with an AnimationGroup can leave a kept mobject nested in a scene-level group:
+            # look inside such groups instead of fading them whole
+            if id(m) in keep or getattr(m, "is_scrim", False):
+                return
+            if any(id(x) in keep for x in m.get_family()[1:]):
+                for s in m.submobjects:
+                    collect(s)
+            else:
+                gone.append(m)
+        for m in self.mobjects:
+            collect(m)
         if gone:
             self.play(*[FadeOut(m) for m in gone], run_time=run_time)
 

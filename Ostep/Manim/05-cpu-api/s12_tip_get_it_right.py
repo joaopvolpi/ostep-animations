@@ -53,11 +53,11 @@ class S12TipGetItRight(Ep05Scene):
             self.wait(1.0)
 
         # S12.4
-        sp = program_chip("spawn()", DIM, 24).move_to(P3(-2.0, -1.0) + LEFT * 3)
+        sp = program_chip("spawn()", DIM, 24).move_to(P3(-2.0, -1.0))
         qm = question_mark(0.4)
         with self.narrate("Not everybody agrees. A recent paper argues for a simpler call, spawn(). "
                           "The authors of the book have opinions. You're allowed to have your own."):
-            self.play(prof.change("neutral"), sp.animate.move_to(P3(-2.0, -1.0)), run_time=0.8)
+            self.play(prof.change("neutral"), FadeIn(sp, shift=RIGHT * 3), run_time=0.8)
             qm.next_to(sp, UP, buff=0.1)
             self.play(FadeIn(qm), run_time=0.3)
             self.wait(1.2)
