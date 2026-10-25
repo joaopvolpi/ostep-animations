@@ -18,7 +18,7 @@ class S18Teaser(Ep05Scene):
             ln.move_to(P3(-5.8, y), aligned_edge=LEFT)
         ics = icons()
         for ic, y in zip(ics, YS):
-            ic.move_to(P3(4.6, y))
+            ic.move_to(P3(3.7, y))          # as S17 leaves them
         recap = VGroup(header, lines, *ics)
         stu = student_corner("neutral")
         prof = prof_corner("happy")

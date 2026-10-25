@@ -73,6 +73,10 @@ class S10Redirection(Ep05Scene):
         # S10.5
         with self.narrate("In the child, before exec(), it closes standard output, then opens the file."):
             self.play(light(0), fd.cut(1))
+            # the cut cable and plug stay children of the table: keep them invisible so a later
+            # fade or highlight of the whole table can't bring them back
+            fd.cables[1].set_opacity(0)
+            fd.plugs[1].set_opacity(0)
             self.wait(1.0)
 
         # S10.6
@@ -98,7 +102,10 @@ class S10Redirection(Ep05Scene):
         with self.narrate("And open files stay open across exec()."):
             self.play(light(2), FadeOut(glow), run_time=0.4)
             self.play(FadeOut(clone), FadeOut(clone_lab), FadeIn(wc_new), FadeIn(wc_lab), run_time=0.8)
-            self.play(Indicate(fd.plugs, color=CPU_COLOR, scale_factor=1.1), Indicate(fd.cables, color=CPU_COLOR),
+            # only the live wiring: plug/cable 1 were cut, the file's own plug and cable replace them
+            live_plugs = VGroup(fd.plugs[0], plug, fd.plugs[2])
+            live_cables = VGroup(fd.cables[0], cable, fd.cables[2])
+            self.play(Indicate(live_plugs, color=CPU_COLOR, scale_factor=1.1), Indicate(live_cables, color=CPU_COLOR),
                       run_time=1.0)
 
         # S10.8
@@ -113,7 +120,7 @@ class S10Redirection(Ep05Scene):
                 self.play(t.animate.move_to(f_icon.get_center()).scale(0.5).set_opacity(0), run_time=1.0)
                 self.remove(t)
             f_icon.label.next_to(f_icon.page, RIGHT, buff=0.1)
-            out.next_to(f_icon, DOWN, buff=0.12)
+            out.next_to(f_icon.page, DOWN, buff=0.12)     # centred on the page, clear of the stderr cable
             self.play(FadeIn(out, shift=LEFT * 0.2), run_time=0.5)
             self.wait(1.0)
 

@@ -49,12 +49,9 @@ class S08Exec(Ep05Scene):
         disk = Disk(width=1.4, height=1.1).move_to(P3(3.2, -1.0))
         wc_file = FileIcon("wc", width=0.5, color=SKY).move_to(disk.top_point() + UP * 0.75)
         arg_file = FileIcon("p3.c", width=0.4).move_to(P3(4.7, -0.1))
-        b1 = code.add_bar(CPU_COLOR, 1)
-        b2 = code.add_bar(CPU_COLOR, 2)
         with self.narrate("In our next example, the child calls a variant of exec() to run wc, the word-counting "
                           "program, on the file p3.c."):
             self.play(FadeOut(q), FadeIn(code, shift=LEFT * 0.4), run_time=0.8)
-            self.play(FadeIn(b1), FadeIn(b2), run_time=0.4)
             self.play(FadeIn(disk, shift=UP * 0.5), FadeIn(wc_file, shift=UP * 0.5), run_time=0.8)
             self.play(FadeIn(arg_file, shift=LEFT * 0.3), run_time=0.5)
             self.wait(1.5)

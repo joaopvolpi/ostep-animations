@@ -35,7 +35,7 @@ class S17Recap(Ep05Scene):
             ln.move_to(P3(-5.8, y), aligned_edge=LEFT)
         ics = icons()
         for ic, y in zip(ics, YS):
-            ic.move_to(P3(4.6, y))
+            ic.move_to(P3(3.7, y))          # clear of the Professor's corner (the bottom icon sits at his head)
         self.say("So, today:", Write(header))
         texts = [
             "fork() creates a new process: a nearly exact copy. The parent gets the child's PID, and the child gets zero.",
