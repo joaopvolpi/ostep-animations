@@ -49,7 +49,6 @@ Trimmed `p1.c` used throughout (line numbers used in the tables below):
 | 3 | "It prints "hello"." | A highlight bar (neutral `TEXT` at 0.2 opacity) lands on line 1. |
 | 4 | "Then it hits an `if` and an `else`." | The bar moves to line 3 (`if`). |
 | 4b | "If this is the child process, the new one that fork creates, it prints child. If it's the parent process, the original one, it prints parent." | `Indicate` line 4 in mint (child), then line 6 in coral (parent). |
-| 4c | "How does the code know which is which? Fork is weird: you call it once, but it returns twice, with a different value in each process. The child gets 0, the parent gets the child's PID. We'll get into that in a second." | `Indicate` line 2 (`fork()`); small tags "rc = 0" (mint, beside line 4) and "rc = PID" (coral, beside line 6) fade in one after the other, then fade out. Teaser only: the full explanation is S05. |
 | 5 | "Let's run it." | Terminal `FadeIn`; `prompt> ./p1` types. Output prints one line every 0.5 s: `hello (pid:29146)`, `parent of 29147 (pid:29146)`, `child (pid:29147)`. |
 | 6 | "Wait. "Hello" appeared once. But then *both* "child" and "parent" showed up. That's an `if` and an `else`. How can both of them run?" | Student → confused, a "?" above. Terminal lines 2 and 3 `Indicate` together; code lines 4 and 6 flash together with a "?" between them. |
 | 7 | "Because after one particular line, there are two of the program." | Professor → happy. A ring `Circumscribe`s line 2 (`int rc = fork();`) in the code. |

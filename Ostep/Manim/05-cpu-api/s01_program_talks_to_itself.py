@@ -44,20 +44,6 @@ class S01ProgramTalksToItself(Ep05Scene):
             self.play(walker.indicate(6, PAR), run_time=0.9)
             self.wait(1.0)
 
-        # S01.4c
-        t_ch = mono("rc = 0", 18, CHI).next_to(walker.line_point(4, "right"), RIGHT, buff=0.2)
-        t_pa = mono("rc = PID", 18, PAR).next_to(walker.line_point(6, "right"), RIGHT, buff=0.2)
-        with self.narrate("How does the code know which is which? Fork is weird: you call it once, "
-                          "but it returns twice, with a different value in each process. "
-                          "The child gets 0, the parent gets the child's PID. We'll get into that in a second."):
-            self.play(walker.indicate(2), run_time=0.9)
-            self.wait(4.5)
-            self.play(FadeIn(t_ch, shift=LEFT * 0.15), run_time=0.5)
-            self.wait(1.2)
-            self.play(FadeIn(t_pa, shift=LEFT * 0.15), run_time=0.5)
-            self.wait(1.5)
-            self.play(FadeOut(t_ch), FadeOut(t_pa), run_time=0.4)
-
         # S01.5
         term = mk_term(5.0, 4, 18).move_to(P3(3.2, 0.7))
         with self.narrate("Let's run it."):

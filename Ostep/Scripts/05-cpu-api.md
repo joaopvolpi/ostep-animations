@@ -37,7 +37,7 @@ three strange calls: `fork()` clones a process, `exec()` turns it into a differe
 
 ### B01 — A program that talks to itself  `cold open` (~0:45)
 **Narrator (V.O.):** Last time, we ended with a promise: a process that clones itself. So let's see
-it. Here is a tiny C program. It prints "hello". Then it hits an `if` and an `else`. If this is the child process, the new one that fork creates, it prints "child". If it's the parent process, the original one, it prints "parent". How does the code know which is which? Fork is weird: you call it once, but it returns twice, with a different value in each process. The child gets 0, the parent gets the child's PID. We'll get into that in a second.
+it. Here is a tiny C program. It prints "hello". Then it hits an `if` and an `else`. If this is the child process, the new one that fork creates, it prints "child". If it's the parent process, the original one, it prints "parent".
 
 **Narrator (V.O.):** Let's run it.
 
