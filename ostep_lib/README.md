@@ -63,12 +63,13 @@ and `ostep_lib/props/p04_preview.py` with `P04PropSheet` / `P04IconSheet` (04).
   `STU_DIALOGUE`, `PROF_DIALOGUE`, `HOST_SCALE` (corner = 0.75 at (±5.8, −2.8); dialogue = 1.0 at (±2.6, −1.2)).
   **A character's `get_center()` / `move_to` / `scale` use a fixed design anchor** (the default-expression body center in its design frame),
   not the bounding box, so placing a character gives the same position whatever its expression. Edges (`get_top()`, `get_left()`…) still use the real bounding box.
-- `TermHighlight.docked_now(term)`: the docked term built instantly, identical to what `show`/`note` leave behind (for a scene's "starts with" state).
+- `TermHighlight.docked_now(term, visible=False)`: the docked term built instantly, identical to what `show`/`note` leave behind (for a scene's "starts with" state). It is built faded (the docked term lasts 2 s); `visible=True` if it docked right before the cut.
 - `tools/continuity.py <NN>` compares the last frame of each scene with the first of the next and lists changed regions (`--dir` for
   any folder of scene clips). Aim for ~0%: a jump means a "starts with" state that isn't the previous "ends with". `TipCard` / `AsideCard(body, title, icon)`: `.slide_in()`, `.slide_out()`.
 - `TermHighlight(accent)` (manager): `.note(term)` for secondary terms (slides into the top-right dock, no veil).
   `.show(term, hold, dock, size, at, scrim=True)` is the unveil, for the 3–4 key terms of an episode only. `.clear()`. By default
   it veils the scene, writes the term at center (0, 0.3), and docks it top-right (≤ 2.6 wide) as the veil lifts.
+  A docked term fades by itself `dock_seconds` (2 s) after it lands (`TermHighlight(dock_seconds=None)` keeps it).
   Don't pass `at=` near the top band. `scrim=False` is only for an empty screen. `SectionBadge(text, accent)`: `.recolor()`.
 - Screen zones: `CONTENT_TOP` (2.55; scene content stays below), `CHROME_ROW_Y` (3.6), `CRUX_STRIP_Y` (3.0;
   the default `dock()` point, strip ≤ 8.2 wide). `scrim(opacity=0.88)` is a full-frame BG veil at z 40

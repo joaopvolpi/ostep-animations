@@ -133,8 +133,7 @@ class Ep08Scene(NarratedScene):
         return self.terms.note(text, **kw)
 
     def add_docked(self, text):
-        m = self.terms._make(text, self.terms.dock_size, self.terms.accent, self.terms.dock_at, right_aligned=True)
-        self.terms.docked = m
+        m = self.terms.docked_now(text)
         self.add(m)
         return m
 

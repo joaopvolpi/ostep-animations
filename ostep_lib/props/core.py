@@ -669,13 +669,16 @@ class TermHighlight:
     ``scrim=False`` only when the area at ``at`` is known to be empty.
     The docked term replaces the previous docked one at top-right ``(6.6, 3.6)``
     (right-aligned, font 26, at most ``dock_max_width`` wide so it never reaches the crux strip).
+    It stays at most ``dock_seconds`` (2 s) after landing, then fades by itself, so a term never
+    lingers into the next topic; scenes need no ``clear()`` for it.  ``dock_seconds=None`` keeps it.
     Also: ``write(term)``, ``dock_anim()``, ``fade_anim()`` for manual control, ``clear()``
     (fades the docked term), ``set_accent(color)``, attributes ``big`` and ``docked``.
     """
 
     def __init__(self, accent=VIRT, at=(0, 0.3, 0), size=54, dock_at=(6.6, CHROME_ROW_Y, 0),
-                 dock_size=26, dock_max_width=2.6):
+                 dock_size=26, dock_max_width=2.6, dock_seconds=2.0):
         self.accent = accent
+        self.dock_seconds = dock_seconds
         self.at = np.array(at, dtype=float)
         self.size = size
         self.dock_at = np.array(dock_at, dtype=float)
@@ -714,26 +717,63 @@ class TermHighlight:
         self._term_accent = accent or self.accent
         return AnimationGroup(Write(self.big[0]), Create(self.big[1]), run_time=0.8)
 
+    def _expire(self, g):
+        """The docked term stays at most ``dock_seconds`` once it has landed, then fades by
+        itself.  A scene-time updater: its clock restarts whenever something else moves, resizes
+        or re-fades the term (the dock animation itself, or a later Transform onto a new term),
+        so it counts from the moment the term sits still.  ``dock_seconds=None`` keeps it."""
+        if self.dock_seconds is None:
+            return g
+        st = {"t": 0.0, "sig": None, "base": None}
+        fade = 0.5
+
+        def sig(m):
+            return (*np.round(m.get_center(), 3), round(m.width, 3),
+                    round(float(m[0].get_fill_opacity()), 3))
+
+        def tick(m, dt):
+            if sig(m) != st["sig"]:          # changed by someone else: restart the clock
+                st["t"], st["base"] = 0.0, None
+            else:
+                st["t"] += dt
+            p = (st["t"] - self.dock_seconds) / fade
+            if p > 0:
+                if st["base"] is None:
+                    st["base"] = float(m[0].get_fill_opacity())
+                o = st["base"] * (1 - min(p, 1.0))
+                m[0].set_fill(opacity=o)
+                m[1].set_stroke(opacity=o)
+            st["sig"] = sig(m)
+        g.add_updater(tick)
+        return g
+
     def dock_anim(self):
         target = self._make(self._term, self.dock_size, self._term_accent, self.dock_at,
                             right_aligned=True, max_width=self.dock_max_width)
         anims = [Transform(self.big, target)]
         if self.docked is not None:
             anims.append(FadeOut(self.docked, shift=UP * 0.3))
-        self.docked, self.big = self.big, None
+        self.docked, self.big = self._expire(self.big), None
         return AnimationGroup(*anims, run_time=0.8)
 
     def fade_anim(self):
         b, self.big = self.big, None
         return FadeOut(b, shift=UP * 0.2, run_time=0.5)
 
-    def docked_now(self, term, accent=None):
+    def docked_now(self, term, accent=None, visible=False):
         """The docked term, built instantly (for a scene's "starts with" state; the caller adds
         it).  Identical to what ``show``/``note`` leave behind, so a scene that starts from it
-        continues the previous one exactly."""
+        continues the previous one exactly: with ``dock_seconds`` set the term has already
+        faded by the cut, so it is built invisible (``visible=True`` for a dock that happened
+        right before the cut: it then fades on the same clock)."""
         self._term, self._term_accent = term, accent or self.accent
         self.docked = self._make(term, self.dock_size, self._term_accent, self.dock_at,
                                  right_aligned=True, max_width=self.dock_max_width)
+        if self.dock_seconds is not None and not visible:
+            self.docked[0].set_fill(opacity=0)
+            self.docked[1].set_stroke(opacity=0)
+        elif visible:
+            self._expire(self.docked)
         return self.docked
 
     def note(self, term, accent=None, run_time=0.8):
@@ -745,7 +785,7 @@ class TermHighlight:
         anims = [FadeIn(target, shift=DOWN * 0.2)]
         if self.docked is not None:
             anims.append(FadeOut(self.docked, shift=UP * 0.3))
-        self.docked = target
+        self.docked = self._expire(target)
         return AnimationGroup(*anims, run_time=run_time)
 
     def show(self, term, hold=1.2, dock=True, size=None, at=None, accent=None, scrim=True):

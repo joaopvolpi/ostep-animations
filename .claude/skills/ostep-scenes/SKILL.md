@@ -46,7 +46,9 @@ the sound off, and the narration should feel like it's describing what the viewe
    **Terms come in two strengths.** Use the unveil (scene veils, term written at center, then docks)
    for the episode's **3–4 key terms** only: the ones the crux hinges on. Write it as
    "Term unveil: *X*", and never use two in neighbouring rows. Every other new term gets
-   "Term note: *X*": it slides into the top-right dock, with no veil. Minor vocabulary needs neither;
+   "Term note: *X*": it slides into the top-right dock, with no veil. The docked term shows for
+   **at most 2 s** and then fades by itself, so land it on the words that name the term and never
+   plan a later beat that relies on it still being there. Minor vocabulary needs neither;
    it is spoken and shows up in the captions. In the Visual overview, list the key terms you chose.
    A term is unveiled **once in the whole series**, in the episode that teaches it. Dialogue and
    recap episodes, and callbacks in later episodes, use notes.
@@ -71,7 +73,8 @@ the sound off, and the narration should feel like it's describing what the viewe
    enters them (if a layout needs the top, say "the strip fades out" in that row). Two panels
    never partly overlap; a new one takes free space or the old one leaves first.
 8. **Make hand-offs exact.** "Ends with" must list every persistent element with its exact position
-   and state: hosts (mode: corner or dialogue, and expression), badge, docked term, crux strip,
+   and state: hosts (mode: corner or dialogue, and expression), badge, docked term (normally already faded:
+   it lasts 2 s), crux strip,
    and each prop's place. The next scene's "Starts with" is a verbatim copy of it. A scene that
    deliberately starts from a different screen says so ("cut to empty"). Characters always sit at
    the library's standard host positions (`host_pair` modes) unless a row says they move.

@@ -136,8 +136,7 @@ def make_terms():
 
 def dock_term_now(terms, text):
     """Instantly create the docked term strip (top-right) and register it."""
-    m = terms._make(text, terms.dock_size, terms.accent, terms.dock_at, right_aligned=True)
-    terms.docked = m
+    m = terms.docked_now(text)
     return m
 
 

@@ -65,6 +65,8 @@ Preview: `python -m manim -ql -s ostep_lib/props/preview.py PropSheet`, plus `Pr
 - Screen zones: `CONTENT_TOP=2.55`, `CHROME_ROW_Y=3.6`, `CRUX_STRIP_Y=3.0`. `scrim(opacity=0.88, z_index=40)`
   returns a full-frame BG veil (`is_scrim=True`; the overlap check ignores text below it).
   Lower level: `write(term)`, `dock_anim()`, `fade_anim()`. Also `clear()`, `set_accent(c)`, attributes `big`, `docked`.
+  `dock_seconds=2.0` (constructor): a docked term fades by itself 2 s after it sits still (an updater; its clock restarts
+  if something moves or re-fades it); `None` keeps it. `docked_now(term, visible=False)` builds the faded start state.
 - `SectionBadge(text, accent=VIRT, font_size=22, corner=(-6.6, 3.6))`: left-aligned at `corner`.
   Parts: `dot, text`. `recolor(accent)` returns an animation.
 - `IllusionSplit(left_title="What each program sees", right_title="What really happens",

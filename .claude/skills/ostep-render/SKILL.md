@@ -146,7 +146,10 @@ Images are expensive, so frame inspection is the exception, not the rule.
    **screen zones**: scene content stays below `CONTENT_TOP`, and the top band is for the badge,
    crux strip and docked term only. Use "Term unveil" → `terms.show(term)` (scrim + center) for
    at most 3–4 key terms per episode, and "Term note" → `terms.note(term)` (slides into the dock) for
-   the rest. If an older scene file asks for more unveils, keep the 3–4 most central and demote
+   the rest. The docked term fades by itself 2 s after landing (`dock_seconds`, library default):
+   don't `clear()` it or extend it, play the note on the words that name the term, and build a
+   scene's "starts with" term with `terms.docked_now(term)` (invisible, matching the faded end of
+   the previous scene; `visible=True` only if it docked within ~2.5 s of that scene's end). If an older scene file asks for more unveils, keep the 3–4 most central and demote
    the others to notes. Log this as a deviation. Don't pass `at=` into an occupied area, and don't set `scrim=False` over a busy
    screen. Fade a label out before new text lands where it was.
    **Reserved zones:** while they're on screen, the crux strip/card, the badge, the docked term and
