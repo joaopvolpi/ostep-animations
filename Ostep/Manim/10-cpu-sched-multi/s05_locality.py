@@ -95,3 +95,5 @@ class S05Locality(Ep10Scene):
                  FadeIn(pin, shift=DOWN * 0.8),
                  VGroup(left, right, t_l, t_r, box, loop, lc).animate.set_opacity(0.35))
         self.beat(0.6)
+        # hand-off: only the CPU with its (emptied) cache stays, as the next scene starts
+        self.fade_stage(cc, extra=(cc.clear(run_time=0.8),))

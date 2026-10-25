@@ -15,21 +15,21 @@ class S11Sqms(Ep10Scene):
         q, ps = job_queue("ABCDE")
         null = mono("NULL", 18, DIM).move_to(P3(3.3, -1.0))
         pad = Padlock(0.45, opened=True).move_to(P3(-3.2, -1.0))
-        self.add(*cpus)
 
         # S11.1
         self.say("Fine. So what's the simplest scheduler? Take the one we already have and share it?",
-                 stu.change("curious"), FadeIn(q), FadeIn(null), LaggedStart(*[FadeIn(p, shift=UP * 0.3) for p in ps], lag_ratio=0.15))
+                 stu.change("curious"), FadeIn(VGroup(*cpus)), FadeIn(q), FadeIn(null), LaggedStart(*[FadeIn(p, shift=UP * 0.3) for p in ps], lag_ratio=0.15))
 
         # S11.2
         with self.narrate("Put all jobs into a single queue. Each CPU, whenever it needs work, grabs the next job from it."):
             self.play(self.note("SQMS"), FadeIn(pad), run_time=0.8)
             for i in range(4):
                 p, repack = q.pop(0)
+                self.allow_overlap(p, VGroup(*cpus), "the job flies over the cache strips to its CPU")
                 self.play(hop_to(p, cpus[i].slot_point(), run_time=0.8), repack, run_time=0.8)
                 p.set_expression("running")
         # S11.3
-        spot = Spotlight(height=0.9, spread=0.4).move_beam_to(q.slot_point(0) + DOWN * 0.1)
+        spot = Spotlight(height=0.6, spread=0.4).move_beam_to(q.slot_point(0) + DOWN * 0.1)
         pol = label("any existing policy", 22, CPU_COLOR).next_to(q, RIGHT, buff=0.25).shift(UP * 0.5)
         pol.move_to(P3(3.2, -1.75))
         self.say("It needs almost no new work. Take any single-CPU policy, and let it pick the best job to run, "
@@ -41,7 +41,7 @@ class S11Sqms(Ep10Scene):
                  FadeOut(spot), FadeOut(pol), prof.change("neutral"))
 
         # S11.5
-        lines = VGroup(*[DashedLine(c.cache_bottom(), q.slot_point(0) + UP * 0.1 + RIGHT * 0.25 * i, dash_length=0.1)
+        lines = VGroup(*[DashedLine(c.cache_bottom(), q.tray.get_top() + RIGHT * 0.35 * (i - 1.5), dash_length=0.1)
                          .set_stroke(DIM, 2, opacity=0.6) for i, c in enumerate(cpus)])
         self.say("The queue is shared, so the scheduler must lock it.",
                  pad.close(), Create(lines))
@@ -84,3 +84,5 @@ class S11Sqms(Ep10Scene):
         self.say("The book wishes it had a real measurement here. Take our word for it, for now.",
                  Create(chart), FadeIn(note), stu.change("neutral"))
         self.beat(0.4)
+        # hand-off to S12: back to the four CPUs with the shared queue
+        self.play(FadeOut(VGroup(lines, lb_lab, lockbar, *waiters, bar, n_lab, wl, ll, chart, note)), run_time=0.7)

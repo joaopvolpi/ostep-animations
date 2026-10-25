@@ -17,6 +17,7 @@ class S16MigrationEasy(Ep10Scene):
         set_cpu_power(c0, False)
         null = mono("NULL", 18, DIM).move_to(P3(MQ_X[0], MQ_Q_Y + 0.25))
         self.add(c0, c1, q0, q1, pB, pD, grid, null)
+        self.on_trays([pB, pD], [q0, q1])
 
         # S16.1
         suit = suitcase_icon(0.5, color=DIM).move_to(P3(0, 0.3))
@@ -38,7 +39,7 @@ class S16MigrationEasy(Ep10Scene):
             self.play(FadeIn(suit2, scale=0.5), run_time=0.4)
             _, repack = q1.pop(0)
             q0.items.append(pB)
-            self.play(hop_to(pB, q0.slot_point(0), run_time=1.0, height=1.0), suit2.animate.shift(P3(-6.0, 0.0)),
+            self.play(hop_to(pB, q0.slot_point(0), run_time=1.0, height=0.1), suit2.animate.shift(P3(-6.0, 0.0)),
                       repack, run_time=1.0)
             self.play(FadeOut(suit2), cpu_power(c0, True), hop_to(pB, c0.slot_point(), run_time=0.7), run_time=0.8)
             q0.items.remove(pB)

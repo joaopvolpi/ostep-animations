@@ -90,5 +90,5 @@ class S08Race(Ep10Scene):
         # S08.9
         cross = VGroup(Circle(radius=0.55).set_stroke(KERNEL_COLOR, 5),
                        Line(UL * 0.39, DR * 0.39).set_stroke(KERNEL_COLOR, 5)).move_to(small_tick[0])
-        self.say("Even with perfect cache coherence.", Create(cross))
+        self.say("Even with perfect cache coherence.", Create(cross), FadeOut(bar1), FadeOut(bar2))
         self.beat(1.0)

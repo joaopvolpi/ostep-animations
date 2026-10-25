@@ -20,7 +20,7 @@ class S07Snooping(Ep10Scene):
         # S07.1  rewind
         self.say("The fix is the hardware's job. And the basic idea is delightfully nosy.",
                  FadeOut(neq), FadeOut(stale), FadeOut(stale_t), FadeOut(comp),
-                 c2.clear(), hop_to(a, c1.slot_point(), run_time=1.0, height=1.0),
+                 c2.clear(), hop_to(a, c1.slot_point(), run_time=1.0, height=0.2),
                  prof.change("neutral"), stu.change("neutral"))
 
         # S07.2

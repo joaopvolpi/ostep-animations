@@ -50,6 +50,8 @@ class S04Caches(Ep10Scene):
         dot = Dot(cc.cpu.get_center(), radius=0.1, color=TEXT)
         miss = x_mark(0.3).move_to(cc.strip.get_center() + RIGHT * 1.2)
         self.add(dot)
+        self.allow_overlap(dot, cc, "the data dot travels over the cache strip")
+        self.allow_overlap(dot, mem, "the data dot reaches the memory cell")
         with self.narrate("The first time the program loads a value, the CPU has to go all the way to memory."):
             self.play(dot.animate.move_to(cc.strip.get_center()), run_time=0.7)
             self.play(FadeIn(miss, scale=1.5), run_time=0.3)
@@ -60,6 +62,7 @@ class S04Caches(Ep10Scene):
         val = VGroup(Square(0.3).set_fill(COL["A"], 0.9).set_stroke(outline_of(COL["A"]), 2), mono("7", 18, INK))
         val[1].move_to(val[0])
         val.move_to(mem.cell(0).get_center())
+        self.allow_overlap(dot, val, "the data dot hands the value over at the memory cell")
         self.say("It copies the value into the cache on the way back.",
                  FadeOut(dot, run_time=0.2),
                  Succession(FadeIn(val, run_time=0.2), val.animate.move_to(cc.cell_point(0)),
@@ -71,6 +74,7 @@ class S04Caches(Ep10Scene):
         fast = VGroup(stopwatch_icon(radius=0.28), mono("~few ns", 26, CPU_COLOR)).arrange(RIGHT, buff=0.2)
         fast.move_to(P3(3.4, READ_CACHE_Y))
         self.add(dot2)
+        self.allow_overlap(dot2, cc, "the data dot lands on the cache cell holding the value")
         self.say("The next time, it finds the value in the cache, and gets it in just a few nanoseconds.",
                  dot2.animate.move_to(cc.strip.get_center()),
                  Succession(Wait(0.8), AnimationGroup(FadeIn(hit, scale=1.5), FadeIn(fast, shift=LEFT * 0.3))),

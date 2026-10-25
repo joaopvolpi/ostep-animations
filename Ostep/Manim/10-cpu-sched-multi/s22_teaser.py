@@ -51,7 +51,7 @@ class S22Teaser(Ep10Scene):
         with self.narrate("Later is the concurrency section: threads, locks, and what they cost. "
                           "Next: the CPU virtualization dialogue."):
             self.play(hop_to(pad, part2.get_left() + LEFT * 0.5, anchor="center", run_time=1.2, height=1.0),
-                      hop_to(th, part2.get_bottom() + DOWN * 0.1, run_time=1.2, height=1.2), run_time=1.3)
+                      hop_to(th, part2.get_left() + LEFT * 1.3 + DOWN * 0.3, run_time=1.2, height=1.2), run_time=1.3)
             self.wait(1.5)
         self.play(FadeOut(VGroup(stu, prof, pad, th, part2)), run_time=0.8)
         dot = Dot(radius=0.12, color=VIRT)

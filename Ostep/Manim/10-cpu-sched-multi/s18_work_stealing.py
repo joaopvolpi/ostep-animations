@@ -9,7 +9,7 @@ from common_more import *  # noqa: E402,F401,F403
 
 class S18WorkStealing(Ep10Scene):
     def construct(self):
-        self.world(strip=2, stu="neutral", prof="neutral")
+        self.world(strip=2, stu="curious", prof="explaining")
         stu, prof = self.stu, self.prof
         st = mq_stage("A", "BDE")
         c0, c1, q0, q1 = st["c0"], st["c1"], st["q0"], st["q1"]
@@ -18,11 +18,12 @@ class S18WorkStealing(Ep10Scene):
         pA.set_expression("running")
         eye = EyeIcon(0.6).move_to(P3(-3.0, -1.55))
         g0 = tag("1 job", 18, TEXT).move_to(P3(-5.2, -0.6))
-        self.add(c0, c1, q0, q1, pA, pB, pD, pE, eye)
+        self.add(c0, c1, q0, q1)
+        self.on_trays([pA, pB, pD, pE], [q0, q1])
 
         # S18.1 key term
         with self.narrate("One basic approach is work stealing."):
-            self.play(self.term("work stealing"))
+            self.play(self.term("work stealing"), FadeIn(VGroup(pA, pB, pD, pE, eye)))
             self.play(FadeIn(g0), run_time=0.4)
 
         # S18.2
@@ -98,3 +99,4 @@ class S18WorkStealing(Ep10Scene):
                  prof.change("happy"), flash, c0.warmth(0, COL["E"]),
                  FadeOut(bub), FadeOut(pot), FadeOut(sweet))
         self.beat(0.4)
+        self.fade_stage()

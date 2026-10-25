@@ -19,12 +19,14 @@ class S15Imbalance(Ep10Scene):
         pA, pC = st["p0"]
         pB, pD = st["p1"]
         comp = Computer("busy").scale(0.55).move_to(P3(5.7, -0.9))
-        self.add(c0, c1, q0, q1, *st["p0"], *st["p1"], grid, comp)
+        self.add(c0, c1, q0, q1, *st["p0"], *st["p1"], grid)
+        finish_now(c0.warmth(3, COL["A"]))
+        finish_now(c1.warmth(3, COL["B"]))
 
         # S15.1
         pC.set_expression("done")
         with self.narrate("Suppose job C finishes."):
-            self.play(pC.change("done"), run_time=0.6)
+            self.play(pC.change("done"), FadeIn(comp), run_time=0.6)
             _, repack = q0.pop(1)
             self.play(FadeOut(pC, shift=UP * 0.3), repack, run_time=0.8)
 
@@ -41,8 +43,8 @@ class S15Imbalance(Ep10Scene):
                 self.play(grid.fill(0, c, "A", run_time=0.25), grid.fill(1, c, "BBDD"[c % 4], run_time=0.25), run_time=0.4)
 
         # S15.5
-        ta = tag("A: 100% of CPU 0", 18, COL["A"]).move_to(P3(-3.0, -1.45))
-        tbd = tag("B: 50% · D: 50%", 18, COL["B"]).move_to(P3(3.0, -1.45))
+        ta = tag("A: 100% of CPU 0", 18, COL["A"]).move_to(P3(-3.0, -1.58))
+        tbd = tag("B: 50% · D: 50%", 18, COL["B"]).move_to(P3(3.0, -1.58))
         two = MathTex(r"2\times", color=KERNEL_COLOR).scale(1.6).move_to(P3(0, -0.6))
         self.say("So A gets twice as much CPU as B or D. That's not the fair share the scheduler wanted.",
                  FadeIn(ta, shift=UP * 0.1), FadeIn(tbd, shift=UP * 0.1), Succession(Wait(1.0), FadeIn(two, scale=0.5), Wait(0.6), FadeOut(two)),
@@ -78,6 +80,7 @@ class S15Imbalance(Ep10Scene):
         shade = scrim(0.85)
         card.set_z_index(45)
         self.add(shade)
-        self.say_crux(card, hold=1.0)
-        self.play(card.dock(run_time=1.2), FadeOut(self.strip), FadeOut(shade), run_time=1.2)
+        self.say_crux(card, hold=1.0, lead="And that leaves us with a second crux: {q}")
+        self.play(card.dock(run_time=1.2), FadeOut(self.strip), FadeOut(shade), grid.clear(), FadeOut(comp), FadeOut(zz),
+                  c0.warmth(0, COL["A"]), c1.warmth(0, COL["B"]), run_time=1.2)
         self.beat(0.3)

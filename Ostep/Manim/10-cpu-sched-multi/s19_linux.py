@@ -35,7 +35,7 @@ def mini_single(cx, cy):
 
 class S19Linux(Ep10Scene):
     def construct(self):
-        self.world(strip=2, stu="neutral", prof="neutral")
+        self.world(strip=2, stu="neutral", prof="happy")
         stu, prof = self.stu, self.prof
 
         # S19.1
@@ -70,7 +70,7 @@ class S19Linux(Ep10Scene):
             return centered_text(txt, 3.0, 20, TEXT).move_to(P3(x, -0.85))
         ladder = MLFQLadder(levels=3, labels=["", "", ""], x_range=(-0.5, 0.5), arrows=False)
         ladder.scale(0.28).move_to(P3(-4, -0.2))
-        b1 = blurb("priority-based (MLFQ-like), interactivity", -4)
+        b1 = blurb("priority-based (MLFQ-like)", -4)
         self.say("O(1) is a priority-based scheduler, a bit like the MLFQ we saw before.",
                  FadeIn(b1, shift=UP * 0.1), FadeIn(ladder), FadeOut(okt))
 
@@ -88,7 +88,7 @@ class S19Linux(Ep10Scene):
                  FadeIn(b3, shift=UP * 0.1))
 
         # S19.9
-        sticker = VGroup(tag("(look it up!)", 18, CPU_COLOR), magnifier_icon(0.4)).arrange(RIGHT, buff=0.1).move_to(P3(3.4, -1.75))
+        sticker = VGroup(tag("(look it up!)", 18, CPU_COLOR), magnifier_icon(0.4)).arrange(RIGHT, buff=0.1).move_to(P3(4.0, -1.75))
         self.say("And about that BF in BFS: the book says you should look it up yourself. It is not for the faint of heart.",
                  FadeIn(sticker, shift=UP * 0.2), stu.change("surprised"))
 
@@ -96,3 +96,5 @@ class S19Linux(Ep10Scene):
         card = aside_card("Meehan's dissertation, linked below", title="ASIDE", width=5.0, font_size=22).move_to(P3(0, -2.55))
         self.say("Read more about them on your own.", card.slide_in(UP))
         self.beat(0.5)
+        # hand-off to S20: only the three cards and the Linux title stay
+        self.fade_stage(*cards, lin)

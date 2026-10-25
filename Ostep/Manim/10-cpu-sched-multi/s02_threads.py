@@ -16,6 +16,7 @@ class S02Threads(Ep10Scene):
         laptop = VGroup(lap, chips, a)
         cores.next_to(lap, UP, buff=0.15)
         self.add(laptop, cores, sw, stu, prof, comp)
+        self.allow_overlap(a, chips[0], "process A stands on its chip")
 
         # S02.1  laptop moves up, program splits
         self.play(AnimationGroup(laptop.animate.scale(0.8).move_to(P3(0, 1.0)),
@@ -68,7 +69,7 @@ class S02Threads(Ep10Scene):
         # S02.5  spotlight sweeps chips
         spot = Spotlight(height=1.0, spread=0.4)
         spot.move_beam_to(chips[0].get_center() + DOWN * 0.1)
-        qs = VGroup(*[question_mark(0.3).move_to(c.get_center() + UP * 0.75) for c in chips])
+        qs = VGroup(*[question_mark(0.24).move_to(c.get_center() + DOWN * 0.5) for c in chips])
         sweep = Succession(*[spot.animate.move_beam_to(c.get_center() + DOWN * 0.1) for c in chips[1:]])
         self.say("someone has to decide who runs on which core.",
                  FadeIn(spot), LaggedStart(*[FadeIn(q, scale=0.5) for q in qs], lag_ratio=0.1),
@@ -83,11 +84,11 @@ class S02Threads(Ep10Scene):
 
         # S02.7  aside
         card = aside_card("advanced chapter: leans on concurrency (later in the series)", title="ASIDE",
-                          width=3.8, font_size=22).move_to(P3(4.4, -0.2))
+                          width=3.8, font_size=22).move_to(P3(0, -1.75))
         self.say("Quick note. The book calls this an advanced chapter. It leans on ideas from concurrency, "
                  "which we haven't fully covered yet.",
-                 FadeOut(spot), card.slide_in(RIGHT), prof.change("neutral"))
+                 FadeOut(spot), card.slide_in(DOWN), prof.change("neutral"))
         # S02.8
         ep = ep_tag("→ Ep. 26-28").next_to(card, DOWN, buff=0.15)
         self.say("So we'll sketch those parts, and promise to come back to them later.",
-                 FadeIn(ep, shift=UP * 0.1), Succession(Wait(2.8), AnimationGroup(card.slide_out(RIGHT), FadeOut(ep))))
+                 FadeIn(ep, shift=UP * 0.1), Succession(Wait(2.8), AnimationGroup(card.slide_out(DOWN), FadeOut(ep))))

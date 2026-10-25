@@ -31,11 +31,13 @@ class S01EightCores(Ep10Scene):
         # S01.4
         a = proc("A", "running", 0.3)
         chip1 = chips[0]
+        self.allow_overlap(a, chip1, "process A stands on its chip")
         lit = mini_chip(True).move_to(chip1)
         self.say("Run it on this machine.",
                  a_c.animate.move_to(chip1.get_center() + DOWN * 0.1).scale(0.3).set_opacity(0),
                  Succession(Wait(0.7), AnimationGroup(Transform(chip1, lit), FadeIn(a.move_to(chip1.get_top() + UP * 0.15)))))
         place_on(a, chip1.get_top() + DOWN * 0.05)
+        self.allow_overlap(a, chip1, "process A stands on its chip")
         self.remove(a_c)
 
         # S01.5

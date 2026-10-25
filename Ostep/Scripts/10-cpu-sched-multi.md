@@ -66,7 +66,7 @@ back to them later.
 > How should the OS schedule jobs on multiple CPUs? What new problems arise? Do the same old
 > techniques work, or are new ideas required?
 
-**Narrator (V.O.):** So that's the question. Do the old techniques work, or do we need new ideas?
+**Narrator (V.O.):** Which brings us to the question behind this whole episode: how to schedule jobs on multiple CPUs? What new problems arise? Do the same old techniques work, or are new ideas required? So that's the question. Do the old techniques work, or do we need new ideas?
 Spoiler: a bit of both. But to see why, we first have to look at what changed in the *hardware*.
 
 *Visual idea:* Crux card in the Virtualization accent (orange); section badge "10 · Multi-CPU Scheduling".
@@ -238,6 +238,8 @@ nothing to do. It sits idle, while CPU one is juggling two jobs. How terrible.
 **Computer** (sleeping): *(snore, half of the CPUs dark)*
 
 **Narrator (V.O.):** This is **load imbalance**, the fundamental problem of multi-queue scheduling.
+
+**Narrator (V.O.):** And that leaves us with a second crux: how to deal with load imbalance?
 
 > **THE CRUX: HOW TO DEAL WITH LOAD IMBALANCE**
 > How should a multi-queue multiprocessor scheduler handle load imbalance, so as to better achieve

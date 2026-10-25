@@ -16,7 +16,7 @@ def make_grid(repeat=False):
 
 class S12SqmsAffinity(Ep10Scene):
     def construct(self):
-        self.world(strip=1, term="scalability", stu="sad", prof="explaining")
+        self.world(strip=1, term="scalability", stu="neutral", prof="neutral")
         stu, prof = self.stu, self.prof
         cpus = four_cpus()
         q_old, ps_old = job_queue("E", center=(0, -1.15))
@@ -31,11 +31,11 @@ class S12SqmsAffinity(Ep10Scene):
 
         # S12.1
         q, ps = job_queue("ABCDE", center=(4.2, -1.0), label_text="the queue", spacing=0.75, scale=0.35)
-        grid = make_grid()
+        grid = make_grid(repeat=True)
         cap = label("5 jobs · 4 CPUs", 22, DIM).move_to(P3(-0.7, -3.2))
         self.say("The second problem is cache affinity. Take five jobs, A through E, and four CPUs.",
                  FadeOut(VGroup(q_old, *ps_old, *on_chip, null, pad)), FadeIn(q), LaggedStart(*[FadeIn(p) for p in ps], lag_ratio=0.1),
-                 FadeIn(grid), FadeIn(cap), stu.change("neutral"), prof.change("neutral"))
+                 FadeIn(grid), FadeIn(cap))
 
         # S12.2
         self.say("Each CPU simply takes the next job from the shared queue…",
@@ -54,7 +54,9 @@ class S12SqmsAffinity(Ep10Scene):
                               for i, c in enumerate(colds)]))
 
         # S12.5
-        xm = x_mark(0.5).move_to(P3(2.2, -1.7))
+        xm = x_mark(0.5).move_to(P3(-0.7, -0.8))
         self.say("This is exactly the opposite of what affinity wants.",
                  FadeIn(xm, scale=1.5), prof.change("worried"))
         self.beat(0.5)
+        # hand-off to S13: four plain CPUs and the finished table
+        self.play(FadeOut(VGroup(q, ps[4], cap, xm, *colds)), grid.unhighlight(), run_time=0.7)

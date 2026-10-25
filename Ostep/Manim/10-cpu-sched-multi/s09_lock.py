@@ -68,7 +68,7 @@ class S09Lock(Ep10Scene):
         # S09.5
         row = VGroup()
         for i in range(8):
-            ch = CPU(size=0.4, label=None, pins=2).move_to(P3(-0.5 + 0.8 * i, -2.5))
+            ch = CPU(size=0.4, label=None, pins=2).move_to(P3(-3.4 + 0.7 * i, -2.5))
             th = Process("ready", color=COL["A"], label=None).scale(0.22)
             place_on(th, ch.slot_point())
             ck = mini_clock(0.1).next_to(ch, DOWN, buff=0.08)
@@ -85,5 +85,5 @@ class S09Lock(Ep10Scene):
                  Succession(card.slide_in(RIGHT), Wait(2.5), card.slide_out(RIGHT)), stu.change("neutral"))
 
         # transition: everything but the padlock fades; it shrinks to the corner
-        rest = VGroup(code, old_code, nodes[2], null, arrows[2], hv, *chips, *threads, sw, wait_t, row)
+        rest = VGroup(code.code, nodes[2], null, arrows[2], hv, *chips, *threads, sw, wait_t, row)
         self.play(FadeOut(rest), pad.animate.scale(0.7).move_to(P3(6.2, 2.1)), run_time=1.0)

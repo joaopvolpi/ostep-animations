@@ -19,6 +19,8 @@ class S17MigrationHard(Ep10Scene):
         pB, = st["p0"]
         pD, = st["p1"]
         self.add(c0, c1, q0, q1, pB, pD, grid)
+        self.on_trays([pB, pD], [q0, q1])
+        finish_now(c0.warmth(3, COL["B"]))
         for c in range(12):
             grid.set(0, c, "B")
             grid.set(1, c, "D")
@@ -31,8 +33,9 @@ class S17MigrationHard(Ep10Scene):
         _, rep = q0.pop(0)
         q0.items.clear()
         self.add(pA)
+        self.on_trays([pA], [q0, q1])
         with self.narrate("Here's a trickier one. A is alone on CPU zero. B and D share CPU one."):
-            self.play(hop_to(pB, q1.slot_point(0), run_time=0.8), run_time=0.8)
+            self.play(hop_to(pB, q1.slot_point(0), run_time=0.8, height=0.1), run_time=0.8)
             q1.items.insert(0, pB)
             self.play(q1.pack(), run_time=0.5)
             self.play(q0.push(pA), run_time=0.8)
@@ -44,11 +47,11 @@ class S17MigrationHard(Ep10Scene):
         with self.narrate("One migration doesn't fix this: moving B just flips the problem."):
             _, rep = q1.pop(0)
             q0.items.append(pB)
-            self.play(hop_to(pB, q0.slot_point(1), run_time=0.9, height=1.0), rep, FadeIn(flip, scale=0.6), FadeIn(same), run_time=0.9)
+            self.play(hop_to(pB, q0.slot_point(1), run_time=0.9, height=0.1), rep, FadeIn(flip, scale=0.6), FadeIn(same), run_time=0.9)
             self.wait(0.5)
             _, rep = q0.pop(1)
             q1.items.insert(0, pB)
-            self.play(hop_to(pB, q1.slot_point(0), run_time=0.9, height=1.0), q1.pack(), rep, run_time=0.9)
+            self.play(hop_to(pB, q1.slot_point(0), run_time=0.9, height=0.1), q1.pack(), rep, run_time=0.9)
             self.play(FadeOut(flip), FadeOut(same), run_time=0.4)
 
         # S17.4
@@ -69,7 +72,7 @@ class S17MigrationHard(Ep10Scene):
         with self.narrate("After a few time slices, B moves to CPU zero to compete with A…"):
             _, rep = q1.pop(0)
             q0.items.append(pB)
-            self.play(hop_to(pB, q0.slot_point(1), run_time=0.9, height=1.0), rep, run_time=0.9)
+            self.play(hop_to(pB, q0.slot_point(1), run_time=0.9, height=0.1), rep, run_time=0.9)
             self.play(LaggedStart(*[grid.fill(0, c, ROW0[c], run_time=0.25) for c in range(4, 8)], lag_ratio=0.5),
                       FadeIn(cold, scale=1.3), Indicate(c0.strip, color=MEM_COLOR), run_time=1.6)
 
@@ -83,7 +86,7 @@ class S17MigrationHard(Ep10Scene):
         with self.narrate("And the load stays balanced, over time."):
             _, rep = q0.pop(0)
             q1.items.append(pA)
-            self.play(hop_to(pA, q1.slot_point(1), run_time=0.9, height=1.0), rep, run_time=0.9)
+            self.play(hop_to(pA, q1.slot_point(1), run_time=0.9, height=0.1), rep, run_time=0.9)
             self.play(LaggedStart(*[AnimationGroup(grid.fill(0, c, ROW0[c], run_time=0.25), grid.fill(1, c, ROW1[c], run_time=0.25))
                                     for c in range(8, 12)], lag_ratio=0.5), FadeIn(share), run_time=2.0)
 
@@ -93,3 +96,5 @@ class S17MigrationHard(Ep10Scene):
                  "how should the system decide to migrate?",
                  prof.change("explaining"), FadeIn(qm, scale=0.5), Indicate(suit, color=CPU_COLOR))
         self.beat(0.8)
+        # hand-off to S18: the bare CPUs and queues
+        self.fade_stage(c0, c1, q0, q1, extra=(c0.warmth(0, COL["B"]),))

@@ -97,6 +97,11 @@ def cpu_at(x, y_chip, name, size=1.2):
     """A CacheCPU whose chip centre is at (x, y_chip)."""
     c = CacheCPU(name, size=size)
     c.shift(P3(x, y_chip) - c.cpu.get_center())
+    # strip and cells sit below their texts even when an Indicate/pulse re-adds them to the scene
+    for m in (c.strip, *c.cells):
+        m.set_z_index(-1)
+    for t in (c.cache_label, *c.texts):
+        t.set_z_index(6)
     return c
 
 
@@ -132,10 +137,38 @@ class Ep10Scene(NarratedScene):
     def note(self, text, **kw):
         return self.terms.note(text, **kw)
 
+    def on_trays(self, procs, queues):
+        """Jobs walking through a queue tray: the letter under their feet crosses the tray border."""
+        for p in procs:
+            for q in queues:
+                self.allow_overlap(p, q.tray, "a job hops onto / off its slot on the tray")
+
     def add_docked(self, text):
         m = self.terms.docked_now(text)
         self.add(m)
+        self._docked_m = m
         return m
+
+    def fade_stage(self, *keep, run_time=0.8, extra=()):
+        """Fade out everything except the chrome (badge, strip, hosts, docked term) and ``keep``;
+        ``extra`` animations play along.  Looks inside scene-level groups so a kept mobject that a
+        play() nested in a group is not faded with it."""
+        chrome = [getattr(self, n, None) for n in ("badge", "strip", "stu", "prof", "_docked_m")]
+        kept = {id(k) for k in (*chrome, *keep) if k is not None}
+        gone = []
+
+        def collect(m):
+            if id(m) in kept or getattr(m, "is_scrim", False):
+                return
+            if any(id(x) in kept for x in m.get_family()[1:]):
+                for s in m.submobjects:
+                    collect(s)
+            else:
+                gone.append(m)
+        for m in self.mobjects:
+            collect(m)
+        if gone or extra:
+            self.play(*[FadeOut(m) for m in gone], *extra, run_time=run_time)
 
     def world(self, term=None, stu="neutral", prof="neutral", strip=0, badge=True, chars=True):
         """Badge, crux strip (0 none, 1 first, 2 second), corner characters, docked term."""

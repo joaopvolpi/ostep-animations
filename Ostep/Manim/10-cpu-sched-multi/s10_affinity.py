@@ -25,8 +25,9 @@ class S10Affinity(Ep10Scene):
         c1, c2, mem, bus = build_affinity_stage()
         a = proc("A", "running", 0.5)
         place_on(a, c1.slot_point())
-        self.add(pad, c1, c2, mem, bus, a)
+        self.add(pad)
         A = COL["A"]
+        self.play(FadeIn(VGroup(c1, c2, mem, bus, a)), run_time=0.6)
 
         # S10.1
         self.say("When a process runs on a CPU, it gradually fills that CPU's caches…",
@@ -55,7 +56,7 @@ class S10Affinity(Ep10Scene):
         # S10.5
         slow = stopwatch("slow", 24, KERNEL_COLOR).move_to(fast)
         with self.narrate("Put it on a different CPU, and it must reload everything, slowly."):
-            self.play(hop_to(a, c2.slot_point(), run_time=1.0, height=1.2), FadeOut(warm), run_time=1.0)
+            self.play(hop_to(a, c2.slot_point(), run_time=1.0, height=0.2), FadeOut(warm), run_time=1.0)
             self.play(Transform(fast, slow), run_time=0.5)
             for i in range(3):
                 self.play(bus_pulse(bus, mem.get_top(), c2.cache_bottom(), color=A, run_time=0.9),
@@ -70,7 +71,8 @@ class S10Affinity(Ep10Scene):
         # S10.7
         pin = pin_icon(0.55).move_to(c1.cpu.get_corner(UL) + P3(0.0, 0.3))
         self.say("So a multiprocessor scheduler should consider cache affinity. When possible, keep a process on the same CPU.",
-                 hop_to(a, c1.slot_point(), run_time=1.0, height=1.2), c2.clear(), FadeOut(ok), FadeOut(gauge),
+                 hop_to(a, c1.slot_point(), run_time=1.0, height=0.2), c2.clear(), FadeOut(ok), FadeOut(gauge),
                  FadeOut(fast), Succession(Wait(1.4), FadeIn(pin, shift=DOWN * 0.5)), prof.change("explaining"))
         self.play(a.change("running"), run_time=0.4)
         self.beat(0.4)
+        self.fade_stage()

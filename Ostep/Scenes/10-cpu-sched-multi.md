@@ -85,7 +85,7 @@
 | # | Narration | On screen / animation |
 |---|---|---|
 | 1 | (transition) | Laptop and processes fade; chips shrink into the forming Section badge "10 · Multi-CPU Scheduling". |
-| 2 | "So that's the question." | Crux card `Write`s: **"How should the OS schedule jobs on multiple CPUs?"** Subtitle (DIM): "What new problems arise? Do the same old techniques work, or are new ideas required?" |
+| 2 | "Which brings us to the question behind this whole episode: {question}" (then the subtitle, then "So that's the question.") | Crux card `Write`s: **"How should the OS schedule jobs on multiple CPUs?"** Subtitle (DIM): "What new problems arise? Do the same old techniques work, or are new ideas required?" |
 | 3 | "Spoiler: a bit of both." | Two small word tags beneath: "old techniques" ✓ and "new ideas" ✓. |
 | 4 | "But to see why, we first have to look at what changed in the hardware." | Card shrinks to a one-line strip at the top (0, 3.2), kept through S18. |
 
@@ -331,7 +331,7 @@
 | 7 | "Queue zero is now empty. CPU zero has nothing to do." | CPU 0's chip drains its color to dark; grid row CPU 0 fills with hatched idle cells; Q0 shows only the label with a tiny "NULL". |
 | 8 | "It sits idle, while CPU one is juggling two jobs. How terrible." | The Computer → sleeping (zZz); CPU 0 gets a "zzz" tag, a clock; CPU 1 on its own flickers between B and D. Dramatic: the lower-third gets a thin "(dramatic and sinister music)" caption in `DIM` italics. |
 | 9 | "This is **load imbalance**, the fundamental problem of multi-queue scheduling." | Term highlight "load imbalance". The hatched row pulses. |
-| 10 | (Crux appears) | A second small Crux card slides in: **"How to deal with load imbalance?"** subtitle (DIM): "How should a multi-queue multiprocessor scheduler handle load imbalance, so as to better achieve its desired scheduling goals?" It replaces the crux strip at the top. |
+| 10 | "And that leaves us with a second crux: {question}" | A second small Crux card slides in: **"How to deal with load imbalance?"** subtitle (DIM): "How should a multi-queue multiprocessor scheduler handle load imbalance, so as to better achieve its desired scheduling goals?" It replaces the crux strip at the top. |
 
 **Characters:** Student (confused → frustrated), Professor (worried), Computer (busy → sleeping).
 **Ends with:** CPU 0 idle (hatched row), CPU 1 alternating B and D; Q0 empty, Q1 = B, D; crux strip for load imbalance at the top.

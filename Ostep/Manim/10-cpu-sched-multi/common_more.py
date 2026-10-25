@@ -132,7 +132,7 @@ MQ_GRID_AT = P3(0.2, -2.35)
 
 
 def hop_mover(m, pt, **kw):
-    return hop_to(m, pt, run_time=kw.pop("run_time", 0.7), height=0.5)
+    return hop_to(m, pt, run_time=kw.pop("run_time", 0.7), height=0.12)
 
 
 def mq_stage(items0="AC", items1="BD", cols=12, cell_w=0.6, fill_grid=None):

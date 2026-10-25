@@ -25,7 +25,8 @@ class S03Crux(Ep10Scene):
 
         # S03.2
         card = CruxCard(CRUX_Q, CRUX_SUB, accent=VIRT, question_size=32, subtitle_size=22).move_to(P3(0, 0.3))
-        self.say_crux(card, stu.look_at(card), prof.look_at(card), hold=0.4)
+        self.say_crux(card, stu.look_at(card), prof.look_at(card), hold=0.4,
+                       lead="Which brings us to the question behind this whole episode: {q}")
         self.say("So that's the question. Do the old techniques work, or do we need new ideas?")
 
         # S03.3

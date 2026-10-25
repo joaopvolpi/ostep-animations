@@ -26,7 +26,7 @@ def mini_q(cx, cy, n=1, pad=False):
 
 class S20BigPicture(Ep10Scene):
     def construct(self):
-        self.world(strip=0, stu="neutral", prof="neutral")
+        self.world(strip=0, stu="surprised", prof="happy")
         stu, prof = self.stu, self.prof
         cards = [RoundedRectangle(width=3.4, height=3.2, corner_radius=0.2).set_fill(CARD_FILL, 1).set_stroke(DIM, 2).move_to(P3(x, 0.3))
                  for x in (-4, 0, 4)]
@@ -34,7 +34,7 @@ class S20BigPicture(Ep10Scene):
         self.add(*cards, lin)
 
         # S20.1
-        frame = RoundedRectangle(width=9.6, height=3.9, corner_radius=0.2).set_fill(CARD_FILL, 1).set_stroke(DIM, 2).move_to(P3(0, 0.15))
+        frame = RoundedRectangle(width=9.6, height=4.1, corner_radius=0.2).set_fill(CARD_FILL, 1).set_stroke(DIM, 2).move_to(P3(0, 0.25))
         h_s = VGroup(label("SQMS", 28, VIRT), mini_q(0, 0, 1, pad=True)).arrange(DOWN, buff=0.12).move_to(P3(COLX["sqms"], 1.55))
         h_m = VGroup(label("MQMS", 28, VIRT), mini_q(0, 0, 2)).arrange(DOWN, buff=0.12).move_to(P3(COLX["mqms"], 1.55))
         labels = [label(r[0], 24).move_to(P3(COLX["label"], y)) for r, y in zip(ROWS, ROW_Y)]
@@ -81,9 +81,9 @@ class S20BigPicture(Ep10Scene):
                       *[Line(P3(-0.45, 0.2 - 0.18 * i), P3(0.45 - 0.3 * i, 0.2 - 0.18 * i)).set_stroke(DIM, 3) for i in range(3)])
         code[2].set_stroke(CPU_COLOR, 4)
         code.move_to(P3(-2.2, -2.7))
-        thumb_a = ScheduleGrid(2, 6, 0.3, 0.25, colors=grid_colors(), row_labels=["", ""]).move_to(P3(0.6, -2.7))
+        thumb_a = ScheduleGrid(2, 6, 0.3, 0.25, colors=grid_colors(), row_labels=["", ""], letter_size=12).move_to(P3(0.6, -2.7))
         thumb_a.set_row(0, "AABBAA"); thumb_a.set_row(1, "BBAABB")
-        thumb_b = ScheduleGrid(2, 6, 0.3, 0.25, colors=grid_colors(), row_labels=["", ""]).move_to(P3(0.6, -2.7))
+        thumb_b = ScheduleGrid(2, 6, 0.3, 0.25, colors=grid_colors(), row_labels=["", ""], letter_size=12).move_to(P3(0.6, -2.7))
         thumb_b.set_row(0, "ABABAB"); thumb_b.set_row(1, "BBBAAA")
         arr = Arrow(P3(-1.5, -2.7), P3(-0.5, -2.7), buff=0, color=DIM, stroke_width=3, tip_length=0.15)
         self.say("Building a general-purpose scheduler remains a daunting task, because small code changes can lead "
@@ -97,3 +97,4 @@ class S20BigPicture(Ep10Scene):
                  "a large amount of money to do so.",
                  FadeIn(money, shift=UP * 0.2), prof.change("proud"))
         self.beat(0.5)
+        self.fade_stage()

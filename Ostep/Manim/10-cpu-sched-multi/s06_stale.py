@@ -49,6 +49,7 @@ class S06Stale(Ep10Scene):
         val = VGroup(Square(0.3).set_fill(COL["A"], 0.9).set_stroke(outline_of(COL["A"]), 2), mono("7", 18, INK))
         val[1].move_to(val[0])
         val.move_to(mem.get_top())
+        self.allow_overlap(val, bus, "the value travels along the bus wire")
         with self.narrate("It's not in CPU one's cache, so it's fetched from memory: the value is seven."):
             self.play(FadeIn(miss, scale=1.4), run_time=0.3)
             self.play(MoveAlongPath(dot, path), FadeOut(miss), run_time=1.3)
@@ -73,7 +74,7 @@ class S06Stale(Ep10Scene):
 
         # S06.8
         self.say("Now the OS stops the program and moves it to CPU two.",
-                 hop_to(a, c2.slot_point(), run_time=1.0, height=1.0))
+                 hop_to(a, c2.slot_point(), run_time=1.0, height=0.2))
         self.play(a.change("running"), run_time=0.4)
 
         # S06.9
@@ -94,12 +95,14 @@ class S06Stale(Ep10Scene):
         val2[1].move_to(val2[0])
         val2.move_to(mem.get_top())
         neq = MathTex(r"7\neq 9", color=KERNEL_COLOR).scale(1.8).move_to(P3(0, 1.3))
+        self.allow_overlap(val2, bus, "the value travels along the bus wire")
         with self.narrate("So it fetches from main memory, which still holds the old value. Seven. Not nine."):
             self.play(MoveAlongPath(dot2, bus.path(c2.cache_bottom(), mem.get_top())), FadeOut(miss2), run_time=1.3)
             self.play(FadeOut(dot2, run_time=0.1), FadeIn(val2, run_time=0.1))
             self.play(MoveAlongPath(val2, back2), run_time=1.3)
             self.play(FadeOut(val2, run_time=0.2), c2.store("7", COL["A"], run_time=0.4))
-            self.play(FadeIn(neq, scale=0.6), a.says("7?", font_size=28, max_width=1.4), run_time=0.8)
+            self.play(FadeIn(neq, scale=0.6), a.says("7?", font_size=28, max_width=1.4),
+                      FadeOut(self.strip), run_time=0.8)
 
         # S06.12
         comp = Computer("error").scale(0.6).move_to(P3(3.7, -2.4))
@@ -107,7 +110,7 @@ class S06Stale(Ep10Scene):
                  stu.change("surprised"), FadeIn(comp, scale=0.7))
 
         # S06.13 key term
-        self.play(prof.change("worried"), a.remove_bubble(), run_time=0.5)
+        self.play(prof.change("worried"), a.remove_bubble(), FadeIn(self.strip), run_time=0.5)
         with self.narrate("This is the problem of cache coherence. Each cache has its own view of the "
                           "\"one\" shared memory, and the views disagree."):
             self.play(self.term("cache coherence"))

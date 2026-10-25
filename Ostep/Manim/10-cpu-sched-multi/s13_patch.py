@@ -47,10 +47,10 @@ class S13Patch(Ep10Scene):
                  Succession(Wait(1.2), suit.animate.move_to(grid.cell_center(3, 4) + UP * 0.45)))
 
         # S13.5
-        nxt = tag("next round: another job", 18).next_to(grid.repeat, DOWN, buff=0.15)
+        nxt = tag("next round: another job", 18).next_to(grid, DOWN, buff=0.2)
         self.say("A different job could take the migrating role the next time round, if you want fairness among the others too.",
                  grid.unhighlight(), FadeOut(VGroup(*arrows)),
-                 suit.animate.move_to(grid.repeat.get_left() + LEFT * 0.35), FadeIn(nxt))
+                 suit.animate.move_to(grid.repeat.get_bottom() + DOWN * 0.3), FadeIn(nxt))
 
         # S13.6
         gear = GearPair(0.28)

@@ -9,7 +9,7 @@ from common_more import *  # noqa: E402,F401,F403
 
 class S14Mqms(Ep10Scene):
     def construct(self):
-        self.world(strip=1, stu="neutral", prof="neutral")
+        self.world(strip=1, stu="neutral", prof="explaining")
         stu, prof = self.stu, self.prof
         st = mq_stage("", "")
         c0, c1, q0, q1, grid = st["c0"], st["c1"], st["q0"], st["q1"], st["grid"]
@@ -38,6 +38,7 @@ class S14Mqms(Ep10Scene):
                           "or the one with fewer jobs."):
             self.play(FadeIn(heur), *[FadeIn(p) for p in jobs.values()], run_time=0.6)
             for j, q in zip("ABCD", (q0, q1, q0, q1)):
+                self.allow_overlap(jobs[j], q.tray, "the job hops over the tray edge onto its slot")
                 self.play(q.push(jobs[j]), run_time=0.8)
 
         # S14.5
@@ -78,3 +79,4 @@ class S14Mqms(Ep10Scene):
                  prof.change("worried"), FadeOut(extra[0]), FadeOut(extra[1]), FadeOut(bar), FadeOut(pad), FadeOut(slash),
                  Succession(Wait(1.5), FadeIn(nxt), Indicate(nxt, color=KERNEL_COLOR, scale_factor=1.1)))
         self.beat(0.3)
+        self.play(FadeOut(nxt), *[FadeOut(r) for r in rr], run_time=0.5)
