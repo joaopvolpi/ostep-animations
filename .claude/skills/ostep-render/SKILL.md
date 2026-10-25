@@ -167,9 +167,10 @@ Images are expensive, so frame inspection is the exception, not the rule.
      the scene with `self.allow_overlap(a, b, "why")` (it then disappears). Follow the
      `ostep-layout-review` skill for the fix loop (`--check-only` reruns the check without video,
      `tools/overlap_sheet.py` shows ambiguous findings as one contact sheet).
-   - **Every `[ghost]` warning must be fixed**: a `FadeOut` or `.animate` on something that
-     already left the screen makes it flash back in. Never fade or animate a mobject twice out;
-     to reuse one, place it and `FadeIn` it.
+   - **Every `[ghost]` warning must be fixed**: a `FadeOut`, `.animate`, `Indicate` or
+     `Transform` on something that already left the screen brings it back (a flash, or for good).
+     Never animate a mobject after it left; highlight only the live parts of a prop; to reuse a
+     mobject, place it and `FadeIn` it.
    - `[bounds]` warnings are fine only for things meant to run past the edge (full-width
      boundaries, slides in/out).
 3. **Inspect visually only the critical scenes:** crowded ones with many components on screen,

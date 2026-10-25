@@ -119,12 +119,12 @@ class NarratedScene(Scene):
         tr.sample(self, mid_play)
 
     def _check_ghosts(self, args):
-        """Debug (env OSTEP_CHECK=1): warn when a FadeOut / ``.animate`` (or any remover or
-        method animation) targets a mobject that is not on screen.  Manim adds it back for the
-        animation, so something that already left flashes in again (a stale bar, a zombie)."""
+        """Debug (env OSTEP_CHECK=1): warn when any animation that is not an entrance (FadeOut,
+        ``.animate``, Indicate, Transform...) targets a mobject that is not on screen.  Manim adds
+        it back for the animation, so something that already left flashes in again (a stale bar, a
+        zombie), or, if the animation does not remove it, comes back for good (a cut cable)."""
         from manim import ValueTracker
         from manim.animation.animation import Wait, prepare_animation
-        from manim.animation.transform import _MethodAnimation
 
         def label(x):
             s = getattr(x, "text", None)
@@ -133,6 +133,7 @@ class NarratedScene(Scene):
         # on screen now, or at the end of the previous play (a prop may detach a part while building
         # the animation that fades it, e.g. Terminal.clear(): that part was visible until now)
         on = {id(m) for top in self.mobjects for m in top.get_family()} | getattr(self, "_shown_ids", set())
+        self._ever_ids = getattr(self, "_ever_ids", set()) | on
 
         def visible_leaves(m):          # what actually draws (a fresh VGroup of on-screen parts is fine)
             return [x for x in m.get_family() if x.has_points() and not x.submobjects
@@ -156,8 +157,10 @@ class NarratedScene(Scene):
                     continue
                 if a.is_introducer():
                     on |= {id(x) for x in m.get_family()}
-                elif a.is_remover() or isinstance(a, _MethodAnimation):
-                    off = [x for x in visible_leaves(m) if id(x) not in on]
+                else:       # a remover, .animate, Indicate, Transform...: all draw their mobject
+                    # only parts that were on screen before and left since: a new mobject animated
+                    # in by a custom entrance (BubbleIn...) is not a flash-back
+                    off = [x for x in visible_leaves(m) if id(x) not in on and id(x) in self._ever_ids]
                     if off:
                         print(f"[ghost] t={self.renderer.time:.1f}s {type(a).__name__}({label(m)}) re-shows "
                               f"{len(off)} part(s) not on screen, e.g. {label(off[0])}")
@@ -168,6 +171,7 @@ class NarratedScene(Scene):
         super().play(*args, **kwargs)        # Scene.wait plays a Wait, so this covers holds too
         if os.environ.get("OSTEP_CHECK"):
             self._shown_ids = {id(m) for top in self.mobjects for m in top.get_family()}
+            self._ever_ids = getattr(self, "_ever_ids", set()) | self._shown_ids
             self._check_bounds()
             self._layout_sample()
 

@@ -256,12 +256,16 @@ def _judge(a, b, ra, rb, cut):
     pair = {ra, rb}
     ov = (cut(a, a.all) & cut(b, b.all)).sum()
     small = min(a.n_all, b.n_all)
-    if not small or ov <= SHAPE_FRAC * small:
+    if not small:
         return None
-    if "chrome" in pair and pair != {"chrome"}:
-        return "chrome"
-    if "host" in pair and pair != {"host"} and "bubble" not in pair:
-        return "host"
+    # touching the chrome or a host shows even when small next to the other shape: an absolute floor
+    if ov >= ZONE_PX:
+        if "chrome" in pair and pair != {"chrome"}:
+            return "chrome"
+        if "host" in pair and pair != {"host"} and "bubble" not in pair:
+            return "host"
+    if ov <= SHAPE_FRAC * small:
+        return None
     contained = b.n_all <= a.n_all and ov >= CONTAIN * b.n_all      # b sits entirely on a
     if pair in ({"panel"}, {"panel", "actor"}, {"panel", "prop"}) and not contained:
         return "panel"

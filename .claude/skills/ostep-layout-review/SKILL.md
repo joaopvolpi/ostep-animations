@@ -48,10 +48,12 @@ This runs every scene as a Manim dry run with the layout check on and writes the
 | `spill` | a card's own text (title, label) sticks out past the card's edge | real: shrink/wrap the text or widen the card |
 | `zone:chrome`, `zone:host` | content inside the thin reserved margin around them | real (crowding) |
 
-Also printed: `[ghost] t=<s> FadeOut(X) re-shows something that is not on screen`. A FadeOut,
-`.animate` or other remover targets a mobject that already left, so Manim adds it back and it
-flashes on screen for the length of that animation. Always real: drop that animation (or, to reuse
-the mobject, place it and `FadeIn` it on purpose).
+Also printed: `[ghost] t=<s> Indicate(X) re-shows N part(s) not on screen`. An animation that
+is not an entrance (FadeOut, `.animate`, Indicate, Transform...) targets something that was on
+screen earlier and has left, so Manim adds it back: it flashes for the animation (a fade), or
+comes back for good (an Indicate on a group that still holds a cut part). Always real: drop that
+animation, animate only the live parts (`VGroup(...)` of them), or, for a part that was removed but
+stays inside its prop, `set_opacity(0)` it right after it leaves.
 
 Labels name the objects: texts by their content (spaces removed), others by class, role and
 center, e.g. `CPU[prop]@(-2.0,0.6)`.
