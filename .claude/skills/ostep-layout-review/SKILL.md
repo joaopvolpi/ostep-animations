@@ -21,9 +21,17 @@ overlaps get an explicit `allow_overlap` so they are never reported again.
    scene's end state must also go into the builder the next scene starts from).
 
 ## Step 1: run the check (no video, no images)
+Before anything else, record the starting point: `python tools/continuity.py <NN>` (so later you
+can tell your regressions from old sub-pixel jumps), and `python -m py_compile` the scene files
+(one syntax error stops the run and the remaining scenes go unchecked).
 ```
-python tools/render.py <NN> --check-only [--scenes S03-S07]
+python tools/render.py <NN> --check-only --scenes S03,S04,S05
 ```
+Run it **in the foreground with a long timeout** (up to 10 min per call), **a few scenes per
+call**: a scene can take 1–3 min and nothing is printed until the call ends, and background jobs
+you wait on can stall you. Read the printed lines, not the files: a scene with no findings leaves
+no `.jsonl`. `[bounds]` lines are a different check (things crossing the frame edge); ignore them
+unless something is cut off by mistake.
 This runs every scene as a Manim dry run with the layout check on and writes the findings to
 `Ostep/Renders/<ep>/480p15/layout/<stem>.jsonl`. Each printed line is
 `[overlap:<kind>] t=<s> <A> x <B> box=(x0,y0)-(x1,y1)`, where A is drawn below B:
@@ -57,10 +65,20 @@ center, e.g. `CPU[prop]@(-2.0,0.6)`.
   subagent if the user asks for frugality: it returns "real / deliberate" per number.
 
 ## Step 3: fix the real ones
+Edit scene files with the Edit tool (they have CRLF line endings; scripted `str.replace` edits
+easily turn `
+` escapes into real newlines).
+
 Prefer the smallest change that removes the overlap without touching anything else:
 - **Labels**: put them on a free side with `next_to(target, direction, buff=0.1–0.15)`; never
   `move_to` a label onto something. Labels of creatures that sit on a CPU go to the side or
   above, not between the creature and the CPU.
+- **Creature labels** (`Process(label=...)`) are part of the creature: they sit under its feet
+  and are rebuilt by every `change()` / `set_expression`. To keep one off a CPU, a rail or a
+  queue tube, drop the built-in label for that stretch and show a separate `Text` beside the
+  creature (bring the label back once it's on free ground). `z_index` set on a creature is lost
+  when it rebuilds: set layers on the static prop instead. When a pool/spotlight hides a label,
+  move the pool; reordering layers just turns `cover` into `line`.
 - **Panels / cards**: move or shrink them into free space, or fade the old one out before the new
   one comes in. Never let content enter the crux strip's area or a host's area (the reserved
   zones): move the content, or fade the strip out (`FadeOut(strip)`) for that stretch and back in.
