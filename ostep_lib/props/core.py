@@ -42,6 +42,15 @@ STU_DIALOGUE = np.array([-2.6, -1.2, 0.0])
 PROF_DIALOGUE = np.array([2.6, -1.2, 0.0])
 
 
+def tag_role(mob, role):
+    """Give ``mob`` and every part of it a layout role for the overlap check ("chrome", "host",
+    "panel", "actor", "prop", "background" or "ignore"; see ``ostep_lib/layout.py``).  Parts are
+    tagged too because animations often add them to the scene one by one."""
+    for m in mob.get_family():
+        m.ostep_role = role
+    return mob
+
+
 def late(delay, anim):
     """Start ``anim`` after ``delay`` seconds inside a larger play WITHOUT the t=0 flash that
     ``Succession(Wait(delay), anim)`` causes (a Succession adds its non-first members' mobjects
@@ -89,7 +98,7 @@ def host_mode_anims(stu, prof, mode, run_time=1.0):
 
 __all__ = [
     "INK", "CARD_FILL", "PEACH_COLOR", "CONTENT_TOP", "CHROME_ROW_Y", "CRUX_STRIP_Y", "scrim",
-    "HOST_SCALE", "STU_CORNER", "PROF_CORNER", "STU_DIALOGUE", "PROF_DIALOGUE",
+    "HOST_SCALE", "STU_CORNER", "PROF_CORNER", "tag_role", "STU_DIALOGUE", "PROF_DIALOGUE",
     "host_pair", "host_mode_anims", "late", "finish_now",
     "outline_of", "label_text", "mono_text", "wrap_text", "centered_text", "make_translucent",
     "base_point", "place_on", "hop_to", "HopTo",
@@ -524,6 +533,7 @@ class CruxCard(VGroup):
         self.frame.set_fill(CARD_FILL, 1).set_stroke(accent, 5)
         body.move_to(self.frame)
         self.add(self.frame, self.header, self.question, self.subtitle)
+        tag_role(self, "chrome")
 
     def write(self, run_time=1.6):
         """Silent write of the whole card. Prefer ``NarratedScene.say_crux``: a crux on screen
@@ -552,7 +562,7 @@ class CruxCard(VGroup):
         # match the submobject layout of the card: frame, header, question, subtitle
         def ghost():
             return Dot(fr.get_center(), radius=0.001).set_opacity(0)
-        return VGroup(fr, ghost(), q, ghost())
+        return tag_role(VGroup(fr, ghost(), q, ghost()), "chrome")
 
     def dock(self, point=(0, 3.0, 0), font_size=24, run_time=1.0):
         """Frame and question morph into the strip; header and subtitle fade out and are
@@ -690,6 +700,7 @@ class TermHighlight:
         ul.next_to(t, DOWN, buff=size * 0.0025 + 0.06).set_stroke(accent, max(2, size / 9))
         g = VGroup(t, ul)
         if right_aligned:
+            tag_role(g, "chrome")       # the docked term is chrome (the big one sits on a scrim)
             g.move_to(at, aligned_edge=RIGHT)
         else:
             g.move_to(at)
@@ -776,6 +787,7 @@ class SectionBadge(VGroup):
         self.add(self.dot, self.text)
         self.move_to(np.array(corner, dtype=float), aligned_edge=LEFT)
         self.accent = accent
+        tag_role(self, "chrome")
 
     def recolor(self, accent, run_time=0.6):
         self.accent = accent

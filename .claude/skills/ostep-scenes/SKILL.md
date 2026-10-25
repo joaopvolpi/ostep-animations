@@ -66,6 +66,10 @@ the sound off, and the narration should feel like it's describing what the viewe
    **On-screen text discipline:** only the few key concepts get a big center unveil; every
    other label is small and placed where it can't touch another label or arrow (say which side
    each label goes on when elements are close).
+   **Reserved zones:** the crux strip, badge, docked term and both hosts keep their space (plus
+   a thin margin) while on screen. Plan positions so no card, code block, diagram or creature
+   enters them (if a layout needs the top, say "the strip fades out" in that row). Two panels
+   never partly overlap; a new one takes free space or the old one leaves first.
 8. **Make hand-offs exact.** "Ends with" must list every persistent element with its exact position
    and state: hosts (mode: corner or dialogue, and expression), badge, docked term, crux strip,
    and each prop's place. The next scene's "Starts with" is a verbatim copy of it. A scene that

@@ -6,12 +6,15 @@ Usage (from the project root):
     python tools/render.py 01-03 -q h               # final quality (1080p60)
     python tools/render.py 04 --no-captions         # clean video, no caption band
     python tools/render.py 04 --no-render           # re-caption / re-assemble existing renders only
+    python tools/render.py 05 --check-only          # layout check only (Manim dry run: no video, faster)
 
 Output, per episode and quality (e.g. Ostep/Renders/04-cpu-intro/480p15/):
     scenes/<stem>.mp4, scenes/<stem>.srt      clean Manim output + its subcaptions
     captioned/<stem>.mp4                      scene with the caption band (if captions)
     <episode>.mp4                             assembled episode (captioned unless --no-captions)
     <episode>.srt                             single-line captions for the whole episode
+    layout/<stem>.jsonl                       layout-check findings (see ostep_lib/layout.py; review
+                                              them with tools/overlap_sheet.py)
 
 Captions: the animation is scaled to 90% and placed at the top of the frame; captions sit in the
 band below it, so they can never overlap the animation. Each caption is one line (long narration
@@ -272,22 +275,29 @@ def render_lock(stale=900):
         lock.unlink(missing_ok=True)
 
 
-def render_scene(ep: str, f: Path, cls: str, q: str, out_scenes: Path):
+def render_scene(ep: str, f: Path, cls: str, q: str, out_scenes: Path, check_only=False):
     media = CACHE / "media" / ep
-    # layout checks on: only their [bounds]/[overlap] lines are shown (Manim's log is noise).
+    # layout checks on: only their [bounds]/[overlap:*] lines are shown (Manim's log is noise).
     # No caching: cached animations skip their frames, and with them the mid-animation checks.
+    log = out_scenes.parent / "layout" / f"{f.stem}.jsonl"
+    log.unlink(missing_ok=True)
+    cmd = [sys.executable, "-m", "manim", f"-q{q}", "--disable_caching", "--media_dir", str(media)]
+    if check_only:
+        cmd.append("--dry_run")
     with render_lock():
-        r = subprocess.run([sys.executable, "-m", "manim", f"-q{q}", "--disable_caching", "--media_dir", str(media),
-                            str(f), cls],
+        r = subprocess.run(cmd + [str(f), cls],
                            cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace",
-                           env={**os.environ, "OSTEP_CHECK": "1", "PYTHONIOENCODING": "utf-8"})
+                           env={**os.environ, "OSTEP_CHECK": "1", "OSTEP_CHECK_LOG": str(log),
+                                "PYTHONIOENCODING": "utf-8"})
     if r.returncode:
         print(r.stdout[-3000:], r.stderr[-6000:], sep="\n")
         sys.exit(f"manim failed on {f.name} ({r.returncode})")
-    warnings = [l for l in r.stdout.splitlines() if l.startswith(("[bounds]", "[overlap]"))]
+    warnings = [l for l in r.stdout.splitlines() if l.startswith(("[bounds]", "[overlap"))]
     for l in warnings:
         print(f"  {l}")
     LAYOUT_WARNINGS.extend(f"{f.stem}: {l}" for l in warnings)
+    if check_only:
+        return
     vid_dir = media / "videos" / f.stem / QUALITY[q]
     mp4, srt = vid_dir / f"{cls}.mp4", vid_dir / f"{cls}.srt"
     out_scenes.mkdir(parents=True, exist_ok=True)
@@ -321,7 +331,11 @@ def main():
     ap.add_argument("--no-render", action="store_true", help="reuse existing renders in Ostep/Renders")
     ap.add_argument("--assemble", action="store_true", help="assemble even when only some scenes are selected")
     ap.add_argument("--no-assemble", action="store_true")
+    ap.add_argument("--check-only", action="store_true",
+                    help="layout check only: Manim dry run, no video, no captions, no assembly")
     a = ap.parse_args()
+    if a.check_only:
+        a.captions, a.no_assemble = False, True
 
     ep = resolve_episode(a.episode)
     scenes = scene_files(ep, a.scenes)
@@ -333,7 +347,7 @@ def main():
     for sid, f, cls in scenes:
         print(f"== {sid} {cls}")
         if not a.no_render:
-            render_scene(ep, f, cls, a.quality, out_scenes)
+            render_scene(ep, f, cls, a.quality, out_scenes, a.check_only)
         if a.captions:
             src = out_scenes / f"{f.stem}.mp4"
             if not src.exists():
@@ -342,6 +356,7 @@ def main():
 
     if not a.no_render:
         print(f"layout check: {len(LAYOUT_WARNINGS)} warning(s)"
+              + (f" (review: python tools/overlap_sheet.py {a.episode})" if LAYOUT_WARNINGS else "")
               + "".join(f"\n  {w}" for w in LAYOUT_WARNINGS))
 
     full = a.scenes is None or a.assemble

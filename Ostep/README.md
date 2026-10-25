@@ -130,6 +130,13 @@ Palette constants live in `ostep_lib/style.py`. Never hard-code colors in scenes
   | Content | y ≤ 2.55 (`CONTENT_TOP`), x ∈ [−6.6, 6.6] | Everything else: diagrams, labels, scene titles, cards. |
   | Characters | bottom corners | Professor / Student / Computer. |
 
+  **Reserved zones.** While they're on screen, the crux strip/card, the section badge, the docked
+  term and both hosts own their drawn shape plus a 0.1-unit margin. No other component may enter
+  it (the layout check reports `chrome`, `host` and `zone:*`). These zones are deliberately
+  minimal: they exist only while their owner is visible. Other components must not partly cover
+  each other either (labels, cards, code, creatures); a deliberate overlap is declared in code
+  with `allow_overlap`.
+
   **Introducing a key term** never shares space with the scene. `TermHighlight.show()` veils the
   whole scene with a scrim, writes the term large at the center, then lifts the veil while the
   term docks to the chrome row. Scene text never goes in the top band. Fade old labels out

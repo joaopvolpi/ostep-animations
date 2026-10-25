@@ -149,10 +149,21 @@ Images are expensive, so frame inspection is the exception, not the rule.
    the rest. If an older scene file asks for more unveils, keep the 3–4 most central and demote
    the others to notes. Log this as a deviation. Don't pass `at=` into an occupied area, and don't set `scrim=False` over a busy
    screen. Fade a label out before new text lands where it was.
+   **Reserved zones:** while they're on screen, the crux strip/card, the badge, the docked term and
+   both hosts own their drawn shape plus a thin margin (0.1 unit). Nothing else may enter it: give
+   content its own space, or fade the strip out for that stretch. Labels go on a free side of
+   their target (`next_to`), never `move_to` onto a prop; a creature's label never sits between it
+   and the CPU it stands on; highlight boxes come from `SurroundingRectangle(target)`.
    `tools/render.py` runs every scene with `OSTEP_CHECK=1` and ends with
-   **"layout check: N warning(s)"**. This check is free (text only), so use it instead of frames:
-   - **Every `[overlap]` warning must be fixed** (two texts on top of each other), or justified in
-     the report (e.g. a deliberate stack).
+   **"layout check: N warning(s)"**. This check is free (no images): it rasterizes what is drawn
+   and reports `[overlap:<kind>]` for texts hidden or crossed by other things (`cover`, `text`,
+   `line`, `edge`), anything touching the chrome or a host (`chrome`, `host`), panels partly on
+   top of each other (`panel`), and content in a reserved zone (`zone:*`); see
+   `ostep_lib/layout.py`. Use it instead of frames:
+   - **Every `[overlap:*]` warning must be fixed**, or, if the overlap is deliberate, declared in
+     the scene with `self.allow_overlap(a, b, "why")` (it then disappears). Follow the
+     `ostep-layout-review` skill for the fix loop (`--check-only` reruns the check without video,
+     `tools/overlap_sheet.py` shows ambiguous findings as one contact sheet).
    - `[bounds]` warnings are fine only for things meant to run past the edge (full-width
      boundaries, slides in/out).
 3. **Inspect visually only the critical scenes:** crowded ones with many components on screen,
@@ -167,9 +178,7 @@ Images are expensive, so frame inspection is the exception, not the rule.
    a short deliberate pause after a reveal or punchline is fine, so use judgement and don't pad
    scenes with words. The tool also prints each hand-off (last caption of scene N → first caption of N+1):
    read them; if scene N+1 starts on a new subject without a bridge, fix the line (and the script).
-   Also make sure labels, arrows and numbers never sit on top of each other or on another label
-   (the layout check catches text/text only: for text vs. arrow, place labels with `next_to` on
-   the free side), and that a counter's number sits on the same baseline as its label.
+   Also make sure a counter's number sits on the same baseline as its label.
 7. Check the duration against the scene's estimate (±30%). A big mismatch usually means
    narration text is missing, or the pauses are wrong.
 
