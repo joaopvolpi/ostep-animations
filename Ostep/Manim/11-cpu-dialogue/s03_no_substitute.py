@@ -21,7 +21,7 @@ class S03NoSubstitute(Ep11Scene):
                  panels.animate(run_time=0.8).scale(0.5).move_to(P3(0, 1.85)), min_time=4.0)
 
         # S03.2
-        term = Terminal(width=5.2, height=2.6, font_size=18, prompt="$").move_to(P3(0, -0.15))
+        term = Terminal(width=5.2, height=2.6, font_size=18, prompt="$").move_to(P3(0, -0.5))
         self.say("There's no substitute for doing.", prof.change("explaining"), FadeOut(q), FadeIn(term),
                  min_time=2.0)
         self.play(term.type("make test"))

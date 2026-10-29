@@ -33,9 +33,9 @@ class S05ShortJobs(Ep11Scene):
 
         # S05.3
         gum = Text("gum", font_size=20, color=TEXT).move_to(B[1])
-        gum.next_to(B[0], UP, buff=0.05)
+        gum.next_to(B[0], UP, buff=0.05).shift(RIGHT * 0.55)
         self.say("I knew that was a good idea the day I was buying gum...",
-                 stu.thinks("gum"), Transform(B[1], gum), min_time=3.5)
+                 stu.thinks("gum", font_size=22, padding=0.18), Transform(B[1], gum), min_time=3.5)
 
         # S05.4
         short = label("short", 20, DIM).next_to(B[0], UP, buff=0.05)
@@ -62,5 +62,5 @@ class S05ShortJobs(Ep11Scene):
 
         # S06
         self.say("That sounds oddly rude to that poor fellow. What else?", prof.change("worried"),
-                 Indicate(A[0], scale_factor=1.1), spot.animate.set_opacity(0.3), min_time=3.0)
+                 Indicate(A[0], scale_factor=1.1), FadeOut(spot), FadeOut(tl), min_time=3.0)
         self.beat(0.5)

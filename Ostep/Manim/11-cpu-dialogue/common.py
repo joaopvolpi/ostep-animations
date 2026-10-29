@@ -83,6 +83,28 @@ class Ep11Scene(NarratedScene):
     def term(self, text, **kw):
         return self.terms.show(text, **kw)
 
+    def fade_stage(self, *keep, run_time=0.8):
+        """Fade out everything except the badge, the hosts, the docked term and ``keep`` (looks inside
+        scene-level groups): the clean hand-off to the next scene."""
+        kept = [getattr(self, "badge", None), getattr(self, "stu", None), getattr(self, "prof", None),
+                self.terms.docked, *keep]
+        ids = {id(x) for k in kept if k is not None for x in k.get_family()}
+        gone = []
+
+        def collect(m):
+            if id(m) in ids or getattr(m, "is_scrim", False):
+                return
+            if any(id(x) in ids for x in m.get_family()[1:]):
+                for s in m.submobjects:
+                    collect(s)
+            else:
+                gone.append(m)
+        for m in list(self.mobjects):
+            collect(m)
+        if gone:
+            self.play(*[FadeOut(m) for m in gone], run_time=run_time)
+            self.wait(0.25)
+
     def add_docked(self, text):
         m = self.terms.docked_now(text)
         self.add(m)
@@ -158,11 +180,11 @@ def build_s03_end(scene):
     """Terminal with three ticks + shrunken panels (as S03 ends)."""
     panels = build_panels_end()
     panels.scale(0.5).move_to(P3(0, 1.85))
-    term = Terminal(width=5.2, height=2.6, font_size=18, prompt="$").move_to(P3(0, -0.15))
+    term = Terminal(width=5.2, height=2.6, font_size=18, prompt="$").move_to(P3(0, -0.5))
     scene.add(term)
-    scene.play(term.type("make test"), run_time=0.05)
+    finish_now(term.type("make test"))
     for name in ("trap handler ... ok", "timer ... ok", "switch ... ok"):
-        scene.play(term.print(name), run_time=0.05)
+        finish_now(term.print(name))
         tick = tick_mark(0.18, GREEN_OK, 5).next_to(term.last_line(), RIGHT, buff=0.15)
         term.add(tick)
     return panels, term
@@ -198,7 +220,7 @@ def build_s04_end():
 
 # S05 checkout world
 Q_CENTER = P3(0.6, -0.3)
-COUNTER_AT = P3(-3.9, -0.45)
+COUNTER_AT = P3(-3.9, -0.2)
 
 
 def hop_mover(mob, bottom_point, run_time=0.6):
@@ -228,8 +250,10 @@ def make_checkout_queue():
 
 
 def make_mini_timeline():
-    return Timeline(["A", "B"], ticks=8, colors=[COL["A"], COL["B"]], x_range=(-2.6, 2.6), top=-1.55,
+    tl = Timeline(["A", "B"], ticks=8, colors=[COL["A"], COL["B"]], x_range=(-2.6, 2.6), top=-1.55,
                     row_height=0.3, row_step=0.42, tick_labels=False, label_font=20)
+    tl.row_labels.shift(LEFT * 0.75)     # keep the row names out of the first cell
+    return tl
 
 
 def build_s05_end():
@@ -241,8 +265,7 @@ def build_s05_end():
     counter = make_counter()
     A.move_to(P3(-2.5, COUNTER_AT[1]) + (A.get_center() - A.get_bottom()))
     A[0].set_expression("blocked")
-    spot = Spotlight(height=1.4, spread=0.5).move_to(P3(0.6, 1.9)).set_opacity(0.3)
-    return VGroup(q, A, B, counter, spot)
+    return VGroup(q, A, B, counter)
 
 
 MLFQ_X = (-4.0, 0.4)
@@ -291,8 +314,10 @@ def sched_strip(rows, x0, top, cw=0.36, ch=0.22, gap=0.1, names="ABC"):
 def build_s07_end():
     """Static replica of S07's end state: level seesaw with ring, RR strips, Lampson card."""
     see = Seesaw(width=3.2, left="turnaround", right="response").move_to(P3(-1.6, 1.1))
+    see.left_pan.label.set_color(COL["A"])
+    see.right_pan.label.set_color(COL["B"])
     ring = Circle(radius=0.4, color=GREEN_OK).set_stroke(GREEN_OK, 4).move_to(see.pivot.get_center() + DOWN * 0.2)
-    ls, rs = sched_strip(["rwwrww", "wrwwrw", "wwrwwr"], -4.0, -0.2), sched_strip(["rwwrww", "wrwwrw", "wwrwwr"], -1.2, -0.2)
+    ls, rs = sched_strip(["rwwrww", "wrwwrw", "wwrwwr"], -4.0, -0.2), sched_strip(["rwwrww", "wrwwrw", "wwrwwr"], -0.7, -0.2)
     card = TipCard(body="Don't find the best. Avoid disaster.", title="LAMPSON", width=3.4, font_size=24,
                    accent=VIRT).move_to(P3(4.2, 0.9))
     return VGroup(see, ring, ls, rs, card)

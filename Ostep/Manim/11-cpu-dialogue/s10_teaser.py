@@ -27,7 +27,7 @@ class S10Teaser(Ep11Scene):
         boxes = VGroup()
         for p, x in zip(procs, (-5.0, -3.6, -2.2)):
             box = RoundedRectangle(width=1.0, height=1.5, corner_radius=0.1).set_fill(MEM_COLOR, 0.35).set_stroke(MEM_COLOR, 2)
-            box.move_to(P3(x, 1.0))
+            box.move_to(P3(x, 1.5))
             place_on(p, box.get_bottom() + UP * 0.08)
             boxes.add(box)
         mem = Memory(regions=["code", "heap", "stack"], width=1.3, height=1.5, addresses=False).move_to(P3(3.3, 1.0))

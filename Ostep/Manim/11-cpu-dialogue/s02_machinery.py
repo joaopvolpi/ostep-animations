@@ -9,8 +9,9 @@ from common import *  # noqa: E402,F401,F403
 
 class S02Machinery(Ep11Scene):
     def construct(self):
-        self.world(stu="neutral", prof="neutral", mode="dlg")
+        self.world(stu="neutral", prof="happy", mode="dlg")
         stu, prof = self.stu, self.prof
+        prof.set_look(stu)      # as S01 ends: the Professor still looks at the Student
         panels = build_panels()
         L, M, R = panels.left, panels.mid, panels.right
         bd, p_user = L.bd, L.proc

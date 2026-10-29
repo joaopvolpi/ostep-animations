@@ -29,8 +29,9 @@ class S01LoadedQuestion(Ep11Scene):
 
         # S01.4
         self.say("True. But it's still an honest question. Give a professor a break, will you?",
-                 stu.remove_bubble(), Succession(prof.change("happy"),
-                 prof.animate.shift(UP * 0.1), prof.animate.shift(DOWN * 0.1)), min_time=4.5)
+                 stu.remove_bubble(), prof.change("happy"), min_time=4.5)
+        self.play(prof.animate.shift(UP * 0.1), run_time=0.25)
+        self.play(prof.animate.shift(DOWN * 0.1), run_time=0.25)
 
         # S01.5
         self.say("Okay, okay. I did learn a few things.", stu.change("neutral"))

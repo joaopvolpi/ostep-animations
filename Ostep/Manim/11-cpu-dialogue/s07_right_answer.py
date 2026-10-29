@@ -24,7 +24,7 @@ class S07RightAnswer(Ep11Scene):
         see.right_pan.label.set_color(COL["B"]) if hasattr(see.right_pan, "label") else None
         q = question_mark(1.2, CPU_COLOR).move_to(P3(0, 0.8))
         left_strip = sched_strip(FIFO, -4.0, -0.2)
-        right_strip = sched_strip(FIFO, -1.2, -0.2)
+        right_strip = sched_strip(FIFO, -0.7, -0.2)
 
         # S07.1
         self.say("These policy battles could rage forever. Is there really a right answer?",
@@ -47,7 +47,7 @@ class S07RightAnswer(Ep11Scene):
             self.wait(1.2)
             self.play(see.tilt(-12), FadeOut(tick), FadeOut(xm), run_time=0.9)
             self.play(Transform(left_strip[1], sched_strip(RR, -4.0, -0.2)[1]),
-                      Transform(right_strip[1], sched_strip(RR, -1.2, -0.2)[1]), run_time=1.0)
+                      Transform(right_strip[1], sched_strip(RR, -0.7, -0.2)[1]), run_time=1.0)
             tick2 = tick_mark(0.3, GREEN_OK, 6).move_to(right_strip.get_right() + RIGHT * 0.35)
             xm2 = x_mark(0.3).move_to(left_strip.get_right() + RIGHT * 0.3)
             self.play(FadeIn(tick2), FadeIn(xm2), run_time=0.5)
