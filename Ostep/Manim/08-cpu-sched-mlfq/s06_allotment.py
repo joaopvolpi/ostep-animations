@@ -28,15 +28,15 @@ class S06Allotment(Ep08Scene):
         lab = label("allotment", 18, DIM).next_to(g, LEFT, buff=0.15)
         darr = Arrow(g.get_left() + LEFT * 0.1 + DOWN * 0.1, g.get_left() + LEFT * 0.1 + DOWN * 0.7, buff=0, color=KERNEL_COLOR, stroke_width=5)
         self.say("It's the amount of time a job can spend at a given priority level before the scheduler lowers its priority.",
-                 FadeIn(A2, shift=DOWN * 0.3), FadeIn(g), Succession(Wait(1.0), FadeIn(lab)),
-                 Succession(Wait(2.5), g.drain(1.0, run_time=1.5)), Succession(Wait(5.0), FadeIn(darr, shift=DOWN * 0.2)))
+                 FadeIn(A2, shift=DOWN * 0.3), FadeIn(g), after(1.0, FadeIn(lab)),
+                 after(2.5, g.drain(1.0, run_time=1.5)), after(5.0, FadeIn(darr, shift=DOWN * 0.2)))
         self.play(FadeOut(darr), FadeOut(lab), run_time=0.4)
 
         # S06.3
         tag = label("allotment = 1 time slice\n= 10 ms", 18, CPU_COLOR, line_spacing=0.8).move_to(P3(1.7, -0.15))
         br = tl.bracket("Q2", 0, 1, "10 ms")
         self.say("To keep things simple, we'll say for now that the allotment is exactly one time slice.",
-                 FadeIn(tag), g.reset(), Succession(Wait(1.0), Create(br.line), FadeIn(br.caps), FadeIn(br.label)))
+                 FadeIn(tag), g.reset(), after(1.0, Create(br.line), FadeIn(br.caps), FadeIn(br.label)))
         self.play(FadeOut(VGroup(A2, g)), run_time=0.4)
 
         # S06.4

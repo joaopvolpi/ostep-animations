@@ -21,14 +21,15 @@ class S02TheCrux(Ep08Scene):
         badge = SectionBadge(BADGE_TEXT, accent=VIRT)
         self.play(FadeOut(hist), stu.animate.scale(CHAR_SCALE).move_to(STUDENT_CORNER),
                   prof.animate.scale(CHAR_SCALE).move_to(PROF_CORNER), run_time=1.2)
-        self.say_crux(card, stu.change("curious", look_at=card), prof.change("neutral"), hold=0.6)
+        self.say_crux(card, stu.change("curious", look_at=card), prof.change("neutral"), hold=0.6,
+                      lead="Which brings us to the crux: {q}")
 
         # S02.2
         self.say("Today's answer is one of the most famous ideas in scheduling: the Multi-Level Feedback Queue, or MLFQ.",
-                 self.term("MLFQ", at=P3(0, -0.9)))
+                 self.term("MLFQ", at=P3(0, -1.7)))
 
         # S02.3
-        tag = tag_chip("1962 · CTSS", TEXT, 24).move_to(P3(0, -1.0))
+        tag = tag_chip("1962 · CTSS", TEXT, 24).move_to(P3(0, -1.6))
         self.say("It was first described in 1962, in the Compatible Time-Sharing System…",
                  FadeIn(tag, shift=UP * 0.4))
 
@@ -39,7 +40,7 @@ class S02TheCrux(Ep08Scene):
                  FadeIn(medal, scale=1.4), FadeIn(name))
 
         # S02.5
-        board = RuleBoard()
+        board = RuleBoard(row_h=0.58)
         sk = board.skeleton(5)
         self.say("We'll build it in five rules.",
                  FadeOut(VGroup(tag, medal, name)), card.dock(), FadeIn(badge.dot), FadeIn(badge.text, shift=RIGHT * 0.2),

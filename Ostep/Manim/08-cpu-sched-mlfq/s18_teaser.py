@@ -19,7 +19,7 @@ class S18Teaser(Ep08Scene):
         # S18.1
         self.say("MLFQ is clever. But it has so many knobs, and the rules keep patching each other. Isn't there a simpler way to share the CPU fairly?",
                  stu.animate.scale(1 / CHAR_SCALE).move_to(STUDENT_DLG), prof.animate.scale(1 / CHAR_SCALE).move_to(PROF_DLG),
-                 Succession(Wait(1.0), FadeIn(panel.set_opacity(1)), Wait(0.6), FadeOut(panel)))
+                 after(1.0, FadeIn(panel.set_opacity(1)), Wait(0.6), FadeOut(panel)))
         self.play(stu.change("curious"), run_time=0.5)
 
         # S18.2
@@ -32,13 +32,13 @@ class S18Teaser(Ep08Scene):
         ins = [Succession(FadeIn(t, shift=DOWN * 0.2), t.animate(run_time=0.6).move_to(drum.cage_center()).scale(0.4).set_opacity(0)) for t in tickets]
         self.say("There is. Forget turnaround and response for a moment. What if we just promised each job a share of the CPU, and picked the next one by drawing a ticket from a raffle drum?",
                  prof.change("happy"), FadeIn(drum), FadeIn(pie, scale=0.6), FadeIn(shares),
-                 Succession(Wait(3.0), LaggedStart(*ins, lag_ratio=0.4)), Succession(Wait(5.0), drum.spin(1, run_time=2.0)))
+                 after(3.0, LaggedStart(*ins, lag_ratio=0.4)), after(5.0, drum.spin(1, run_time=2.0)))
 
         # S18.3
         tk = Ticket(COL["A"], label="A", width=0.7, height=0.4).move_to(drum.chute_point())
         hand = hand_icon(0.45).move_to(drum.chute_point() + RIGHT * 0.9 + UP * 0.3)
         self.say("The scheduler gambles?", stu.change("surprised"), FadeIn(tk, scale=0.4), FadeIn(hand),
-                 hand.animate(run_time=1.2).move_to(tk.get_right() + RIGHT * 0.3), Succession(Wait(1.0), tk.animate(run_time=1.0).move_to(P3(1.8, 0.3))))
+                 hand.animate(run_time=1.2).move_to(tk.get_right() + RIGHT * 0.3), after(1.0, tk.animate(run_time=1.0).move_to(P3(1.8, 0.3))))
 
         # S18.4
         self.say("Next time.", prof.change("proud"), min_time=1.0)

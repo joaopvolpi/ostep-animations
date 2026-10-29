@@ -20,11 +20,11 @@ class S17Recap(Ep08Scene):
         tags = VGroup(tag_chip("BSD UNIX", TEXT, 20).move_to(P3(0.9, 2.3)), tag_chip("Solaris", TEXT, 20).move_to(P3(2.45, 2.3)),
                       tag_chip("Windows NT", TEXT, 20).move_to(P3(1.7, -0.25)))
         self.add(tags)
-        world = VGroup(lad, cpu, self.tl, self.board, tags, self.terms.docked)
+        world = VGroup(lad, cpu, self.tl, self.board, tags)
 
         # S17.1
         hdr = label("Recap", 34, VIRT, weight=BOLD).move_to(P3(-5.6, 2.3), aligned_edge=LEFT)
-        self.say("So, today:", FadeOut(world), self.prof.change("neutral"), Succession(Wait(0.6), Write(hdr)))
+        self.say("So, today:", FadeOut(world), self.prof.change("neutral"), after(0.6, Write(hdr)))
 
         ys = (1.5, 0.7, -0.1, -0.9, -1.7)
         texts = ["Several queues, highest first", "Learn from history", "Quick to give up the CPU = stays high",

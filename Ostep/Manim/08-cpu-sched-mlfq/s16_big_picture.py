@@ -11,7 +11,7 @@ class S16BigPicture(Ep08Scene):
     def construct(self):
         self.build(lanes=3, cpu=True, ticks=20, board=False, stu="neutral", prof="explaining", term="advice")
         lad, cpu, tl = self.ladder, self.cpu, self.tl
-        board = RuleBoard()
+        board = RuleBoard(row_h=0.58)
         board.place_now([(t, RULES[t]) for t in ("R1", "R2", "R3", "R4", "R5")])
         B = self.put("B", 2, 0)
         A = self.put("A", 1, 0)
@@ -45,19 +45,19 @@ class S16BigPicture(Ep08Scene):
         sw = stopwatch_icon(0.3).move_to(P3(0.85, 0.0))
         self.say("Five: every so often, everybody goes back to the top.",
                  board.glow("R5"), FadeIn(sw), Rotate(sw.hand, angle=-TAU, about_point=sw[0].get_center(), run_time=1.5),
-                 Succession(Wait(1.6), lad.boost_all()))
+                 after(1.6, lad.boost_all()))
         self.play(FadeOut(sw), run_time=0.3)
 
         # S16.7
         br = Brace(VGroup(lad.lanes[2], lad.lanes[0]), RIGHT, buff=0.08).set_color(VIRT)
         lev = label("levels", 20, VIRT).next_to(br, RIGHT, buff=0.05)
         loop = CurvedArrow(cpu.get_bottom() + DOWN * 0.1, lad.right_point(1) + RIGHT * 0.05 + DOWN * 0.3, angle=-1.2, color=VIRT, stroke_width=5)
-        self.say("That's why it's called a Multi-Level Feedback Queue.", self.note("feedback"), FadeIn(br), FadeIn(lev), Succession(Wait(1.5), Create(loop)))
+        self.say("That's why it's called a Multi-Level Feedback Queue.", self.note("feedback"), FadeIn(br), FadeIn(lev), after(1.5, Create(loop)))
         # S16.8
-        fb = label("feedback", 22, VIRT).next_to(loop, DOWN, buff=0.1).shift(LEFT * 0.4)
+        fb = label("feedback", 22, VIRT).next_to(loop, DOWN, buff=0.1).shift(RIGHT * 0.9)
         hist = history_clock(0.28).move_to(P3(1.1, -0.65))
         self.say("It has multiple levels of queues, and it uses feedback to decide a job's priority. History is its guide.",
-                 FadeIn(fb), Succession(Wait(3.0), FadeIn(hist)))
+                 FadeIn(fb), after(3.0, FadeIn(hist)))
         # S16.9
         self.say("It doesn't demand to know a job in advance. It watches.",
                  Succession(spot.animate(run_time=0.6).move_beam_to(lad.lane_point(2, 0)), spot.animate(run_time=0.6).move_beam_to(lad.lane_point(2, 4)),
@@ -67,7 +67,7 @@ class S16BigPicture(Ep08Scene):
         fills = [cell_run(tl, "Q2", 1, "B", 0.25), cell_run(tl, "Q2", 2, "C", 0.25), cell_run(tl, "Q1", 3, "A", 0.25),
                  cell_run(tl, "Q0", 4, "A", 0.25), cell_run(tl, "Q0", 5, "A", 0.25), cell_run(tl, "Q2", 11, "A", 0.25), cell_run(tl, "Q2", 12, "A", 0.25)]
         self.say("Short jobs get excellent response, close to SJF or STCF, and long jobs still make fair progress.",
-                 Succession(*fills), Succession(Wait(0.6), FadeIn(ck1, scale=1.4), FadeIn(ck2, scale=1.4)))
+                 Succession(*fills), after(0.6, FadeIn(ck1, scale=1.4), FadeIn(ck2, scale=1.4)))
         # S16.11
         tags = [tag_chip("BSD UNIX", TEXT, 20).move_to(P3(0.9, 2.3)), tag_chip("Solaris", TEXT, 20).move_to(P3(2.45, 2.3)),
                 tag_chip("Windows NT", TEXT, 20).move_to(P3(1.7, -0.25))]

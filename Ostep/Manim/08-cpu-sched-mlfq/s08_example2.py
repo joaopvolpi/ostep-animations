@@ -20,7 +20,7 @@ class S08Example2(Ep08Scene):
 
         # S08.1
         ex2 = ex_tag("Example 2: a short job arrives")
-        now = tl.boundary_marker(10, "now", color=CPU_COLOR, font_size=20)
+        now = tl.boundary_marker(10, "now", color=CPU_COLOR, font_size=20, extra=0.0)
         self.say("Now a more interesting one. A is still running in the lowest queue.",
                  Transform(self.ex_tag, ex2), tl.unfill_ticks(list(range(11, 21)), run_time=0.8), FadeIn(now), FadeOut(gA) if False else Wait(0.1))
         tl.purge()
@@ -29,7 +29,7 @@ class S08Example2(Ep08Scene):
 
         # S08.2
         B = job("B", lad.job_scale)
-        B.move_to(P3(-3.0, 2.9))
+        B.move_to(P3(-3.0, 3.05))
         lad.register(B, 2, 0)
         need = VGroup(label("needs 20 ms", 16, TEXT), *[Rectangle(width=0.3, height=0.2).set_fill(COL["B"], 1).set_stroke(TEXT, 1) for _ in range(2)])
         need[1:].arrange(RIGHT, buff=0.02)
@@ -56,7 +56,7 @@ class S08Example2(Ep08Scene):
         # S08.5
         self.say("Ten milliseconds later, B has used its allotment, and it moves down to Q1.",
                  gB.drain(1.0, run_time=1.5), cell_run(tl, "Q2", 11, "B", 0.1) if False else Wait(0.1),
-                 Succession(Wait(1.6), AnimationGroup(self.to_lane(B, 1, 0, "ready"), board.glow("R4a", run_time=1.0), gB.reset(0.4), cell_run(tl, "Q1", 12, "B", 1.0))),
+                 after(1.6, AnimationGroup(self.to_lane(B, 1, 0, "ready"), board.glow("R4a", run_time=1.0), gB.reset(0.4), cell_run(tl, "Q1", 12, "B", 1.0))),
                  spot.animate.move_beam_to(lad.lane_point(1, 3)))
 
         # S08.6
@@ -82,7 +82,7 @@ class S08Example2(Ep08Scene):
         bub = label("probably short?", 22, TEXT)
         bub = VGroup(RoundedRectangle(width=bub.width + 0.4, height=0.5, corner_radius=0.2).set_fill(CARD_FILL, 1).set_stroke(DIM, 2), bub)
         bub[1].move_to(bub[0])
-        bub.move_to(P3(-1.2, 1.55))
+        bub.move_to(P3(-2.4, 1.1))
         B2 = job("B", lad.job_scale)
         lad.register(B2, 2, 0)
         B2.move_to(lad.lane_point(2, 0))
@@ -94,12 +94,12 @@ class S08Example2(Ep08Scene):
         a2 = VGroup(job("A", 0.3), Arrow(UP * 0.2, DOWN * 0.2, buff=0, color=KERNEL_COLOR, stroke_width=4, tip_length=0.1)).arrange(RIGHT, buff=0.1)
         t1 = label("runs quickly, completes", 16, PERS)
         t2 = label("sinks, proves itself long", 16, KERNEL_COLOR)
-        m1 = VGroup(a1, t1).arrange(RIGHT, buff=0.15).move_to(P3(-3.0, 1.55))
+        m1 = VGroup(a1, t1).arrange(RIGHT, buff=0.15).move_to(P3(-3.0, 2.05))
         m2 = VGroup(a2, t2).arrange(RIGHT, buff=0.15).move_to(P3(-3.0, 1.1))
         self.say("If it really is short, it runs quickly and completes. If it isn't, it sinks down the queues and proves itself a long, batch-like job.",
-                 FadeOut(bub), FadeOut(B2), FadeIn(m1), Succession(Wait(2.5), FadeIn(m2)), self.prof.change("explaining"))
+                 FadeOut(bub), FadeOut(B2), FadeOut(spot), FadeIn(m1), after(2.5, FadeIn(m2)), self.prof.change("explaining"))
 
         # S08.12
-        approx = VGroup(MathTex(r"\approx", color=TEXT), label("SJF", 30, TEXT)).arrange(RIGHT, buff=0.15).move_to(P3(-1.5, -0.25))
+        approx = approx_tag()
         self.say("In this way MLFQ approximates SJF.", FadeOut(VGroup(m1, m2)), FadeIn(approx, scale=1.2), min_time=2.5)
         self.beat(1.5)

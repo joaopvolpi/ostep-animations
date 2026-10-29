@@ -115,6 +115,19 @@ class SetExpr(Animation):
         super().begin()
 
 
+def after(delay, *anims):
+    """Run ``anims`` one after another, starting ``delay`` seconds into the play (no first-frame flash)."""
+    return late(delay, anims[0] if len(anims) == 1 else Succession(*anims))
+
+
+class Ladder8(MLFQLadder):
+    """MLFQLadder whose 8-lane jobs stand a little higher, so their tiny labels stay inside the lane."""
+
+    def lane_point(self, level, slot=0):
+        p = super().lane_point(level, slot)
+        return p + UP * 0.08 if self.levels == 8 else p
+
+
 class Ep08Scene(NarratedScene):
     def setup(self):
         super().setup()
@@ -151,7 +164,7 @@ class Ep08Scene(NarratedScene):
         if self.stu is not None:
             self.add(self.stu, self.prof)
         if lanes:
-            self.ladder = MLFQLadder(levels=lanes)
+            self.ladder = Ladder8(levels=lanes)
             self.add(self.ladder)
         if cpu:
             self.cpu = CPU(size=1.2).move_to(CPU_AT)
@@ -160,7 +173,7 @@ class Ep08Scene(NarratedScene):
             self.tl = make_tl(ticks)
             self.add(self.tl)
         if board:
-            self.board = RuleBoard(n_rows=board_n)
+            self.board = RuleBoard(n_rows=board_n, row_h=0.58)
             if rules == "skeleton":
                 self.board.skeleton(5)
             elif rules:
@@ -276,6 +289,14 @@ def ex_tag(text):
     return label(text, 22, DIM).move_to(P3(-0.7, -3.05))
 
 
+def approx_tag():
+    """'approx SJF' on a small card that sits inside lane Q1."""
+    t = VGroup(MathTex(r"\approx", color=TEXT), label("SJF", 30, TEXT)).arrange(RIGHT, buff=0.15)
+    card = RoundedRectangle(width=t.width + 0.5, height=0.65, corner_radius=0.15).set_fill(CARD_FILL, 1).set_stroke(DIM, 2)
+    t.move_to(card)
+    return VGroup(card, t).move_to(P3(-2.6, 1.1))
+
+
 def s08_end(sc, stu="excited", prof="proud"):
     """S08's end state: Figure 8.3 (left) on the timeline, A on the CPU, '≈ SJF' tag."""
     A = s07_end(sc, stu=stu, prof=prof)
@@ -287,7 +308,7 @@ def s08_end(sc, stu="excited", prof="proud"):
     sc.ex_tag = ex_tag("Example 2: a short job arrives")
     sc.add(sc.ex_tag)
     sc.board.rows  # noqa
-    approx = VGroup(MathTex(r"\approx", color=TEXT), label("SJF", 30, TEXT)).arrange(RIGHT, buff=0.15).move_to(P3(-1.5, -0.25))
+    approx = approx_tag()
     sc.add(approx)
     sc.approx = approx
     return A

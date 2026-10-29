@@ -14,13 +14,14 @@ class S13Accounting(Ep08Scene):
         board = self.board
 
         # S13.1
-        self.say("Now gaming.", board.glow("R4a", KERNEL_COLOR, 1.0), Succession(Wait(0.4), board.glow("R4b", KERNEL_COLOR, 1.0)))
+        self.say("Now gaming.", board.glow("R4a", KERNEL_COLOR, 1.0), after(0.4, board.glow("R4b", KERNEL_COLOR, 1.0)))
 
         # S13.2 (close-up)
         B = job("B", 1.2, "running").move_to(P3(-1.6, 0.7))
         sh = put_shades(B, 1.0)
         g = AllotmentGauge(2.4, 1.0)
         g.attach_to(B)
+        self.allow_overlap(g, g, "the gauge fill sits inside its own frame")
         spot = P3(-1.6 + 2.2, 0.0)
         poof = puff(0.35)
         poof.move_to(g.get_center())
@@ -53,7 +54,7 @@ class S13Accounting(Ep08Scene):
         # S13.5
         qlab = label("Q2", 28, TEXT).next_to(B, RIGHT, buff=0.3)
         qlab1 = label("Q1", 28, TEXT).move_to(qlab.get_center() + DOWN * 0.8)
-        self.say("Once it's spent, the job is demoted.", FadeIn(qlab), Succession(Wait(0.8), AnimationGroup(Transform(qlab, qlab1), B.animate.shift(DOWN * 0.5))))
+        self.say("Once it's spent, the job is demoted.", FadeIn(qlab), after(0.8, AnimationGroup(Transform(qlab, qlab1), B.animate.shift(DOWN * 0.5))))
         self.play(FadeOut(VGroup(B, sh, g, pad, qlab, *lines)), run_time=0.5)
 
         # S13.6
@@ -64,12 +65,12 @@ class S13Accounting(Ep08Scene):
         eq2 = VGroup(MathTex("=", color=TEXT), label("10 ms used", 22, TEXT)).arrange(RIGHT, buff=0.15).next_to(tens, RIGHT, buff=0.25)
         self.say("One long burst or many small ones: it doesn't matter.",
                  GrowFromEdge(one, LEFT), LaggedStart(*[FadeIn(t, shift=UP * 0.1) for t in tens], lag_ratio=0.1),
-                 Succession(Wait(1.2), FadeIn(eq), FadeIn(eq2)))
+                 after(1.2, FadeIn(eq), FadeIn(eq2)))
         self.play(FadeOut(VGroup(one, tens, eq, eq2)), run_time=0.4)
 
         # S13.7
         self.say("So we merge four A and four B into one rule: once a job uses up its allotment at a given level, regardless of how many times it has given up the CPU, its priority is reduced.",
-                 board.merge(["R4a", "R4b"], "R4", RULES["R4"]), Succession(Wait(2.0), board.glow("R4", GREEN_OK, 1.2)))
+                 board.merge(["R4a", "R4b"], "R4", RULES["R4"]), after(2.0, board.glow("R4", GREEN_OK, 1.2)))
 
         # S13.8
         tl_l, tl_r = make_half(LEFT_X, 30), make_half(RIGHT_X, 30)
@@ -84,7 +85,7 @@ class S13Accounting(Ep08Scene):
             if k % 4 == 3:
                 left.append(tl_l.fill_span("Q0", b + U, b + 1, "running", COL["A"], run_time=0.1))
         self.say("On the left, the gamer B issues an I/O before every allotment ends, stays on top, and dominates the CPU.",
-                 FadeIn(tl_l), FadeIn(tl_r), FadeIn(ttl), FadeIn(ttr), Succession(Wait(1.5), *left))
+                 FadeIn(tl_l), FadeIn(tl_r), FadeIn(ttl), FadeIn(ttr), after(1.5, *left))
 
         # S13.9
         right = []

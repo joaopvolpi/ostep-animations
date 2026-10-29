@@ -73,5 +73,5 @@ class S09Example3(Ep08Scene):
         tick = tick_mark(0.35).next_to(B, RIGHT, buff=0.15)
         rt = label("response time: low", 20, DIM).move_to(P3(1.7, -0.15))
         self.say("The interactive job stays snappy, which is exactly the goal.",
-                 self.to_cpu(A), Succession(*fin), Succession(Wait(0.8), FadeIn(tick, scale=1.4), FadeIn(rt)))
+                 self.to_cpu(A), Succession(*fin), after(0.8, FadeIn(tick, scale=1.4), FadeIn(rt)))
         self.beat(1.0)

@@ -40,7 +40,7 @@ class S15InTheWild(Ep08Scene):
         c3, f3, t3 = info_card("Reserved + nice", CARD_YS[2])
 
         # S15.1
-        self.say("Real systems tune these knobs differently.", Create(f1), Succession(Wait(0.4), Create(f2)), Succession(Wait(0.8), Create(f3)))
+        self.say("Real systems tune these knobs differently.", Create(f1), after(0.4, Create(f2)), after(0.8, Create(f3)))
         for f in (f1, f2, f3):
             f.set_fill(CARD_FILL, 1)
 
@@ -54,11 +54,12 @@ class S15InTheWild(Ep08Scene):
         chips.arrange(DOWN, buff=0.15, aligned_edge=LEFT).move_to(P3(0.7, 1.7))
         ml = mini_ladder(20, 3.2, 1.7, w=1.2, step=0.13)
         self.say("By default: sixty queues, slices growing from twenty milliseconds at the top to a few hundred at the bottom, and a boost about once a second.",
-                 LaggedStart(*[FadeIn(c, shift=RIGHT * 0.3) for c in chips], lag_ratio=0.5), Succession(Wait(2.0), LaggedStart(*[FadeIn(r) for r in ml], lag_ratio=0.05)))
+                 LaggedStart(*[FadeIn(c, shift=RIGHT * 0.3) for c in chips], lag_ratio=0.5), after(2.0, LaggedStart(*[FadeIn(r) for r in ml], lag_ratio=0.05)))
 
         # S15.4
         strike = Line(f1.get_corner(DL) + RIGHT * 0.1, f1.get_corner(UR) + LEFT * 0.1).set_stroke(KERNEL_COLOR, 4)
-        self.say("FreeBSD skips the table.", FadeIn(c2), Succession(Wait(0.6), Create(strike)))
+        self.allow_overlap(strike, VGroup(c1, f1, t1, rows), "the cross-out is meant to strike the Solaris card")
+        self.say("FreeBSD skips the table.", FadeIn(c2), after(0.6, Create(strike)))
         self.play(FadeOut(VGroup(chips, ml)), run_time=0.5)
 
         # S15.5
@@ -68,7 +69,7 @@ class S15InTheWild(Ep08Scene):
         curve = ax.plot(lambda x: np.exp(-x), x_range=[0, 4], color=PERS)
         dl = label("usage decays", 16, DIM).next_to(ax, UP, buff=0.05).shift(UP * 0.0)
         self.say("It computes priority from CPU used, and that usage decays over time, which plays the role of the boost.",
-                 self.note("decay-usage"), Write(formula), Succession(Wait(1.5), Create(ax), Create(curve, run_time=1.5), FadeIn(dl)))
+                 self.note("decay-usage"), Write(formula), after(1.5, Create(ax), Create(curve, run_time=1.5), FadeIn(dl)))
 
         # S15.6
         ml3 = mini_ladder(4, 1.0, -1.2, tinted=(0, 1), w=1.6, step=0.28)
@@ -78,9 +79,10 @@ class S15InTheWild(Ep08Scene):
         # S15.7
         term = Terminal(width=3.6, height=1.2, font_size=16, prompt="$").move_to(P3(4.6, -1.3))
         jb = job("A", 0.2).move_to(ml3[2].get_left() + RIGHT * 0.3)
+        self.allow_overlap(jb, ml3, "tiny job label on the mini ladder rows")
         self.say("And many accept advice: the UNIX nice command raises or lowers a job's priority, a little.",
-                 self.note("advice"), FadeIn(term), FadeIn(jb), Succession(Wait(1.0), term.type("nice -n 10 ./job")),
-                 Succession(Wait(3.5), jb.animate.move_to(ml3[3].get_left() + RIGHT * 0.3)))
+                 self.note("advice"), FadeIn(term), FadeIn(jb), after(1.0, term.type("nice -n 10 ./job")),
+                 after(3.5, jb.animate.move_to(ml3[3].get_left() + RIGHT * 0.3)))
 
         # S15.8
         tip = TipCard(body=VGroup(label("Use advice where", 18, TEXT), label("possible", 18, TEXT)).arrange(DOWN, buff=0.05),

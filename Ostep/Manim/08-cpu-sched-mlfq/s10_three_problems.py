@@ -17,7 +17,7 @@ def make_card1():
     bot = Rectangle(width=2.0, height=0.4).set_fill(DIM, 0.1).set_stroke(DIM, 1.5).move_to(P3(x0 - 0.35, y0 - 0.45))
     wall = VGroup(*[job(n, 0.2) for n in "BCBC"]).arrange(RIGHT, buff=0.12).move_to(top)
     a = job("A", 0.2).move_to(bot.get_left() + RIGHT * 0.3)
-    zz = zz_glyph(0.15).next_to(a, UP + RIGHT, buff=0.0)
+    zz = zz_glyph(0.15).next_to(a, RIGHT, buff=0.02)
     cpu = CPU(size=0.5, font_size=12).move_to(P3(x0 + 1.2, y0 + 0.2))
     cnt = label("0 ms of CPU", 18, KERNEL_COLOR).move_to(P3(x0, y0 - 0.95))
     c.add(top, bot, wall, a, zz, cpu, cnt)
@@ -55,9 +55,10 @@ class S10ThreeProblems(Ep08Scene):
         A, B = s09_end(self, stu="neutral", prof="neutral")
         board = self.board
         thumb = VGroup(self.ladder, self.cpu, self.tl, A, B, self.ex_tag)
+        self.allow_overlap(VGroup(A, B), self.ladder, "tiny job labels touch lane borders while the ladder shrinks to a thumbnail")
 
         # S10.1
-        self.play(thumb.animate.scale(0.38).move_to(P3(-4.6, 1.5)), run_time=1.0)
+        self.play(thumb.animate.scale(0.32).move_to(P3(-4.6, 1.55)), run_time=1.0)
         self.say("So we have a basic MLFQ. Short and interactive jobs fly, and long ones share what's left.",
                  self.stu.change("excited"), board.ok())
 
@@ -79,7 +80,7 @@ class S10ThreeProblems(Ep08Scene):
         # S10.5
         self.say("With too many interactive jobs, they consume all the CPU, and long jobs never get any.",
                  LaggedStart(*[Indicate(m, scale_factor=1.4) for m in c1.wall], lag_ratio=0.4), Indicate(c1.cnt, color=KERNEL_COLOR),
-                 Succession(Wait(2.0), Indicate(c1.zz, scale_factor=1.5)), self.stu.change("neutral"))
+                 after(2.0, Indicate(c1.zz, scale_factor=1.5)), self.stu.change("neutral"))
 
         # S10.6
         c2 = make_card2().move_to(P3(CX[1], CARD_Y))
@@ -91,7 +92,7 @@ class S10ThreeProblems(Ep08Scene):
         gk = board.hold_glow("R4b", KERNEL_COLOR)
         self.say("Rule four B is the hole. Just before the allotment is used up, issue an I/O, and you keep your priority.",
                  FadeIn(gk), g.drain(0.99, run_time=2.0),
-                 Succession(Wait(2.4), Indicate(c2.io, scale_factor=1.3), g.reset(0.5)))
+                 after(2.4, Indicate(c2.io, scale_factor=1.3), g.reset(0.5)))
 
         # S10.8
         pies = [mini_pie([(f, COL["B"]), (1 - f, DIM)], 0.4).move_to(c2.pie) for f in (0.6, 0.85, 0.99)]
@@ -123,5 +124,5 @@ class S10ThreeProblems(Ep08Scene):
         upa = Arrow(c3.a.get_top() + RIGHT * 0.5 + UP * 0.2, c3.a.get_top() + RIGHT * 0.5 + UP * 0.8, buff=0, color=PERS, stroke_width=4)
         xm = x_mark(0.3).move_to(upa.get_center() + RIGHT * 0.1)
         self.say("A CPU-bound job may become interactive, but with our rules it's stuck at the bottom.",
-                 self.stu.change("frustrated"), FadeIn(kb, scale=1.3), FadeIn(sliv), Succession(Wait(1.5), FadeIn(upa), FadeIn(xm, scale=1.4)))
+                 self.stu.change("frustrated"), FadeIn(kb, scale=1.3), FadeIn(sliv), after(1.5, FadeIn(upa), FadeIn(xm, scale=1.4)))
         self.beat(1.0)

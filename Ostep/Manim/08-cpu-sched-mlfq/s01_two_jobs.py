@@ -22,7 +22,7 @@ class S01TwoJobs(Ep08Scene):
         kb = keyboard_icon(0.7).move_to(P3(-3.7, 0.5))
         t_l = label("1 ms", 24, CPU_COLOR).move_to(P3(-2.85, 0.5))
         self.say("One of them is tiny: a keystroke, an echo on the screen, done in a blink.",
-                 Indicate(box_l, scale_factor=1.2), Succession(Wait(0.8), FadeIn(kb, scale=1.3), FadeIn(t_l)))
+                 Indicate(box_l, scale_factor=1.2), after(0.8, FadeIn(kb, scale=1.3), FadeIn(t_l)))
         self.play(Transform(t_l, label("?", 28, CPU_COLOR).move_to(t_l)), run_time=0.5)
 
         # S01.3
@@ -30,7 +30,7 @@ class S01TwoJobs(Ep08Scene):
         t_r = label("1 hour", 24, CPU_COLOR).move_to(P3(3.55, 0.5))
         self.say("The other will grind through numbers for an hour.",
                  box_r.animate.scale(1.6).move_to(P3(3.2, 1.8)),
-                 Succession(Wait(0.8), FadeIn(sw, scale=1.3), FadeIn(t_r), Rotate(sw.hand, angle=-TAU, about_point=sw[0].get_center(), run_time=1.5)))
+                 after(0.8, FadeIn(sw, scale=1.3), FadeIn(t_r), Rotate(sw.hand, angle=-TAU, about_point=sw[0].get_center(), run_time=1.5)))
         self.play(Transform(t_r, label("?", 28, CPU_COLOR).move_to(t_r)), run_time=0.5)
 
         # S01.4
@@ -62,7 +62,7 @@ class S01TwoJobs(Ep08Scene):
         r_end = Arrow(P3(-0.6, 0.85), P3(-0.1, 0.85), buff=0, color=PERS, stroke_width=4, max_tip_length_to_length_ratio=0.4)
         tk = tick_mark(0.3).move_to(P3(0.3, 0.85))
         self.say("Round robin keeps response time low: the keyboard feels snappy.",
-                 FadeIn(r_lab), Succession(Create(r_arr), Transform(r_arr, r_end)), Succession(Wait(1.2), FadeIn(tk, scale=1.3)),
+                 FadeIn(r_lab), Succession(Create(r_arr), Transform(r_arr, r_end)), after(1.2, FadeIn(tk, scale=1.3)),
                  prof.change("explaining"))
 
         # S01.9
@@ -71,8 +71,8 @@ class S01TwoJobs(Ep08Scene):
         t_long = Arrow(P3(-0.6, 0.3), P3(2.0, 0.3), buff=0, color=KERNEL_COLOR, stroke_width=4, max_tip_length_to_length_ratio=0.15)
         xm2 = x_mark(0.28).move_to(P3(2.4, 0.3))
         self.say("But it drags every job out, so turnaround time is awful.",
-                 FadeIn(t_lab), FadeIn(t_arr), Succession(Wait(0.6), Transform(t_arr, t_long, run_time=1.6)),
-                 Succession(Wait(2.4), FadeIn(xm2, scale=1.3)))
+                 FadeIn(t_lab), FadeIn(t_arr), after(0.6, Transform(t_arr, t_long, run_time=1.6)),
+                 after(2.4, FadeIn(xm2, scale=1.3)))
 
         # S01.10
         self.play(FadeOut(VGroup(r_lab, r_arr, tk, t_lab, t_arr, xm2, ring, rrt)), run_time=0.5)
@@ -87,5 +87,5 @@ class S01TwoJobs(Ep08Scene):
         hist = history_clock(0.5).scale(1.3).move_to(P3(0, 1.5))
         self.say("Not stuck. We can't see the future. But we can watch the past.",
                  FadeOut(VGroup(box_l, box_r, kb, sw, t_l, t_r, sjf2, xs, rr2, half)),
-                 Succession(Wait(0.8), Create(hist[1]), FadeIn(hist[0])), prof.change("happy"))
+                 after(0.8, Create(hist[1]), FadeIn(hist[0])), prof.change("happy"))
         self.beat(1.0)

@@ -28,19 +28,19 @@ class S14Knobs(Ep08Scene):
         ring_a = progress_ring(0.95, color=VIRT, value=0.4, width=6).move_to(cpu)
         ring_b = progress_ring(0.95, color=VIRT, value=0.85, width=6).move_to(cpu)
         self.say("How long a time slice at each level?",
-                 panel.move_knob(1, 0.2, 0.6), FadeIn(ring_a), Succession(Wait(0.6), Transform(ring_a, ring_b, run_time=1.0)))
+                 panel.move_knob(1, 0.2, 0.6), FadeIn(ring_a), after(0.6, Transform(ring_a, ring_b, run_time=1.0)))
         self.play(panel.move_knob(1, 0.5, 0.5), FadeOut(ring_a), run_time=0.5)
 
         # S14.3
         g1 = AllotmentGauge(0.8, 1.0).move_to(P3(2.0, 2.2))
         g2 = AllotmentGauge(1.6, 1.0).move_to(P3(2.0, 2.2))
-        self.say("How big an allotment?", panel.move_knob(2, 0.85, 0.6), FadeIn(g1), Succession(Wait(0.6), Transform(g1, g2, run_time=0.9)))
+        self.say("How big an allotment?", panel.move_knob(2, 0.85, 0.6), FadeIn(g1), after(0.6, Transform(g1, g2, run_time=0.9)))
         self.play(panel.move_knob(2, 0.5, 0.5), FadeOut(g1), run_time=0.5)
 
         # S14.4
         sw = stopwatch_icon(0.3).move_to(P3(0.85, 0.0))
         self.say("How often to boost?", panel.move_knob(3, 0.15, 0.6), FadeIn(sw),
-                 Succession(Wait(0.6), Rotate(sw.hand, angle=-TAU, about_point=sw[0].get_center(), run_time=1.0),
+                 after(0.6, Rotate(sw.hand, angle=-TAU, about_point=sw[0].get_center(), run_time=1.0),
                             Rotate(sw.hand, angle=-TAU * 3, about_point=sw[0].get_center(), run_time=1.0)))
         self.play(panel.move_knob(3, 0.5, 0.5), FadeOut(sw), run_time=0.5)
 
@@ -70,7 +70,7 @@ class S14Knobs(Ep08Scene):
 
         # S14.8
         self.say("In this example, the top queue has a ten-millisecond slice, the middle one twenty, the bottom one forty.",
-                 Indicate(t2, color=CPU_COLOR), Succession(Wait(1.5), Indicate(t1, color=CPU_COLOR)), Succession(Wait(3.0), Indicate(t0, color=CPU_COLOR)))
+                 Indicate(t2, color=CPU_COLOR), after(1.5, Indicate(t1, color=CPU_COLOR)), after(3.0, Indicate(t0, color=CPU_COLOR)))
 
         # S14.9
         spans = [("Q2", "A", 0, 1), ("Q2", "B", 1, 2), ("Q1", "A", 2, 4), ("Q1", "B", 4, 6)]

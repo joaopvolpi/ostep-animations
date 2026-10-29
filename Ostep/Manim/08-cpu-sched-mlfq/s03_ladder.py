@@ -13,7 +13,7 @@ class S03Ladder(Ep08Scene):
         self.build(lanes=None, cpu=False, rules="skeleton", stu="curious", prof="neutral")
         strip = crux_strip()
         self.add(strip)
-        lad = MLFQLadder(levels=8)
+        lad = Ladder8(levels=8)
         cpu = CPU(size=1.2).move_to(CPU_AT)
         self.ladder, self.cpu = lad, cpu
         s = lad.job_scale
@@ -43,8 +43,8 @@ class S03Ladder(Ep08Scene):
         self.add(spot)
         link = CurvedArrow(P3(0.3, 2.3), P3(1.35, 1.35), angle=-0.6, color=CPU_COLOR, stroke_width=5)
         self.say("…and the scheduler picks from the highest queue that has anything in it.",
-                 FadeIn(spot), Succession(Wait(0.4), spot.animate(run_time=1.6).move_beam_to(lad.lane_point(8, 3))),
-                 lad.serve(8), Succession(Wait(1.8), GrowFromCenter(cpu), Create(link)))
+                 FadeIn(spot), after(0.4, spot.animate(run_time=1.6).move_beam_to(lad.lane_point(8, 3))),
+                 lad.serve(8), after(1.8, GrowFromCenter(cpu), Create(link)))
 
         # S03.5
         self.say("Picture a ladder. In the book's first figure there are eight queues.",
@@ -59,7 +59,7 @@ class S03Ladder(Ep08Scene):
         hist = history_clock(0.3).move_to(P3(0.8, -0.45))
         ltxt = label("learn from history", 20, TEXT).move_to(P3(2.1, -0.95))
         self.say("And the big idea: the scheduler will learn from history.",
-                 self.stu.change("curious"), FadeIn(hist), Succession(Wait(0.8), Write(ltxt)))
+                 self.stu.change("curious"), FadeIn(hist), after(0.8, Write(ltxt)))
 
         # S03.8
         blocks = VGroup(*[Rectangle(width=0.16, height=0.22).set_fill(COL["A"], 1).set_stroke(TEXT, 1) for _ in range(4)]).arrange(RIGHT, buff=0.03)
@@ -67,7 +67,7 @@ class S03Ladder(Ep08Scene):
         nxt = VGroup(Arrow(ORIGIN, RIGHT * 0.35, buff=0, color=TEXT, stroke_width=3, tip_length=0.12), label("next?", 18, DIM)).arrange(RIGHT, buff=0.05)
         nxt.next_to(blocks, RIGHT, buff=0.08)
         self.say("What a job did a moment ago tells us what it will probably do next.",
-                 LaggedStart(*[FadeIn(b, shift=RIGHT * 0.3) for b in blocks], lag_ratio=0.25), Succession(Wait(1.2), FadeIn(nxt)))
+                 LaggedStart(*[FadeIn(b, shift=RIGHT * 0.3) for b in blocks], lag_ratio=0.25), after(1.2, FadeIn(nxt)))
 
         # S03.9
         card = tip_history_card()
@@ -76,5 +76,5 @@ class S03Ladder(Ep08Scene):
         # S03.10
         bad = x_mark(0.3).move_to(card.get_right() + LEFT * 0.4 + UP * 0.35)
         self.say("But careful: when the past is a bad guide, such a system can decide worse than one with no knowledge at all.",
-                 self.prof.change("worried"), Succession(Wait(1.0), FadeIn(bad, scale=1.5)), self.stu.change("neutral"))
+                 self.prof.change("worried"), after(1.0, FadeIn(bad, scale=1.5)), self.stu.change("neutral"))
         self.beat(1.0)

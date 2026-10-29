@@ -42,7 +42,7 @@ class S05Changing(Ep08Scene):
         # S05.3
         self.say("The key to MLFQ is that it varies a job's priority based on what it does, its observed behavior.",
                  self.note("observed behavior"), FadeOut(VGroup(C, D)),
-                 Indicate(lad.arrows.up, color=CPU_COLOR), Succession(Wait(0.6), Indicate(lad.arrows.down, color=CPU_COLOR)))
+                 Indicate(lad.arrows.up, color=CPU_COLOR), after(0.6, Indicate(lad.arrows.down, color=CPU_COLOR)))
 
         # S05.4
         trB = strip_pattern(COL["B"], -1.05)

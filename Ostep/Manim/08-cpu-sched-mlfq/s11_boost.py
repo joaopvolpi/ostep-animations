@@ -27,24 +27,24 @@ class S11Boost(Ep08Scene):
         fill = Rectangle(width=0.2, height=0.25).set_fill(COL["A"], 1).set_stroke(width=0).align_to(bar, LEFT).match_y(bar)
         fill2 = Rectangle(width=0.5, height=0.25).set_fill(COL["A"], 1).set_stroke(width=0).align_to(bar, LEFT).match_y(bar)
         self.say("What if we guarantee that every job makes some progress?",
-                 FadeIn(bar), FadeIn(fill), Succession(Wait(1.0), Transform(fill, fill2, run_time=1.0)))
+                 FadeIn(bar), FadeIn(fill), after(1.0, Transform(fill, fill2, run_time=1.0)))
         self.play(FadeOut(VGroup(bar, fill)), run_time=0.4)
 
         # S11.3
         self.say("Simple idea: every so often, throw everybody back in the top queue.",
                  FadeIn(sw), Rotate(sw.hand, angle=-TAU, about_point=sw[0].get_center(), run_time=2.0),
-                 Succession(Wait(2.2), lad.boost_all()))
+                 after(2.2, lad.boost_all()))
 
         # S11.4
-        s_hi = label("S", 26, VIRT, weight=BOLD).next_to(sw, DOWN, buff=0.08)
+        s_hi = label("S", 26, VIRT, weight=BOLD).next_to(sw, RIGHT, buff=0.1)
         self.say("That's Rule five: after some time period S, move all the jobs in the system to the topmost queue.",
-                 board.add_rule("R5", RULES["R5"]), FadeIn(s_hi), Succession(Wait(3.5), self.term("priority boost")))
+                 board.add_rule("R5", RULES["R5"]), FadeIn(s_hi), after(3.5, self.term("priority boost")))
 
         # S11.5
         t1 = VGroup(tick_mark(0.25), label("no starvation", 16, PERS)).arrange(RIGHT, buff=0.08).move_to(P3(5.0, -1.45))
         t2 = VGroup(tick_mark(0.25), label("behavior changes", 16, PERS)).arrange(RIGHT, buff=0.08).move_to(P3(5.0, -1.45))
         t1.move_to(P3(4.9, -1.15)); t2.move_to(P3(4.9, -1.5))
-        self.say("It solves two problems at once.", FadeIn(t1[0], scale=1.4), Succession(Wait(1.0), FadeIn(t2[0], scale=1.4)))
+        self.say("It solves two problems at once.", FadeIn(t1[0], scale=1.4), after(1.0, FadeIn(t2[0], scale=1.4)))
 
         # S11.6
         self.say("A job in the top queue shares the CPU round robin, so it can't starve.",
@@ -70,7 +70,7 @@ class S11Boost(Ep08Scene):
         starved = label("starved", 22, KERNEL_COLOR, weight=BOLD).move_to(P3(-1.0 - 1.5, -1.95))
         starved.move_to(tl_l.cell_center("Q0", 16))
         fills = [tl_l.fill("Q2", t, "running", color=COL["B"] if t % 2 else COL["C"], run_time=0.3) for t in range(11, 21)]
-        self.say("On the left, no boost: once B and C arrive, A is starved.", Succession(*fills), Succession(Wait(3.6), FadeIn(starved)))
+        self.say("On the left, no boost: once B and C arrive, A is starved.", Succession(*fills), after(3.6, FadeIn(starved)))
 
         # S11.10
         mk = [tl_r.boundary_marker(10, None, color=VIRT), tl_r.boundary_marker(20, None, color=VIRT)]
@@ -78,7 +78,7 @@ class S11Boost(Ep08Scene):
         rfills = []
         for row, t, n in FIG84_RIGHT[10:]:
             rfills.append(tl_r.fill(row, t, "running", color=COL[n], run_time=0.3))
-        self.say("On the right, we boost every hundred milliseconds.", FadeIn(mk[0]), FadeIn(swr), Succession(*rfills), Succession(Wait(4.0), FadeIn(mk[1])))
+        self.say("On the right, we boost every hundred milliseconds.", FadeIn(mk[0]), FadeIn(swr), Succession(*rfills), after(4.0, FadeIn(mk[1])))
 
         # S11.11
         cap = label("S = 100 ms (too small, but good for a picture)", 18, DIM).move_to(P3(0.2, -3.2))

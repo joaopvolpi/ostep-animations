@@ -57,7 +57,7 @@ Last time we learned two good ideas for scheduling, and learned that each one ne
 > **THE CRUX: HOW TO SCHEDULE WITHOUT PERFECT KNOWLEDGE?**
 > How can we design a scheduler that both minimizes response time for interactive jobs while also minimizing turnaround time, without *a priori* knowledge of job length?
 
-**Narrator (V.O.):** Today's answer is one of the most famous ideas in scheduling: the **Multi-Level Feedback Queue**, or **MLFQ**. It was first described in 1962, in the Compatible Time-Sharing System, and it helped earn its creator, Fernando Corbato, the Turing Award. We'll build it in five rules. Each one is the answer to a problem with the one before.
+**Narrator (V.O.):** Which brings us to the crux: how to schedule without perfect knowledge? Today's answer is one of the most famous ideas in scheduling: the **Multi-Level Feedback Queue**, or **MLFQ**. It was first described in 1962, in the Compatible Time-Sharing System, and it helped earn its creator, Fernando Corbato, the Turing Award. We'll build it in five rules. Each one is the answer to a problem with the one before.
 
 *Visual idea:* Crux card in the Virtualization orange; section badge "08 · MLFQ" appears top-left. The five rule slots appear empty below, like a blank rulebook.
 

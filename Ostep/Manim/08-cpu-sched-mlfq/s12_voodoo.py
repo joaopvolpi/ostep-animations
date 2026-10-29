@@ -21,6 +21,7 @@ class S12Voodoo(Ep08Scene):
         # S12.1
         dial = Dial(1.0, "S", 0.5)
         dial.shift(P3(-1.5, 1.2) - dial.hub.get_center())
+        dial.label.next_to(dial.arc, RIGHT, buff=0.2)
         self.say("So what should S be?",
                  Create(dial.arc), FadeIn(dial.ticks), FadeIn(dial.needle), FadeIn(dial.hub), Write(dial.label))
 
@@ -28,7 +29,7 @@ class S12Voodoo(Ep08Scene):
         sparks = VGroup(*[label("?", 24, CPU_COLOR).move_to(dial.hub.get_center() + UP * 0.5 + RIGHT * (i - 1.5) * 0.45) for i in range(4)])
         ends = [LEFT * 1.3 + UP * 0.6, RIGHT * 1.3 + UP * 0.6, LEFT * 0.5 + UP * 1.0, RIGHT * 0.6 + UP * 1.1]
         self.say("Hard question.", dial.wiggle(run_time=1.6),
-                 Succession(Wait(0.4), AnimationGroup(*[Succession(FadeIn(s), s.animate(run_time=0.8).shift(e).set_opacity(0)) for s, e in zip(sparks, ends)])))
+                 after(0.4, AnimationGroup(*[Succession(FadeIn(s), s.animate(run_time=0.8).shift(e).set_opacity(0)) for s, e in zip(sparks, ends)])))
         self.remove(sparks)
 
         # S12.3
@@ -58,6 +59,6 @@ class S12Voodoo(Ep08Scene):
         gear = GearPair(0.3).move_to(P3(1.3, -0.7))
         nn = neural_glyph(0.9).move_to(P3(2.3, -0.7))
         self.say("Often you can't, so you get a config file of defaults an administrator tweaks, or, these days, machine-learned values.",
-                 dial.swing_to(0.5), FadeIn(cfg, shift=UP * 0.4), Succession(Wait(2.0), FadeIn(gear), gear.spin(angle=TAU, run_time=2.0)),
-                 Succession(Wait(4.0), FadeIn(nn, shift=LEFT * 0.4)))
+                 dial.swing_to(0.5), FadeIn(cfg, shift=UP * 0.4), after(2.0, FadeIn(gear), gear.spin(angle=TAU, run_time=2.0)),
+                 after(4.0, FadeIn(nn, shift=LEFT * 0.4)))
         self.beat(1.0)
